@@ -1,0 +1,2 @@
+spring.datasource.username=SEU_USUARIO_MYSQL_LOCAL
+spring.datasource.password=SUA_SENHA_MYSQL_LOCAL
