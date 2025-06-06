@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entrar</title>
+
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <main>
+        <div class="flex min-h-screen items-center justify-center px-4">
+            <div class="w-full max-w-md p-6 bg-white rounded-2xl shadow-lg">
+
+                <h1 class="text-3xl font-bold mb-1 text-gray-700">Entrar</h1>
+                <p class="text-sm text-gray-600 mb-6">Acesse sua conta</p>
+
+                <div th:if="${param.error}"
+                     class="mb-4 rounded-md bg-red-100 p-3 text-red-700 text-sm">
+                    Usuário ou senha inválidos.
+                </div>
+
+                <form
+                        id="loginForm"
+                        class="space-y-5"
+                        action="/login"
+                        method="post"
+                        novalidate
+                >
+                    <div class="flex flex-col">
+                        <label for="email" class="mb-1 font-medium text-gray-700">E-mail</label>
+                        <input
+                            id="email"
+                            name="username"
+                            type="email"
+                            placeholder="email@gmail.com"
+                            class="border rounded-md px-3 py-2
+                                focus:outline-none
+                                focus:border-blue-500 focus:ring-2
+                                focus:ring-blue-200"
+                            th:classappend="${param.error} ? ' border-red-500 focus:border-red-500 focus:ring-red-200' : ' border-gray-300'"
+                        />
+                        <p id="emailError" class="mt-1 text-sm text-red-600"></p>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label for="password" class="mb-1 font-medium text-gray-700">Senha</label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            class="border rounded-md px-3 py-2
+                                focus:outline-none focus:border-blue-500
+                                focus:ring-2 focus:ring-blue-200"
+                            th:classappend="${param.error} ? ' border-red-500 focus:border-red-500 focus:ring-red-200' : ' border-gray-300'"
+                        />
+                        <p id="passwordError" class="mt-1 text-sm text-red-600"></p>
+                    </div>
+
+                    <button
+                        id="submitButton"
+                        type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md
+                            focus:outline-none focus:ring-2 focus:ring-blue-200"
+                    >
+                        Entrar
+                    </button>
+                </form>
+
+                <div class="mt-4 text-center text-sm text-gray-600">
+                    <p>
+                        Ainda não tem conta?
+                        <a th:href="@{/signup}" class="text-blue-600 hover:underline">Cadastre-se</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/funcoes/ajax-utils.js"></script>
+    <script th:src="@{/js/Login.js}"></script>
+</body>
+</html>
