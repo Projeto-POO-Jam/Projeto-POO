@@ -9,7 +9,7 @@ $(document).ready(function() {
     var $passwordError = $("#passwordError");
 
     var emailRegex= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
     function validateField(fieldName) {
         if (fieldName === "username") {
@@ -69,17 +69,36 @@ $(document).ready(function() {
             return;
         }
 
-        apiRequest('POST', 'signup', {
-            username: $.trim($usernameInput.val()),
-            email: $.trim($emailInput.val()),
-            password: $passwordInput.val()
+        apiRequest('POST', 'api/users', {
+            userNameLogin: $.trim($usernameInput.val()),
+            userEmail: $.trim($emailInput.val()),
+            userPassword: $passwordInput.val(),
+            userName: "Nome Completo do Usuário"
         })
             .then(function(resultado) {
                 console.log('Cadastro bem-sucedido:', resultado.data);
-                alert("teste");
+
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Cadastro realizado com Sucesso"
+                });
+
+                //bloquar btn
+
                 setTimeout(function() {
                     window.location.href = '/login';
-                }, 1000);
+                }, 3000);
             })
             .catch(function(err) {
                 console.error('Erro ao chamar /signup:', err);

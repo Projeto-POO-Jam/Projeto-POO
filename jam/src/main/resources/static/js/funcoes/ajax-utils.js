@@ -1,51 +1,51 @@
 var BASE_URL = 'http://localhost:8080';
 
 /**
- * Função genérica para fazer requisição AJAX ao backend.
- * @param {string} type  – verbo HTTP ('GET', 'POST', 'PUT', 'DELETE', etc.).
- * @param {string} route – rota após o "/" base, ex: 'login', 'usuarios/123', 'produtos'.
- * @param {object} [data] – objeto com parâmetros.
- *                          Para GET: vira querystring;
- *                          para POST/PUT/DELETE que envia corpo, vira JSON.
- * @returns {Promise}    – retorna um Promise-like (jqXHR) que, em caso de sucesso,
- *                          resolve um objeto { status, data } e, em erro, rejeita { status, error }.
+ * Função genérica para requisições AJAX com contentType default ou customizado.
+ * Se não passar contentType, usa 'application/json; charset=UTF-8'.
+ * @param {string} type          – verbo HTTP ('GET', 'POST', etc.).
+ * @param {string} route         – rota após '/', ex: 'perform_login'.
+ * @param {object|string} [data] – dados: objeto para JSON ou para form-urlencoded.
+ * @param {string} [ct]          – opcional: contentType; padrão application/json.
+ * @returns {Promise}            – resolve {status, data} ou rejeita {status, error}.
  */
-function apiRequest(type, route, data) {
+function apiRequest(type, route, data, ct) {
     var deferred = $.Deferred();
+    var method = type.toUpperCase();
+    var url = BASE_URL + '/' + route;
 
-    var urlCompleta = BASE_URL + '/' + route;
+    var contentType = ct || 'application/json; charset=UTF-8';
+    var sendData;
+    var processData = true;
 
-    // Determina opções básicas do ajax
-    var ajaxOptions = {
-        url: urlCompleta,
-        method: type.toUpperCase(),
-        success: function(response, textStatus, xhr) {
-            deferred.resolve({
-                status: xhr.status,
-                data: response
-            });
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            deferred.reject({
-                status: xhr.status,
-                error: errorThrown
-            });
-        }
-    };
-
-    if (type.toUpperCase() === 'GET') {
-        ajaxOptions.dataType = 'json';
-        if (data) {
-            ajaxOptions.data = data;
-            // ex: { id: 5, filtro: 'ativo' } vira ?id=5&filtro=ativo
-        }
+    if (contentType.indexOf('application/json') === 0) {
+        sendData = data != null ? JSON.stringify(data) : null;
+        processData = false;
     } else {
-        ajaxOptions.contentType = 'application/json; charset=UTF-8';
-        if (data) {
-            ajaxOptions.data = JSON.stringify(data);
-        }
+        sendData = data;
     }
 
-    $.ajax(ajaxOptions);
+    $.ajax({
+        url: url,
+        method: method,
+        contentType: contentType,
+        processData: processData,
+        dataType: 'text',
+        data: sendData,
+        complete: function(xhr) {
+            var status = xhr.status;
+            var raw = xhr.responseText;
+            var parsed;
+            if (raw) {
+                try { parsed = JSON.parse(raw); } catch (e) { parsed = undefined; }
+            }
+            if (status >= 200 && status < 300) {
+                deferred.resolve({ status: status, data: parsed });
+            } else {
+                deferred.reject({ status: status, error: xhr.statusText });
+            }
+        }
+    });
+
     return deferred.promise();
 }

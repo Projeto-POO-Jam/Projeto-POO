@@ -20,7 +20,6 @@ $(document).ready(function() {
                 return true;
             }
         }
-
     }
 
     $emailInput.on("blur", function() {
@@ -37,7 +36,10 @@ $(document).ready(function() {
 
         event.preventDefault();
 
-        apiRequest('GET', 'login')
+        apiRequest('POST', 'perform_login', {
+                username: "Eduardo Franco",
+                password: "Teste1234."
+        }, 'application/x-www-form-urlencoded')
             .then(function(resultado) {
                 console.log('Usuário logado:', resultado.data);
                 window.location.href = '/home';
