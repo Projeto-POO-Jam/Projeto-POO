@@ -18,7 +18,11 @@ function apiRequest(type, route, data, ct) {
     var sendData;
     var processData = true;
 
-    if (contentType.indexOf('application/json') === 0) {
+    if (data instanceof FormData) {
+        sendData   = data;
+        processData = false;
+        contentType = false;
+    } else if (contentType.indexOf('application/json') === 0) {
         sendData = data != null ? JSON.stringify(data) : null;
         processData = false;
     } else {

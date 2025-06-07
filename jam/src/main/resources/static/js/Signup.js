@@ -9,8 +9,36 @@ $(document).ready(function() {
     var $emailError = $("#emailError");
     var $passwordError = $("#passwordError");
 
+    var $avatarInput   = $('#avatarInput');
+    var $avatarPreview = $('#avatarPreview');
+    var $avatarError   = $('#avatarError');
+    var defaultAvatarSrc = $avatarPreview.attr('src');
+
     var emailRegex= /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    $avatarInput.on('change', function() {
+        var file = this.files[0];
+        if (!file) {
+            $avatarError.text('');
+            $avatarPreview.attr('src', defaultAvatarSrc);
+            return;
+        }
+
+        if (!file.type.match(/^image\//)) {
+            $avatarError.text('Selecione um arquivo de imagem válido.');
+            $avatarPreview.attr('src', defaultAvatarSrc);
+            return;
+        }
+        $avatarError.text('');
+
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            // e.target.result é a data URL da imagem
+            $avatarPreview.attr('src', e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
 
     function validateField(fieldName) {
         if (fieldName === "username") {
@@ -70,14 +98,15 @@ $(document).ready(function() {
             return;
         }
 
+        var formData = new FormData(this);
+        formData.set('userNameLogin', $.trim($usernameInput.val()));
+        formData.set('userEmail',    $.trim($emailInput.val()));
+        formData.set('userPassword', $passwordInput.val());
+        formData.set('userName',     'Nome Completo do Usuário');
+
         $submitBtn.prop("disabled", true);
 
-        apiRequest('POST', 'api/users', {
-            userNameLogin: $.trim($usernameInput.val()),
-            userEmail: $.trim($emailInput.val()),
-            userPassword: $passwordInput.val(),
-            userName: "Nome Completo do Usuário"
-        })
+        apiRequest('POST', 'api/users', formData)
             .then(function(resultado) {
                 console.log('Cadastro bem-sucedido:', resultado.data);
 
