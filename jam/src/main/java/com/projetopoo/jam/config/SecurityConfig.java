@@ -57,7 +57,8 @@ public class SecurityConfig {
                             "/signup",
                             "/perform_login",
                             "/css/**",
-                            "/js/**"
+                            "/js/**",
+                            "/img/**"
                     ).permitAll()
                     .anyRequest().authenticated()
             )
