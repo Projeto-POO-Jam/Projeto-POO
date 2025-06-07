@@ -1,0 +1,38 @@
+header.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #000000;
+}
+
+body.dark header.site-header {
+    background-color: #000;
+}
+
+.site-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+}
+
+body.dark .site-title {
+    color: #f9fafb;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.theme-icon {
+    font-size: 1.5rem;
+    color: white;
+}
+
+body.dark .theme-icon {
+    color: #f9fafb;
+}

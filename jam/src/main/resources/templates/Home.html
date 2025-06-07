@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${titulo}">Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <link rel="stylesheet" th:href="@{/css/home.css}" /> -->
-</head>
+<head th:replace="fragments/Head :: Head('Entrar')"></head>
 <body>
-    <div th:replace="fragments/Header :: siteHeader"></div>
+    <div th:replace="fragments/Menu :: siteHeader"></div>
 
     <main>
-        <h2 class="text-3xl font-bold text-blue-600">Página Inicial</h2>
+        <h2 class="titleHome">Página Inicial</h2>
     </main>
 
 </body>
+
+<script th:src="@{/js/funcoes/Theme.js}"></script>
 </html>

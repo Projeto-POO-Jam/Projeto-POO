@@ -3,6 +3,7 @@ $(document).ready(function() {
     var $usernameInput = $("#username");
     var $emailInput = $("#email");
     var $passwordInput = $("#password");
+    var $submitBtn = $("#submitButton");
 
     var $usernameError = $("#usernameError");
     var $emailError = $("#emailError");
@@ -69,6 +70,8 @@ $(document).ready(function() {
             return;
         }
 
+        $submitBtn.prop("disabled", true);
+
         apiRequest('POST', 'api/users', {
             userNameLogin: $.trim($usernameInput.val()),
             userEmail: $.trim($emailInput.val()),
@@ -82,7 +85,7 @@ $(document).ready(function() {
                     toast: true,
                     position: "top-end",
                     showConfirmButton: false,
-                    timer: 3000,
+                    timer: 2000,
                     timerProgressBar: true,
                     didOpen: (toast) => {
                         toast.onmouseenter = Swal.stopTimer;
@@ -94,15 +97,14 @@ $(document).ready(function() {
                     title: "Cadastro realizado com Sucesso"
                 });
 
-                //bloquar btn
-
                 setTimeout(function() {
                     window.location.href = '/login';
-                }, 3000);
+                }, 2000);
             })
             .catch(function(err) {
                 console.error('Erro ao chamar /signup:', err);
                 $emailError.text("Erro ao cadastrar. Tente novamente.");
+                $submitBtn.prop("disabled", false);
             });
     });
 });
