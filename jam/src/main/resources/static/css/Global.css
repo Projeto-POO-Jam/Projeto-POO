@@ -4,6 +4,7 @@
         --text: #000000;
         --primary: #000000;
         --subText: #4b5563;
+        --error: #dc2626;
     }
 
     .dark {
