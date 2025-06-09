@@ -1,10 +1,11 @@
 package com.projetopoo.jam.service;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
+import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
 import com.projetopoo.jam.util.ImageUtil;
 import com.projetopoo.jam.util.UpdateUtils;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,11 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -31,12 +30,18 @@ public class UserService {
 
     @Transactional
     public void createUser(User user, MultipartFile photo) throws IOException {
+        List<String> validationErrors = new ArrayList<>();
+
         if (userRepository.findByUserName(user.getUserName()).isPresent()) {
-            throw new IllegalArgumentException("Username already exists: " + user.getUserName());
+            validationErrors.add("USERNAME_EXISTS");
         }
 
         if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
-            throw new IllegalArgumentException("Email already exists: " + user.getUserEmail());
+            validationErrors.add("EMAIL_EXISTS");
+        }
+
+        if (!validationErrors.isEmpty()) {
+            throw new UserValidationException(validationErrors);
         }
 
         user.setUserPhoto(ImageUtil.createImage(photo, UPLOAD_DIRECTORY, "/upload/user/"));
