@@ -22,8 +22,12 @@ public class UserService {
 
     @Transactional
     public void createUser(User user) {
-        if (userRepository.findByUserNameLogin(user.getUserNameLogin()).isPresent()) {
-            throw new IllegalArgumentException("Username already exists: " + user.getUserNameLogin());
+        if (userRepository.findByUserName(user.getUserName()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists: " + user.getUserName());
+        }
+
+        if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists: " + user.getUserEmail());
         }
 
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
