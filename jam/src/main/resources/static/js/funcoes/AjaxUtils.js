@@ -41,12 +41,12 @@ function apiRequest(type, route, data, ct) {
             var raw = xhr.responseText;
             var parsed;
             if (raw) {
-                try { parsed = JSON.parse(raw); } catch (e) { parsed = undefined; }
+                try { parsed = JSON.parse(raw); } catch (e) { parsed = null; }
             }
             if (status >= 200 && status < 300) {
                 deferred.resolve({ status: status, data: parsed });
             } else {
-                deferred.reject({ status: status, error: xhr.statusText });
+                deferred.reject({ status: status, data: parsed, error: xhr.statusText });
             }
         }
     });

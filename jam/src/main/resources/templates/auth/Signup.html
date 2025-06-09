@@ -45,7 +45,7 @@
                             id="username"
                             name="username"
                             type="text"
-                            placeholder="ex: fulano123"
+                            placeholder="ex: pinguim"
                             th:classappend="${param.error} ? ' error' : ''"
                         />
                         <p id="usernameError" class="error-message"></p>
@@ -57,7 +57,7 @@
                             id="email"
                             name="email"
                             type="email"
-                            placeholder="seu@email.com"
+                            placeholder="ex: seu@email.com"
                             th:classappend="${param.error} ? ' error' : ''"
                         />
                         <p id="emailError" class="error-message"></p>
@@ -72,6 +72,17 @@
                             th:classappend="${param.error} ? ' error' : ''"
                         />
                         <p id="passwordError" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Confirmar Senha</label>
+                        <input
+                            id="passwordConfirm"
+                            name="passwordConfirm"
+                            type="password"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="passwordConfirmError" class="error-message"></p>
                     </div>
 
                     <button
