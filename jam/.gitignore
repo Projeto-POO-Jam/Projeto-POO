@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 application-local.properties
+**/upload/user/*
+!**/upload/user/.gitkeep
 
 ### STS ###
 .apt_generated
