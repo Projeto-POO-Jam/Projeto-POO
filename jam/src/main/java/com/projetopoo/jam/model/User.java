@@ -12,18 +12,15 @@ public class User {
     private int userId;
 
     @Column(unique = true, nullable = false, length = 60)
-    private String userNameLogin;
+    private String userName;
 
     @Column(nullable = false)
     private String userPassword;
 
-    @Column(nullable = false, length = 60)
-    private String userName;
-
     @Column
     private String userPhoto;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String userEmail;
 
     @OneToMany(mappedBy = "voteUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -36,17 +33,15 @@ public class User {
 
     }
 
-    public User(String userNameLogin, String userPassword, String userName, String userPhoto, String userEmail) {
-        this.userNameLogin = userNameLogin;
+    public User(String userPassword, String userName, String userPhoto, String userEmail) {
         this.userPassword = userPassword;
         this.userName = userName;
         this.userPhoto = userPhoto;
         this.userEmail = userEmail;
     }
 
-    public User(int userId, String userNameLogin, String userPassword, String userName, String userPhoto, String userEmail) {
+    public User(int userId, String userPassword, String userName, String userPhoto, String userEmail) {
         this.userId = userId;
-        this.userNameLogin = userNameLogin;
         this.userPassword = userPassword;
         this.userName = userName;
         this.userPhoto = userPhoto;
@@ -59,14 +54,6 @@ public class User {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getUserNameLogin() {
-        return userNameLogin;
-    }
-
-    public void setUserNameLogin(String userNameLogin) {
-        this.userNameLogin = userNameLogin;
     }
 
     public String getUserPassword() {
