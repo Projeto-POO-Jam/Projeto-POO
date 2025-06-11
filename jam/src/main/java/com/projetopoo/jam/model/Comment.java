@@ -23,13 +23,6 @@ public class Comment {
     private User commentUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Comment parent;
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> replies;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", nullable = false)
     private Game commentGame;
 
@@ -59,22 +52,6 @@ public class Comment {
 
     public void setCommentUser(User commentUser) {
         this.commentUser = commentUser;
-    }
-
-    public Comment getParent() {
-        return parent;
-    }
-
-    public void setParent(Comment parent) {
-        this.parent = parent;
-    }
-
-    public List<Comment> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(List<Comment> replies) {
-        this.replies = replies;
     }
 
     public LocalDateTime getCommentDate() {

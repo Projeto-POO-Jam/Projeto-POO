@@ -39,15 +39,6 @@ public class CommentService {
         }
         comment.setCommentGame(optionalGame.get());
 
-        if(commentRequestDTO.getParentId() != null){
-            Optional<Comment> optionalParent = commentRepository.findById(commentRequestDTO.getParentId());
-            if (optionalParent.isEmpty()) {
-                throw new EntityNotFoundException("Comentário pai com o ID " + commentRequestDTO.getParentId() + " não encontrado.");
-            }
-            comment.setParent(optionalParent.get());
-        }
-
-
         commentRepository.save(comment);
     }
 
