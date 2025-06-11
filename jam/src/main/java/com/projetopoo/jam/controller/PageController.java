@@ -11,7 +11,7 @@ public class PageController {
 
     @GetMapping({"/", "/home"})
     public String home() {
-        return "Home";
+        return "home/home";
     }
 
     @GetMapping("/login")

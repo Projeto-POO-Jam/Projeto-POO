@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/Head :: Head('Entrar')"></head>
+<head th:replace="~{fragments/Head :: Head('Entrar')}"></head>
 <body>
     <main>
         <div class="container">
@@ -104,7 +104,6 @@
         </div>
     </main>
 
-    <script src="js/funcoes/AjaxUtils.js"></script>
-    <script th:src="@{/js/Signup.js}"></script>
+    <script type="module" th:src="@{/js/auth/Signup.js}"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ var BASE_URL = 'http://localhost:8080';
  * @param {string} [ct]          – opcional: contentType; padrão application/json.
  * @returns {Promise}            – resolve {status, data} ou rejeita {status, error}.
  */
-function apiRequest(type, route, data, ct) {
+export function apiRequest(type, route, data, ct) {
     var deferred = $.Deferred();
     var method = type.toUpperCase();
     var url = BASE_URL + '/' + route;
