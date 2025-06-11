@@ -1,12 +1,12 @@
 import { apiRequest } from '../common/AjaxUtils.js';
 import { showSuccess, showError } from '../common/notifications.js';
 import { setupValidation, isFormValid } from '../common/validation.js';
-import { attachImagePreview } from '../common/filePreview.js';
+import { setupImageCrop, getCroppedBlob } from '../common/ImageCropUtils.js';
 
 $(function(){
-    const $form = $('#signupForm');
-    //Preview de avatar
-    attachImagePreview('#avatarInput', '#avatarPreview');
+    const form = $('#signupForm');
+    //Chama função do de editar avatar
+    setupImageCrop();
 
     //Validações
     const validationRules = {
@@ -32,7 +32,7 @@ $(function(){
     setupValidation(validationRules);
 
     //formulario
-    $form.on('submit', async e => {
+    form.on('submit', async e => {
         e.preventDefault();
         if (!isFormValid(validationRules)) return;
 
@@ -45,8 +45,13 @@ $(function(){
         const formData  = new FormData();
         formData .append('user', new Blob([JSON.stringify(userData)], { type: 'application/json' }));
 
-        const file = $('#avatarInput')[0].files[0];
-        if (file) formData .append('userPhoto', file);
+        const blob = cropModal.getCroppedBlob();
+        if (blob) {
+            formData.append('userPhoto', blob, 'avatar.jpg');
+        } else {
+            const file = $('#avatarInput')[0].files[0];
+            if (file) formData.append('userPhoto', file);
+        }
 
         apiRequest('POST', 'api/users', formData, false)
             .then(response => {

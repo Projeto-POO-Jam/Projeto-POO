@@ -3,7 +3,7 @@ import { showError } from '../common/notifications.js';
 import { setupValidation, isFormValid } from '../common/validation.js';
 
 $(function() {
-    const $form = $('#loginForm');
+    const form = $('#loginForm');
 
     //Validação
     const validationRules = {
@@ -17,7 +17,7 @@ $(function() {
     setupValidation(validationRules);
 
     //formulario
-    $form.on('submit', function(e) {
+    form.on('submit', function(e) {
         e.preventDefault();
         if (!isFormValid(validationRules)) return;
 
