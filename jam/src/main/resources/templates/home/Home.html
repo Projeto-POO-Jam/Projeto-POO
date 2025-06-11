@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/Head :: Head('Entrar')"></head>
+<head th:replace="~{fragments/Head :: Head('Entrar')}"></head>
 <body>
     <div th:replace="fragments/Menu :: siteMenu"></div>
 
@@ -10,5 +10,5 @@
 
 </body>
 
-<script th:src="@{/js/funcoes/Theme.js}"></script>
+<script th:src="@{/js/common/Theme.js}"></script>
 </html>
