@@ -8,6 +8,7 @@ import com.projetopoo.jam.util.UpdateUtils;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +79,23 @@ public class UserService {
                 "userName", "userPhoto", "userVotes", "userComments");
 
         userRepository.save(existingUser);
+    }
+
+
+    @Transactional(readOnly = true)
+    public User findUser(String identifier) {
+        User user;
+
+        if (identifier.contains("@")) {
+            user = userRepository.findByUserEmail(identifier)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + identifier));
+        } else {
+            user = userRepository.findByUserName(identifier)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + identifier));
+        }
+
+        user.setUserPassword(null);
+        return user;
     }
 
 }
