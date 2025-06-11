@@ -148,3 +148,102 @@ form {
     height: 100%;
     object-fit: cover;
 }
+
+#cropModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#cropModal.active {
+    display: flex;
+}
+
+#cropModal .modal-content {
+    width: 80%;
+    height: 80%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 1rem;
+    border: none;
+    background-color: var(--bg) !important;
+}
+
+#cropModal .cropper-container .cropper-wrap-box,
+#cropModal .cropper-container .cropper-canvas {
+    background-color: var(--bg) !important;
+}
+
+#cropModal .cropper-container {
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+#cropModal .cropper-container .cropper-wrap-box {
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.cropper-container .cropper-bg{
+    border-radius: 1rem !important;
+}
+
+#cropModal img#cropImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+#cropModal .modal-actions {
+    margin: 1rem;
+    text-align: right;
+}
+
+#cropModal .modal-actions button {
+    padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: black;
+    color: #fff;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+#cropModal .modal-actions button:hover {
+    background: #1c1c1c;
+}
+
+#cropModal .modal-actions button.cancel {
+    background: #6c757d;
+}
+
+#cropModal .modal-actions button.cancel:hover {
+    background: #5a6268;
+}
+
+.cropper-face {
+    background-color: transparent !important;
+}
+
+.cropper-modal {
+    opacity: 0.5 !important;
+    border-radius: 1rem !important;
+    background-color: var(--bg) !important;
+}
