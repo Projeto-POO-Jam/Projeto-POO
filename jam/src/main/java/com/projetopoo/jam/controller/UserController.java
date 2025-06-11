@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,15 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @GetMapping
+    public ResponseEntity<User> findUser(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userService.findUser(principal.getName());
+        return ResponseEntity.ok(user);
+    }
 
     @PostMapping
     public ResponseEntity<?> createUser(
