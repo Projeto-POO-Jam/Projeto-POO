@@ -10,7 +10,7 @@ import java.util.List;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int commentId;
+    private long commentId;
 
     @Column(length = 300, nullable = false)
     private String commentText;
@@ -30,11 +30,11 @@ public class Comment {
 
     }
 
-    public int getCommentId() {
+    public long getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(int commentId) {
+    public void setCommentId(long commentId) {
         this.commentId = commentId;
     }
 

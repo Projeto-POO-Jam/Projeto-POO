@@ -3,11 +3,13 @@ package com.projetopoo.jam.service;
 import com.projetopoo.jam.dto.CommentRequestDTO;
 import com.projetopoo.jam.model.Comment;
 import com.projetopoo.jam.model.Game;
+import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.CommentRepository;
 import com.projetopoo.jam.repository.GameRepository;
 import com.projetopoo.jam.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,23 @@ public class CommentService {
         comment.setCommentGame(optionalGame.get());
 
         commentRepository.save(comment);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId, String identifier) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isEmpty()) {
+            throw new EntityNotFoundException("Comentário com o ID " + commentId + " não encontrado.");
+        }
+        Comment comment = optionalComment.get();
+
+        User requestingUser = userRepository.findByIdentifier(identifier);
+
+        if (!(comment.getCommentUser().getUserId() == requestingUser.getUserId())) {
+            throw new AccessDeniedException("Usuário não autorizado a excluir este comentário.");
+        }
+
+        commentRepository.delete(comment);
     }
 
 }
