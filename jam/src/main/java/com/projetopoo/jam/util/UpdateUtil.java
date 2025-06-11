@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class UpdateUtils {
+public class UpdateUtil {
     /**
      * Copia as propriedades não nulas de um objeto de origem para um objeto de destino.
      *

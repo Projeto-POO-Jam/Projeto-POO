@@ -4,11 +4,10 @@ import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
 import com.projetopoo.jam.util.ImageUtil;
-import com.projetopoo.jam.util.UpdateUtils;
+import com.projetopoo.jam.util.UpdateUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,7 +74,7 @@ public class UserService {
             ImageUtil.deleteImage(oldPhotoPath);
         }
 
-        UpdateUtils.copyNonNullProperties(user, existingUser,
+        UpdateUtil.copyNonNullProperties(user, existingUser,
                 "userName", "userPhoto", "userVotes", "userComments");
 
         userRepository.save(existingUser);
@@ -83,17 +82,31 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public User findUser(String identifier) {
+    public User findByIdentifier(String identifier) {
         User user;
 
         if (identifier.contains("@")) {
-            user = userRepository.findByUserEmail(identifier)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + identifier));
+            Optional<User> optionalUser = userRepository.findByUserEmail(identifier);
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
+            } else {
+                throw new EntityNotFoundException("User not found with email: " + identifier);
+            }
         } else {
-            user = userRepository.findByUserName(identifier)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + identifier));
+            Optional<User> optionalUser = userRepository.findByUserName(identifier);
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
+            } else {
+                throw new EntityNotFoundException("User not found with username: " + identifier);
+            }
         }
 
+        return user;
+    }
+
+    @Transactional(readOnly = true)
+    public User findUser(String identifier) {
+        User user = findByIdentifier(identifier);
         user.setUserPassword(null);
         return user;
     }

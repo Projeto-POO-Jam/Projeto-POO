@@ -3,6 +3,7 @@ package com.projetopoo.jam.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "comments")
@@ -14,15 +15,19 @@ public class Comment {
     @Column(length = 300, nullable = false)
     private String commentText;
 
+    @Column(nullable = false)
+    private LocalDateTime commentDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User commentUser;
 
-    @Column(nullable = false)
-    private String commentParentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
 
-    @Column(nullable = false)
-    private LocalDateTime commentDate;
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> replies;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", nullable = false)
@@ -56,12 +61,20 @@ public class Comment {
         this.commentUser = commentUser;
     }
 
-    public String getCommentParentId() {
-        return commentParentId;
+    public Comment getParent() {
+        return parent;
     }
 
-    public void setCommentParentId(String commentParentId) {
-        this.commentParentId = commentParentId;
+    public void setParent(Comment parent) {
+        this.parent = parent;
+    }
+
+    public List<Comment> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<Comment> replies) {
+        this.replies = replies;
     }
 
     public LocalDateTime getCommentDate() {
