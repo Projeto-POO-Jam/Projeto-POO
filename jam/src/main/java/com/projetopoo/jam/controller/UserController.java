@@ -1,6 +1,7 @@
 package com.projetopoo.jam.controller;
 
 import ch.qos.logback.classic.encoder.JsonEncoder;
+import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.exception.UserValidationException;
@@ -23,11 +24,11 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<User> findUser(Principal principal) {
+    public ResponseEntity<UserResponseDTO> findUser(Principal principal) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User user = userService.findUser(principal.getName());
+        UserResponseDTO user = userService.findUser(principal.getName());
         return ResponseEntity.ok(user);
     }
 

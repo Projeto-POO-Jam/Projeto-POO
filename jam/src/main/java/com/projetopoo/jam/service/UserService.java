@@ -1,5 +1,7 @@
 package com.projetopoo.jam.service;
 
+import com.projetopoo.jam.dto.CommentResponseDTO;
+import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
@@ -7,6 +9,7 @@ import com.projetopoo.jam.util.ImageUtil;
 import com.projetopoo.jam.util.UpdateUtil;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ModelMapper modelMapper;
 
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/upload/user";
 
@@ -105,10 +110,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public User findUser(String identifier) {
+    public UserResponseDTO findUser(String identifier) {
         User user = findByIdentifier(identifier);
-        user.setUserPassword(null);
-        return user;
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 
 }
