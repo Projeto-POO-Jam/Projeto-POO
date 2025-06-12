@@ -92,6 +92,7 @@ public class UserService {
             existingUser.setUserPhoto(newPhotoPath);
 
             ImageUtil.deleteImage(oldPhotoPath);
+            user.setUserPhoto(null);
         }
 
         modelMapper.map(user, existingUser);
