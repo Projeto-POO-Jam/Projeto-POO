@@ -1,20 +1,27 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.CommentRequestDTO;
+import com.projetopoo.jam.dto.CommentResponseDTO;
 import com.projetopoo.jam.model.Comment;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.CommentRepository;
 import com.projetopoo.jam.repository.GameRepository;
 import com.projetopoo.jam.repository.UserRepository;
+
 import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.modelmapper.ModelMapper;
+
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -25,6 +32,8 @@ public class CommentService {
     private GameRepository gameRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Transactional
     public void createComment(CommentRequestDTO commentRequestDTO, String identifier) {
@@ -59,6 +68,14 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
+    }
+
+    @Transactional
+    public List<CommentResponseDTO> findCommentsList(Long gameId) {
+        List<Comment> comments = commentRepository.findByCommentGame_GameId(gameId);
+        return comments.stream()
+                .map(comment -> modelMapper.map(comment, CommentResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
 }
