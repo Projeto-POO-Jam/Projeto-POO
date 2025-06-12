@@ -7,6 +7,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "comments")
+@NamedEntityGraph(
+        name = "CommentWithUser",
+        attributeNodes = {
+                @NamedAttributeNode("commentUser")
+        }
+)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

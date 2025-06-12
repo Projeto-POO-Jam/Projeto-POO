@@ -1,6 +1,7 @@
 package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.CommentRequestDTO;
+import com.projetopoo.jam.dto.CommentResponseDTO;
 import com.projetopoo.jam.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,19 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
     @Autowired
     private CommentService commentService;
+
+    @GetMapping("/list/{gameId}")
+    public ResponseEntity<List<CommentResponseDTO>> findCommentsList(@PathVariable Long gameId) {
+        List<CommentResponseDTO> comments = commentService.findCommentsList(gameId);
+        return ResponseEntity.ok(comments);
+    }
 
     @PostMapping
     public ResponseEntity<?> createComment(@RequestBody CommentRequestDTO commentRequestDTO, Principal principal) {
