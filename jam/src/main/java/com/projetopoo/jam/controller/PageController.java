@@ -11,7 +11,7 @@ public class PageController {
 
     @GetMapping({"/", "/home"})
     public String home() {
-        return "home/home";
+        return "pages/home";
     }
 
     @GetMapping("/login")
@@ -20,13 +20,12 @@ public class PageController {
         if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
             return "redirect:/home";
         }
-
-        return "auth/Login";
+        return "auth/login";
     }
 
     @GetMapping("/signup")
     public String signup() {
-        return "auth/Signup";
+        return "auth/signup";
     }
 
 }

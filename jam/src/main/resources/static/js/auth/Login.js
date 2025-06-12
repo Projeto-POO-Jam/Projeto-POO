@@ -1,4 +1,4 @@
-import { apiRequest } from '../common/AjaxUtils.js';
+import { apiRequest } from '../common/api.js';
 import { showError } from '../common/notifications.js';
 import { setupValidation, isFormValid } from '../common/validation.js';
 

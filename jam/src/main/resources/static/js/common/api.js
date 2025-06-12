@@ -19,7 +19,7 @@ export function apiRequest(type, route, data, ct) {
     var processData = true;
 
     if (data instanceof FormData) {
-        sendData   = data;
+        sendData = data;
         processData = false;
         contentType = false;
     } else if (contentType.indexOf('application/json') === 0) {
