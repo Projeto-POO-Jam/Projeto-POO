@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/Head :: Head('Entrar')}"></head>
+<head th:replace="~{fragments/head :: Head('Entrar')}"></head>
 <body>
     <main>
         <div class="container">
@@ -13,7 +13,7 @@
                 </div>
 
                 <form id="signupForm" action="/signup" method="post" enctype="multipart/form-data" novalidate>
-                    <div th:replace="~{fragments/ImageCropComponent :: imageCrop}"></div>
+                    <div th:replace="~{fragments/imageCropComponent :: imageCrop}"></div>
 
                     <div class="form-group">
                         <label for="username">Nome de usuário</label>
@@ -80,6 +80,6 @@
         </div>
     </main>
 
-    <script type="module" th:src="@{/js/auth/Signup.js}"></script>
+    <script type="module" th:src="@{/js/auth/signup.js}"></script>
 </body>
 </html>

@@ -167,8 +167,8 @@ form {
 }
 
 #cropModal .modal-content {
-    width: 80%;
-    height: 80%;
+    width: 60%;
+    height: 70%;
     overflow: hidden;
     display: flex;
     flex-direction: column;

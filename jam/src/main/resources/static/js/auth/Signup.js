@@ -1,7 +1,7 @@
-import { apiRequest } from '../common/AjaxUtils.js';
+import { apiRequest } from '../common/api.js';
 import { showSuccess, showError } from '../common/notifications.js';
 import { setupValidation, isFormValid } from '../common/validation.js';
-import { setupImageCrop, getCroppedBlob } from '../common/ImageCropUtils.js';
+import { setupImageCrop } from '../common/imageCropUtils.js';
 
 $(function(){
     const form = $('#signupForm');
