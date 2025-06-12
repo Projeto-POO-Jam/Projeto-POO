@@ -19,9 +19,6 @@ public class Vote {
     @JoinColumn(name = "game_id", nullable = false)
     private Game voteGame;
 
-    @Column(nullable = false)
-    private int voteScore;
-
     public Vote() {
 
     }
@@ -48,13 +45,5 @@ public class Vote {
 
     public void setGame(Game game) {
         this.voteGame = game;
-    }
-
-    public int getVoteScore() {
-        return voteScore;
-    }
-
-    public void setVoteScore(int voteScore) {
-        this.voteScore = voteScore;
     }
 }

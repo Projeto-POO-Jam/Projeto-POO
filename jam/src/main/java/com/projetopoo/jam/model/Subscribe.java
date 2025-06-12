@@ -3,7 +3,9 @@ package com.projetopoo.jam.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "subscribes")
+@Table(name = "subscribes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "jam_id"})
+})
 public class Subscribe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
