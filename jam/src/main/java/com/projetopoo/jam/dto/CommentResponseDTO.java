@@ -5,7 +5,7 @@ import com.projetopoo.jam.model.User;
 import java.time.LocalDateTime;
 
 public class CommentResponseDTO {
-    private long commentId;
+    private Long commentId;
     private String commentText;
     private LocalDateTime commentDate;
     private UserResponseDTO commentUser;
@@ -14,11 +14,11 @@ public class CommentResponseDTO {
 
     }
 
-    public long getCommentId() {
+    public Long getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(long commentId) {
+    public void setCommentId(Long commentId) {
         this.commentId = commentId;
     }
 

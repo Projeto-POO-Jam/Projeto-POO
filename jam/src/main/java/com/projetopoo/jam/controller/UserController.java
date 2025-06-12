@@ -1,9 +1,7 @@
 package com.projetopoo.jam.controller;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.dto.UserResquestDTO;
-import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.exception.UserValidationException;
 
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;

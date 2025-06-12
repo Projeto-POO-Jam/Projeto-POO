@@ -16,7 +16,7 @@ import java.util.List;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long commentId;
+    private Long commentId;
 
     @Column(length = 300, nullable = false)
     private String commentText;
@@ -36,11 +36,11 @@ public class Comment {
 
     }
 
-    public long getCommentId() {
+    public Long getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(long commentId) {
+    public void setCommentId(Long commentId) {
         this.commentId = commentId;
     }
 
