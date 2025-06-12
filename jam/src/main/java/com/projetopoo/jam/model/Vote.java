@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long voteId;
+    private Long voteId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -23,11 +23,11 @@ public class Vote {
 
     }
 
-    public long getVoteId() {
+    public Long getVoteId() {
         return voteId;
     }
 
-    public void setVoteId(long voteId) {
+    public void setVoteId(Long voteId) {
         this.voteId = voteId;
     }
 

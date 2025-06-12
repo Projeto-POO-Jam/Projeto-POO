@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class Subscribe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long subscribeId;
+    private Long subscribeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -27,11 +27,11 @@ public class Subscribe {
 
     }
 
-    public long getSubscribeId() {
+    public Long getSubscribeId() {
         return subscribeId;
     }
 
-    public void setSubscribeId(long subscribeId) {
+    public void setSubscribeId(Long subscribeId) {
         this.subscribeId = subscribeId;
     }
 

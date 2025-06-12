@@ -2,6 +2,7 @@ package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.CommentResponseDTO;
 import com.projetopoo.jam.dto.UserResponseDTO;
+import com.projetopoo.jam.dto.UserResquestDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
@@ -34,8 +35,10 @@ public class UserService {
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/upload/user";
 
     @Transactional
-    public void createUser(User user, MultipartFile photo) throws IOException {
+    public void createUser(UserResquestDTO userResquestDTO) throws IOException {
         List<String> validationErrors = new ArrayList<>();
+
+        User user = modelMapper.map(userResquestDTO, User.class);
 
         if (userRepository.findByUserName(user.getUserName()).isPresent()) {
             validationErrors.add("USERNAME_EXISTS");
@@ -49,69 +52,57 @@ public class UserService {
             throw new UserValidationException(validationErrors);
         }
 
-        user.setUserPhoto(ImageUtil.createImage(photo, UPLOAD_DIRECTORY, "/upload/user/"));
+        user.setUserPhoto(ImageUtil.createImage(userResquestDTO.getUserPhoto(), UPLOAD_DIRECTORY, "/upload/user/"));
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
         userRepository.save(user);
     }
 
     @Transactional
-    public void updateUser(User user, MultipartFile photo) throws IOException {
-        Optional<User> optionalUser = userRepository.findById(user.getUserId());
-        User existingUser;
+    public void updateUser(UserResquestDTO user, String identifier) throws IOException {
+        List<String> validationErrors = new ArrayList<>();
+
+        User existingUser = userRepository.findByIdentifier(identifier);
 
         if (user.getUserPassword() != null) {
             user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
         }
 
-        if (optionalUser.isPresent()) {
-            existingUser = optionalUser.get();
-        } else {
-            throw new EntityNotFoundException("User not found with id: " + user.getUserId());
+        if (user.getUserName() != null && !user.getUserName().equals(existingUser.getUserName())) {
+            if (userRepository.findByUserName(user.getUserName()).isPresent()) {
+                validationErrors.add("USERNAME_EXISTS");
+            }
         }
 
-        if (photo != null && !photo.isEmpty()) {
+        if (user.getUserEmail() != null && !user.getUserEmail().equals(existingUser.getUserEmail())) {
+            if (userRepository.findByUserEmail(user.getUserEmail()).isPresent()) {
+                validationErrors.add("EMAIL_EXISTS");
+            }
+        }
+
+        if (!validationErrors.isEmpty()) {
+            throw new UserValidationException(validationErrors);
+        }
+
+
+        if (user.getUserPhoto() != null && !user.getUserPhoto().isEmpty()) {
             String oldPhotoPath = existingUser.getUserPhoto();
 
-            String newPhotoPath = ImageUtil.createImage(photo, UPLOAD_DIRECTORY, "/upload/user/");
+            String newPhotoPath = ImageUtil.createImage(user.getUserPhoto(), UPLOAD_DIRECTORY, "/upload/user/");
             existingUser.setUserPhoto(newPhotoPath);
 
             ImageUtil.deleteImage(oldPhotoPath);
+            user.setUserPhoto(null);
         }
 
-        UpdateUtil.copyNonNullProperties(user, existingUser,
-                "userName", "userPhoto", "userVotes", "userComments");
+        modelMapper.map(user, existingUser);
 
         userRepository.save(existingUser);
     }
 
-
-    @Transactional(readOnly = true)
-    public User findByIdentifier(String identifier) {
-        User user;
-
-        if (identifier.contains("@")) {
-            Optional<User> optionalUser = userRepository.findByUserEmail(identifier);
-            if (optionalUser.isPresent()) {
-                user = optionalUser.get();
-            } else {
-                throw new EntityNotFoundException("User not found with email: " + identifier);
-            }
-        } else {
-            Optional<User> optionalUser = userRepository.findByUserName(identifier);
-            if (optionalUser.isPresent()) {
-                user = optionalUser.get();
-            } else {
-                throw new EntityNotFoundException("User not found with username: " + identifier);
-            }
-        }
-
-        return user;
-    }
-
     @Transactional(readOnly = true)
     public UserResponseDTO findUser(String identifier) {
-        User user = findByIdentifier(identifier);
+        User user = userRepository.findByIdentifier(identifier);
         return modelMapper.map(user, UserResponseDTO.class);
     }
 

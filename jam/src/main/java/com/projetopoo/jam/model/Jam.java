@@ -11,7 +11,7 @@ public class Jam {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int jamId;
+    private Integer jamId;
 
     @Column(length = 60, nullable = false)
     private String jamTitle;
@@ -46,11 +46,11 @@ public class Jam {
 
     }
 
-    public int getJamId() {
+    public Integer getJamId() {
         return jamId;
     }
 
-    public void setJamId(int jamId) {
+    public void setJamId(Integer jamId) {
         this.jamId = jamId;
     }
 

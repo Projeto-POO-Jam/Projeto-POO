@@ -1,7 +1,7 @@
 package com.projetopoo.jam.dto;
 
 public class UserResponseDTO {
-    private int userId;
+    private Integer userId;
     private String userName;
     private String userPhoto;
     private String userEmail;
@@ -10,11 +10,11 @@ public class UserResponseDTO {
 
     }
 
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
