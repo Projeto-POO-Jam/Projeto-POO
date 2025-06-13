@@ -1,6 +1,8 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.UserResponseDTO;
+import com.projetopoo.jam.dto.VoteRequestDTO;
+import com.projetopoo.jam.dto.VoteTotalResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.Comment;
 import com.projetopoo.jam.model.Game;
@@ -55,6 +57,13 @@ public class VoteService {
             voteRepository.save(vote);
             return true;
         }
+    }
+
+    @Transactional
+    public VoteTotalResponseDTO totalVotes(VoteRequestDTO voteRequestDTO) {
+        VoteTotalResponseDTO voteTotalResponseDTO = new VoteTotalResponseDTO();
+        voteTotalResponseDTO.setVoteTotal(voteRepository.countByVoteGame_GameId(voteRequestDTO.getGameId()));
+        return voteTotalResponseDTO;
     }
 
 }
