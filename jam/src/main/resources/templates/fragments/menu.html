@@ -3,15 +3,24 @@
     <div th:fragment="siteMenu">
         <header class="site-header">
             <h1 class="site-title">MeuApp</h1>
-            <button
-                onclick="toggleTheme()"
-                class="theme-toggle"
-                aria-label="Alternar tema claro/escuro"
-            >
+            <section class="options-menu">
+                <button
+                    onclick="toggleTheme()"
+                    class="theme-toggle"
+                    aria-label="Alternar tema claro/escuro"
+                >
                 <span id="theme-icon" class="theme-icon material-symbols-outlined">
                     light_mode
                 </span>
-            </button>
+                </button>
+
+                <div class="img-user-menu">
+                    <img data-field="userPhoto" data-default="/images/default-avatar.png" alt="Avatar do usuário"/>
+                </div>
+            </section>
+
         </header>
+
+        <script type="module" th:src="@{/js/pages/fragments/menu.js}"></script>
     </div>
 </html>
