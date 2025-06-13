@@ -2,6 +2,7 @@ package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.dto.VoteRequestDTO;
+import com.projetopoo.jam.dto.VoteTotalResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.service.UserService;
@@ -36,6 +37,12 @@ public class VoteController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<VoteTotalResponseDTO> totalVotes(@RequestBody VoteRequestDTO voteRequest) {
+        VoteTotalResponseDTO voteTotalResponseDTO = voteService.totalVotes(voteRequest);
+        return ResponseEntity.ok(voteTotalResponseDTO);
     }
 
 }
