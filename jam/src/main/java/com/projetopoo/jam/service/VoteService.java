@@ -2,6 +2,9 @@ package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.VoteRequestDTO;
 import com.projetopoo.jam.dto.VoteResponseDTO;
+import com.projetopoo.jam.dto.UserResponseDTO;
+import com.projetopoo.jam.dto.VoteRequestDTO;
+import com.projetopoo.jam.dto.VoteTotalResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.Vote;
@@ -71,6 +74,13 @@ public class VoteService {
         }
         vote.setGame(optionalGame.get());
         return vote;
+    }
+  
+    @Transactional
+    public VoteTotalResponseDTO totalVotes(VoteRequestDTO voteRequestDTO) {
+        VoteTotalResponseDTO voteTotalResponseDTO = new VoteTotalResponseDTO();
+        voteTotalResponseDTO.setVoteTotal(voteRepository.countByVoteGame_GameId(voteRequestDTO.getGameId()));
+        return voteTotalResponseDTO;
     }
 
 }

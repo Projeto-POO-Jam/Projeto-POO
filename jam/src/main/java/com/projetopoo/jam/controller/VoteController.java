@@ -2,6 +2,10 @@ package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.VoteRequestDTO;
 import com.projetopoo.jam.dto.VoteResponseDTO;
+import com.projetopoo.jam.dto.VoteTotalResponseDTO;
+import com.projetopoo.jam.exception.UserValidationException;
+import com.projetopoo.jam.model.User;
+import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.service.VoteService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,12 @@ public class VoteController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<VoteTotalResponseDTO> totalVotes(@RequestBody VoteRequestDTO voteRequest) {
+        VoteTotalResponseDTO voteTotalResponseDTO = voteService.totalVotes(voteRequest);
+        return ResponseEntity.ok(voteTotalResponseDTO);
     }
 
 }
