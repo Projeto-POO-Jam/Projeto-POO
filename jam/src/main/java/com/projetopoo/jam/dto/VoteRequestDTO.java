@@ -1,13 +1,13 @@
 package com.projetopoo.jam.dto;
 
 public class VoteRequestDTO {
-    private Long gameId;
+    private Long voteGameId;
 
-    public Long getGameId() {
-        return gameId;
+    public Long getVoteGameId() {
+        return voteGameId;
     }
 
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
+    public void setVoteGameId(Long voteGameId) {
+        this.voteGameId = voteGameId;
     }
 }

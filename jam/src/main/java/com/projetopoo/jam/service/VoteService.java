@@ -33,7 +33,7 @@ public class VoteService {
         VoteResponseDTO voteResponseDTO = new VoteResponseDTO();
 
         Vote vote = getVote(voteRequestDTO, identifier);
-        Optional<Vote> optionalVote = voteRepository.findByVoteUserAndVoteGame(vote.getUser(), vote.getGame());
+        Optional<Vote> optionalVote = voteRepository.findByVoteUserAndVoteGame(vote.getVoteUser(), vote.getVoteGame());
 
         if(optionalVote.isPresent()) {
             voteResponseDTO.setVoted(true);
@@ -49,7 +49,7 @@ public class VoteService {
         VoteResponseDTO voteResponseDTO = new VoteResponseDTO();
 
         Vote vote = getVote(voteRequestDTO, identifier);
-        Optional<Vote> optionalVote = voteRepository.findByVoteUserAndVoteGame(vote.getUser(), vote.getGame());
+        Optional<Vote> optionalVote = voteRepository.findByVoteUserAndVoteGame(vote.getVoteUser(), vote.getVoteGame());
 
         if(optionalVote.isPresent()) {
             voteRepository.delete(optionalVote.get());
@@ -66,20 +66,20 @@ public class VoteService {
     public Vote getVote(VoteRequestDTO voteRequestDTO, String identifier) {
         Vote vote = new Vote();
 
-        vote.setUser(userRepository.findByIdentifier(identifier));
+        vote.setVoteUser(userRepository.findByIdentifier(identifier));
 
-        Optional<Game> optionalGame = gameRepository.findByGameId(voteRequestDTO.getGameId());
+        Optional<Game> optionalGame = gameRepository.findByGameId(voteRequestDTO.getVoteGameId());
         if (optionalGame.isEmpty()) {
-            throw new EntityNotFoundException("Jogo com o ID " + voteRequestDTO.getGameId() + " não encontrado.");
+            throw new EntityNotFoundException("Jogo com o ID " + voteRequestDTO.getVoteGameId() + " não encontrado.");
         }
-        vote.setGame(optionalGame.get());
+        vote.setVoteGame(optionalGame.get());
         return vote;
     }
   
     @Transactional
     public VoteTotalResponseDTO totalVotes(VoteRequestDTO voteRequestDTO) {
         VoteTotalResponseDTO voteTotalResponseDTO = new VoteTotalResponseDTO();
-        voteTotalResponseDTO.setVoteTotal(voteRepository.countByVoteGame_GameId(voteRequestDTO.getGameId()));
+        voteTotalResponseDTO.setVoteTotal(voteRepository.countByVoteGame_GameId(voteRequestDTO.getVoteGameId()));
         return voteTotalResponseDTO;
     }
 
