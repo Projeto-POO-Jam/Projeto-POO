@@ -1,9 +1,6 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.SubscribeRequestDTO;
-import com.projetopoo.jam.dto.SubscribeResponseDTO;
-import com.projetopoo.jam.dto.VoteRequestDTO;
-import com.projetopoo.jam.dto.VoteTotalResponseDTO;
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.service.SubscribeService;
 import com.projetopoo.jam.service.VoteService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,6 +25,12 @@ public class SubscribeController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity<SubscribeTotalResponseDTO> totalSubscribe(@RequestBody SubscribeRequestDTO subscribeRequestDTO) {
+        SubscribeTotalResponseDTO subscribeTotalResponseDTO = subscribeService.totalSubscribes(subscribeRequestDTO);
+        return ResponseEntity.ok(subscribeTotalResponseDTO);
     }
 
 }

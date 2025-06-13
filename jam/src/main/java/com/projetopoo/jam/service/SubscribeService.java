@@ -1,7 +1,6 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.SubscribeRequestDTO;
-import com.projetopoo.jam.dto.SubscribeResponseDTO;
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.Subscribe;
@@ -54,6 +53,13 @@ public class SubscribeService {
         }
         subscribe.setSubscribeJam(optionalJam.get());
         return subscribe;
+    }
+
+    @Transactional
+    public SubscribeTotalResponseDTO totalSubscribes(SubscribeRequestDTO subscribeRequestDTO) {
+        SubscribeTotalResponseDTO subscribeTotalResponseDTO = new SubscribeTotalResponseDTO();
+        subscribeTotalResponseDTO.setSubscribeTotal(subscribeRepository.countBySubscribeJam_JamId(subscribeRequestDTO.getSubscribeJamId()));
+        return subscribeTotalResponseDTO;
     }
 
 }

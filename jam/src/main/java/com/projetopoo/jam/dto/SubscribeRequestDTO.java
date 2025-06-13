@@ -1,13 +1,13 @@
 package com.projetopoo.jam.dto;
 
 public class SubscribeRequestDTO {
-    private Integer subscribeJamId;
+    private Long subscribeJamId;
 
-    public Integer getSubscribeJamId() {
+    public Long getSubscribeJamId() {
         return subscribeJamId;
     }
 
-    public void setSubscribeJamId(Integer subscribeJamId) {
+    public void setSubscribeJamId(Long subscribeJamId) {
         this.subscribeJamId = subscribeJamId;
     }
 }
