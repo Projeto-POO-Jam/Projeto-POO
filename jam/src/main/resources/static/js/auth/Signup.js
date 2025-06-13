@@ -1,22 +1,22 @@
 import { apiRequest } from '../common/api.js';
 import { showSuccess, showError } from '../common/notifications.js';
 import { setupValidation, isFormValid } from '../common/validation.js';
-import { setupImageCrop } from '../common/imageCropUtils.js';
+import { setupImageCrop, getCroppedBlob } from '../common/imageCropUtils.js';
 
-$(function(){
+$(function() {
     const form = $('#signupForm');
-    //Chama função do de editar avatar
+    //Editor de imagem
     setupImageCrop();
 
-    //Validações
+    //Validação
     const validationRules = {
         username: [
-            {validate: value => value.trim() !== '',  message: 'Nome de usuário é obrigatório.'},
-            {validate: value => !value.includes(' '), message: 'Não pode conter espaços.'}
+            { validate: value => value.trim() !== '', message: 'Nome de usuário é obrigatório.' },
+            { validate: value => !value.includes(' '), message: 'Não pode conter espaços.' }
         ],
         email: [
-            { validate: value => value.trim() !== '', message: 'E-mail obrigatório.'},
-            { validate: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), message: 'Formato de e-mail inválido.'}
+            { validate: value => value.trim() !== '', message: 'E-mail obrigatório.' },
+            { validate: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), message: 'Formato de e-mail inválido.' }
         ],
         password: [
             { validate: value => value.length >= 8, message: 'Mínimo 8 caracteres.' },
@@ -25,32 +25,24 @@ $(function(){
             { validate: value => /\d/.test(value), message: 'Pelo menos 1 número.' }
         ],
         passwordConfirm: [
-            { validate: value => value === $('#password').val(), message: 'As senhas não coincidem.'}
+            { validate: value => value === $('#password').val(), message: 'As senhas não coincidem.' }
         ]
     };
-
     setupValidation(validationRules);
 
-    //formulario
+    //Formulário
     form.on('submit', async e => {
         e.preventDefault();
         if (!isFormValid(validationRules)) return;
 
-        const userData = {
-            userName:  $('#username').val().trim(),
-            userEmail: $('#email').val().trim(),
-            userPassword: $('#password').val()
-        };
+        const formData = new FormData(form[0]);
+        formData.set('userName', $.trim($('#username').val()));
+        formData.set('userEmail', $.trim($('#email').val()));
+        formData.set('userPassword', $('#password').val());
 
-        const formData  = new FormData();
-        formData .append('user', new Blob([JSON.stringify(userData)], { type: 'application/json' }));
-
-        const blob = cropModal.getCroppedBlob();
-        if (blob) {
-            formData.append('userPhoto', blob, 'avatar.jpg');
-        } else {
-            const file = $('#avatarInput')[0].files[0];
-            if (file) formData.append('userPhoto', file);
+        const croppedBlob = getCroppedBlob();
+        if (croppedBlob instanceof Blob) {
+            formData.set('userPhoto', croppedBlob, 'avatar.jpg');
         }
 
         apiRequest('POST', 'api/users', formData, false)
