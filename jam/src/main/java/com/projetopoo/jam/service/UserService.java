@@ -1,26 +1,21 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.CommentResponseDTO;
 import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.dto.UserResquestDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
 import com.projetopoo.jam.util.ImageUtil;
-import com.projetopoo.jam.util.UpdateUtil;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
