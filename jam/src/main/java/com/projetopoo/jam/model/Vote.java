@@ -31,19 +31,19 @@ public class Vote {
         this.voteId = voteId;
     }
 
-    public User getUser() {
+    public User getVoteUser() {
         return voteUser;
     }
 
-    public void setUser(User user) {
+    public void setVoteUser(User user) {
         this.voteUser = user;
     }
 
-    public Game getGame() {
+    public Game getVoteGame() {
         return voteGame;
     }
 
-    public void setGame(Game game) {
+    public void setVoteGame(Game game) {
         this.voteGame = game;
     }
 }
