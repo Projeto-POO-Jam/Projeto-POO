@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: Head('Página Inicial')}"></head>
+<body>
+    <div th:replace="fragments/menu :: siteMenu"></div>
+
+    <main>
+        <h2 class="titleHome">Página Cadastrar JAM</h2>
+
+        <section class="container-register-jam">
+            <div class="card-jam">
+                <h1>Crie sua Jam</h1>
+                <p>Preencha os campos abaixo para criar sua Jam</p>
+
+                <div th:if="${param.error}" class="alert">
+                    Ocorreu um erro ao criar a jam. Tente novamente.
+                </div>
+
+                <form class="form-Jam" id="createJamForm" action="" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="form-group form-group-jam">
+                        <label for="jamName">Nome da Jam</label>
+                        <input
+                            id="jamName"
+                            name="jamName"
+                            type="text"
+                            placeholder="ex: pinguim"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="jamNameError" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="descricao" class="tooltip" title="testando">Descrição da Jam</label>
+                        <input
+                            id="descricao"
+                            name="descricao"
+                            type="email"
+                            placeholder="ex: seu@email.com"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="startDate">Data início</label>
+                        <input
+                            id="startDate"
+                            name="startDate"
+                            type="datetime-local"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="startDateError" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="endDate">Data final</label>
+                        <input
+                            id="endDate"
+                            name="endDate"
+                            type="datetime-local"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="endDateError" class="error-message"></p>
+                    </div>
+
+                    <div class="division">
+                        <h1>Estilização da pagina</h1>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="content">Conteúdo da Jam (HTML livre)</label>
+                        <textarea id="content" name="content"></textarea>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="coverImg">Imagem Capa</label>
+                        <input
+                            id="coverImg"
+                            name="coverImg"
+                            type="file"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="wallpaperImg">Imagem wallpaper</label>
+                        <input
+                            id="wallpaperImg"
+                            name="wallpaperImg"
+                            type="file"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="bannerImg">Imagem banner</label>
+                        <input
+                            id="bannerImg"
+                            name="bannerImg"
+                            type="file"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                    </div>
+
+                    <button
+                        id="submitButton"
+                        type="submit"
+                        class="submit-button"
+                    >
+                        Criar Jam
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" th:src="@{/js/pages/registerJam.js}"></script>
+</body>
+</html>
