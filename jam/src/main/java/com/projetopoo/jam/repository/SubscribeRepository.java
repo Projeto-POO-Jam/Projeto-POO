@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     Optional<Subscribe> findBySubscribeUserAndSubscribeJam(User subscribeUser, Jam subscribeJam);
+    long countBySubscribeJam_JamId(Long jamId);
 }
