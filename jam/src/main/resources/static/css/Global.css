@@ -30,3 +30,50 @@
         color: var(--primary);
     }
 }
+
+/* skeleton*/
+.skeleton {
+    position: relative !important;
+    overflow: hidden !important;
+    background-color: #555 !important;
+    color: transparent !important;
+    pointer-events: none !important;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -200px;
+    width: 200px;
+    height: 100%;
+    background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.3),
+            transparent
+    );
+    animation: loading-skeleton 1.4s infinite;
+    z-index: 1;
+}
+
+@keyframes loading-skeleton {
+    0% { left: -200px; }
+    100% { left: 100%; }
+}
+
+img.skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #555;
+    z-index: 0;
+}
+
+img.skeleton {
+    color: transparent;
+}
+

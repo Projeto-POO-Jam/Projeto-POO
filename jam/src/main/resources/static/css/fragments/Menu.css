@@ -37,10 +37,12 @@ body.dark .theme-icon {
     color: #f9fafb;
 }
 
-.img-user-menu img{
+.img-user-menu img {
     width: 3rem;
     height: 3rem;
-    border-radius: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
     user-select: none;
     cursor: pointer;
 }
