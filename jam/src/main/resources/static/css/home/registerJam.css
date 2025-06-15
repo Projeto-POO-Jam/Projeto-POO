@@ -1,0 +1,26 @@
+.container-register-jam{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-jam{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-Jam{
+    width: 100%;
+}
+
+.form-group-jam {
+    margin-top: 1rem;
+}
+
+.division{
+    margin: 2rem 1rem;
+}

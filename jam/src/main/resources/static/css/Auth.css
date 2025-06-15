@@ -92,6 +92,7 @@ form {
     border: none;
     border-radius: 0.375rem;
     cursor: pointer;
+    margin: 1rem 0;
 }
 
 .submit-button:hover {

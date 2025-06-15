@@ -14,6 +14,9 @@ public class PageController {
         return "pages/home";
     }
 
+    @GetMapping("/registerJam")
+    public String registerJam() {return "pages/registerJam";}
+
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
