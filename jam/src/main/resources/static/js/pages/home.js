@@ -28,21 +28,27 @@ $(function() {
         const dataInicio = new Date(jam.startDate);
         const dataFim = new Date(jam.endDate);
 
+        const statusText = (hoje >= dataInicio && hoje <= dataFim)
+            ? 'Ocorrendo'
+            : 'Fechada';
+
         const formato = { day: '2-digit', month: '2-digit', year: 'numeric' };
         const inicioStr = dataInicio.toLocaleDateString('pt-BR', formato);
-        const fimStr = dataFim.toLocaleDateString('pt-BR', formato);
+        const fimStr    = dataFim.toLocaleDateString('pt-BR', formato);
 
         const durationHtml = hoje > dataFim
             ? `<p>Essa jam acabou</p>`
-            : ` <div class="duration-jam-card">
-                    <p>Começa no dia ${inicioStr}</p>
-                    <p>Termina no dia ${fimStr}</p>
-                 </div>`;
+            : `
+            <div class="duration-jam-card">
+                <p>Começa no dia ${inicioStr}</p>
+                <p>Termina no dia ${fimStr}</p>
+            </div>
+          `;
 
         const card = `
             <div class="jam-card">
                 <div class="header-jam-card">
-                    <h1 class="status-jam-card">${jam.status}</h1>
+                    <h1 class="status-jam-card">${statusText}</h1>
                     <div class="aling-qtd-members-jam-card">
                         <span class="material-symbols-outlined">account_circle</span>
                         <p>${jam.qtdMembers}</p>
