@@ -11,3 +11,14 @@ export function fetchJamsByMonth(month, offset = 0, limit = 20) {
     return apiRequest('GET', `jam/listaJam?month=${month}&offset=${offset}&limit=${limit}`)
         .then(({ data }) => data);
 }
+
+
+/**
+ * Busca todos os dados da view da Jam
+ * @param {number|string} id – o ID da Jam
+ * @returns {Promise<object>} – o objeto com todos os campos da Jam
+ */
+export function fetchViewJam(id) {
+    return apiRequest('GET', `api/jams/pegaViewJam/${id}`)
+        .then(({ status, data }) => data);
+}
