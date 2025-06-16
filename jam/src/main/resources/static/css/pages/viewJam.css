@@ -1,0 +1,73 @@
+.jam-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.img-cover{
+
+}
+
+.card-view-jam{
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 1rem;
+    padding: 1rem;
+}
+
+.header-jam-card{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.details-jam-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    margin: 1rem;
+}
+
+
+.name-jam{
+
+}
+
+.name-jam h1{
+
+}
+
+.name-jam p{
+
+}
+
+.participants-jam{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.participants-jam h1{
+
+}
+
+.participants-jam p{
+
+}
+
+.options-jam-card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.options-jam-card button{
+    background-color: transparent;
+    border: none;
+    margin: 10px;
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: Head('Página Inicial')}"></head>
+<body>
+    <div th:replace="fragments/menu :: siteMenu"></div>
+
+    <main class="jam-card">
+        <section class="img-cover" id="jam-cover-container"></section>
+
+        <section class="card-view-jam" id="jam-content">
+            <div class="header-jam-card">
+                <div class="details-jam-card">
+                    <div class="name-jam">
+                        <h1 data-field="jamName">Teste</h1>
+                        <p>Criada por: <span data-field="jamCriador"></span></p>
+                    </div>
+                    <div class="participants-jam">
+                        <h1 data-field="jamQtd">0</h1>
+                        <p>Ingressou</p>
+                    </div>
+                </div>
+
+                <div class="options-jam-card">
+                    <button>Geral</button>
+                    <button>hank</button>
+                    <button>jogos</button>
+                </div>
+
+            </div>
+
+            <div class="container-jam-card">
+                <div id="jam-duration-container">
+                    <h1>Teste aqui vai o card contador</h1>
+                </div>
+                <div class="page-user-jam-card">
+                    <!-- Aqui o HTML do usuario -->
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+
+    <script th:src="@{/js/common/theme.js}"></script>
+    <script type="module" th:src="@{/js/pages/viewJam.js}"></script>
+</body>
+</html>
