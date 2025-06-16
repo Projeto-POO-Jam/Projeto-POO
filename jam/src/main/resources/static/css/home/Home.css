@@ -1,68 +1,124 @@
 .titleHome{
     font-size: 20px;
     font-weight: 600;
-    color: var(--text);
     margin: 1rem;
 }
 
-
 /*View Jams*/
 .container-Jams{
-
+    display: flex;
+    width: 100%;
 }
 
 .month-section{
-
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
 }
 
 .month-title{
-
+    font-size: 22px;
+    font-weight: 800;
 }
 
 .cards-container{
-
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
 }
 
 .jam-card{
-
+    width: 15rem;
+    height: 15rem;
+    border-radius: 1rem;
+    box-shadow: -1px 3px 14px 2px rgba(0,0,0,0.75);
+    -webkit-box-shadow: -1px 3px 14px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 3px 14px 2px rgba(0,0,0,0.75);
+    padding: 6px;
 }
 
 .header-jam-card{
-
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .status-jam-card{
-
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--secondary-color);
 }
 
 .aling-qtd-members-jam-card{
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .aling-qtd-members-jam-card span{
-
+    margin-right: 5px;
+    font-size: 20px;
 }
 
 .aling-qtd-members-jam-card p{
-
+    font-size: 20px;
 }
 
 .container-jam-card{
-
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 100%;
 }
 
 .container-jam-card h1{
-
+    font-size: 28px;
+    font-weight: 600;
+    max-width: 13rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .duration-jam-card{
-
+    display: flex;
+    flex-direction: column;
+    align-items: start;
 }
 
 .duration-jam-card p{
-
+    font-size: 14px;
 }
 
-.load-more{
+.jam-btn-wrapper{
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+    width: 100%;
+}
 
+.jam-btn{
+    width: 5rem;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: var(--secondary-color);
+    color: var(--white-color);
+    border-radius: 0.5rem;
+    user-select: none;
+    cursor: pointer;
+}
+
+.jam-btn:hover{
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+
+.load-more{
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--secondary-color);
 }

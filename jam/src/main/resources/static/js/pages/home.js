@@ -34,16 +34,16 @@ $(function() {
 
         const formato = { day: '2-digit', month: '2-digit', year: 'numeric' };
         const inicioStr = dataInicio.toLocaleDateString('pt-BR', formato);
-        const fimStr    = dataFim.toLocaleDateString('pt-BR', formato);
+        const fimStr = dataFim.toLocaleDateString('pt-BR', formato);
 
         const durationHtml = hoje > dataFim
-            ? `<p>Essa jam acabou</p>`
+            ? `<div class="duration-jam-card"><p>Essa jam acabou</p></div>`
             : `
-            <div class="duration-jam-card">
-                <p>Começa no dia ${inicioStr}</p>
-                <p>Termina no dia ${fimStr}</p>
-            </div>
-          `;
+                <div class="duration-jam-card">
+                    <p>Começa no dia ${inicioStr}</p>
+                    <p>Termina no dia ${fimStr}</p>
+                </div>
+            `;
 
         const card = `
             <div class="jam-card">
@@ -62,11 +62,17 @@ $(function() {
         `;
 
         const newCard = $(card);
+
+        const btnWrapper = $('<div>')
+            .addClass('jam-btn-wrapper');
+
         const btn = $('<button>')
             .addClass('jam-btn')
             .text('Ver Jam')
             .on('click', () => window.location.href = `/jams/${jam.id}`);
-        newCard.append(btn);
+
+        btnWrapper.append(btn);
+        newCard.append(btnWrapper);
 
         return newCard;
     }

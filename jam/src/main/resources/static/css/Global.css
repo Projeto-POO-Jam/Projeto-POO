@@ -5,6 +5,8 @@
         --primary: #000000;
         --subText: #4b5563;
         --error: #dc2626;
+        --secondary-color: #5865F2;
+        --white-color: #ffff;
     }
 
     .dark {
