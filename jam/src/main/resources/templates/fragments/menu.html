@@ -1,27 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <div th:fragment="siteMenu">
+
         <header class="site-header">
-            <h1 class="site-title">MeuApp</h1>
-            <section class="options-menu">
+            <img src="" alt="Logo" class="site-logo"></img>
+            <div class="container-menu">
+                <button>Games</button>
+                <button>Explorar Jams</button>
+                <button>Criar Jams</button>
+                <div>
+                    <input type="text" placeholder="Pesquise por Jam">
+                    <span class="material-symbols-outlined">
+                        search
+                    </span>
+                </div>
+            </div>
+            <div class="options-menu">
                 <button
                     onclick="toggleTheme()"
                     class="theme-toggle"
                     aria-label="Alternar tema claro/escuro"
                 >
-                <span id="theme-icon" class="theme-icon material-symbols-outlined">
-                    light_mode
-                </span>
-                </button>
+                    <span id="theme-icon" class="theme-icon material-symbols-outlined">
+                        light_mode
+                    </span>
 
-                <div class="img-user-menu">
-                    <img
-                        data-field="userPhoto"
-                        class="skeleton" data-default="/images/default-avatar.png"
-                        alt="Avatar do usuário"
-                    />
-                </div>
-            </section>
+                </button>
+                <img class="img-user-menu skeleton"
+                     data-field="userPhoto"
+                     data-default="/images/default-avatar.png"
+                     alt="Avatar do usuário"
+                />
+            </div>
+
 
         </header>
 

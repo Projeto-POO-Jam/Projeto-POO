@@ -2,7 +2,8 @@ header.site-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem;
+    height: 3vh;
+    padding: 2rem;
     background-color: #000000;
 }
 
@@ -10,14 +11,29 @@ body.dark header.site-header {
     background-color: #000;
 }
 
-.site-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: white;
+.site-logo {
+    background: red;
+    width: 4rem; height: 4rem;
+    /*
+        Primeira Logo
+        background-image: url("logo1");
+    */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-body.dark .site-title {
-    color: #f9fafb;
+body.dark .site-logo {
+    /*
+        Segunda Logo
+        background-image: url("logo2");
+    */
+}
+
+.container-menu{
+    background: red;
+    display: flex; align-items: center;
+    justify-content: center;
 }
 
 .theme-toggle {
@@ -37,7 +53,7 @@ body.dark .theme-icon {
     color: #f9fafb;
 }
 
-.img-user-menu img {
+.img-user-menu{
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
