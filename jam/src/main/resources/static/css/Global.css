@@ -1,16 +1,24 @@
 @layer base {
     :root {
-        --bg: #ffffff;
-        --text: #000000;
-        --primary: #000000;
         --subText: #4b5563;
         --error: #dc2626;
+        --white: #f3f3f3;
+        --blue: #5865f2;
+        --grey: #3b3b3b;
+        --black: #202020;
+        --text: var(--black);
+        --background-menu: #ffffff;
+        --background: var(--white);
     }
 
     .dark {
-        --bg: #222222;
-        --text: #f9fafb;
-        --primary: #ffffff;
+        --text: var(--white);
+        --white: #f3f3f3;
+        --blue: #5865f2;
+        --grey: #3b3b3b;
+        --black: #202020;
+        --background-menu: var(--grey);
+        --background: var(--black);
     }
 
     *{
@@ -20,14 +28,14 @@
     }
 
     body {
-        background-color: var(--bg);
+        background-color: var(--background);
         color: var(--text);
         width: 100%;
         height: 100vh;
     }
 
     a {
-        color: var(--primary);
+        color: var(--black);
     }
 }
 

@@ -178,12 +178,12 @@ form {
     padding: 0;
     border-radius: 1rem;
     border: none;
-    background-color: var(--bg) !important;
+    background-color: var(--background) !important;
 }
 
 #cropModal .cropper-container .cropper-wrap-box,
 #cropModal .cropper-container .cropper-canvas {
-    background-color: var(--bg) !important;
+    background-color: var(--background) !important;
 }
 
 #cropModal .cropper-container {
@@ -246,5 +246,5 @@ form {
 .cropper-modal {
     opacity: 0.5 !important;
     border-radius: 1rem !important;
-    background-color: var(--bg) !important;
+    background-color: var(--background) !important;
 }
