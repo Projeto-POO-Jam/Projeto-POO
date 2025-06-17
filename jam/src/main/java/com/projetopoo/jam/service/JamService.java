@@ -2,6 +2,7 @@ package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.CommentResponseDTO;
 import com.projetopoo.jam.dto.JamRequestDTO;
+import com.projetopoo.jam.dto.JamSseDTO;
 import com.projetopoo.jam.model.Comment;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.User;
@@ -33,6 +34,8 @@ public class JamService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private SseNotificationService sseNotificationService;
 
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/upload/jam";
 
@@ -54,6 +57,10 @@ public class JamService {
         jam.setJamBanner(ImageUtil.createImage(jamRequestDTO.getJamBanner(), directoryBanner, "/upload/jam/" + uuid + "/banner/"));
 
         jamRepository.save(jam);
+
+        JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
+
+        sseNotificationService.sendEventToTopic("view-jams", "new-jam", jamSseDTO);
     }
 
 }

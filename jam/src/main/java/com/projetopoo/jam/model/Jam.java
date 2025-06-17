@@ -38,6 +38,10 @@ public class Jam {
     @Column
     private String jamBanner;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JamStatus jamStatus = JamStatus.SCHEDULED;
+
     @OneToMany(mappedBy = "subscribeJam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subscribe> jamSubscribes ;
 
@@ -135,5 +139,13 @@ public class Jam {
 
     public void setJamUser(User jamUser) {
         this.jamUser = jamUser;
+    }
+
+    public JamStatus getJamStatus() {
+        return jamStatus;
+    }
+
+    public void setJamStatus(JamStatus jamStatus) {
+        this.jamStatus = jamStatus;
     }
 }

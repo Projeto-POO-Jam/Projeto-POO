@@ -6,6 +6,8 @@ target/
 application-local.properties
 **/upload/user/*
 !**/upload/user/.gitkeep
+**/upload/jam/*
+!**/upload/jam/.gitkeep
 
 ### STS ###
 .apt_generated
