@@ -2,22 +2,85 @@ header.site-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem;
-    background-color: #000000;
+    height: 3vh;
+    padding: 2rem;
+    background-color: var(--background-menu);
 }
 
-body.dark header.site-header {
-    background-color: #000;
+.site-logo {
+    width: 4rem; height: 4rem;
+    /*
+        Primeira Logo
+        background-image: url("logo1");
+    */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.site-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: white;
+body.dark .site-logo {
+    /*
+        Segunda Logo
+        background-image: url("logo2");
+    */
 }
 
-body.dark .site-title {
-    color: #f9fafb;
+.container-menu{
+    width: 60%;
+    display: flex; align-items: center;
+    justify-content: space-between;
+}
+.container-menu button{
+    position: relative;
+    padding: 5px 1px;
+    font-size: 1.2rem;
+    color: var(--text);
+    border: none;
+    background: none;
+    outline: none;
+    transition: .6s ease-in-out;
+    cursor: pointer;
+}
+.container-menu button:hover{color: var(--blue)}
+.container-menu button:hover::before{
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0%;
+    width: 100%; height: 1.5px;
+    background: var(--blue);
+    animation: animateLine .6s ease-in-out;
+}
+@keyframes animateLine {
+    0%{
+        width: 0%;
+        left: 50%;
+    }
+    100%{
+        width: 100%;
+        left: 0;
+    }
+}
+
+.bar-search-menu{
+    width: 35%;
+    position: relative;
+    padding: 4px 10px;
+    border: 2px solid var(--blue);
+    border-radius: 20px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+}
+.bar-search-menu input{
+    height: 100%;
+    color: var(--text);
+    display: flex; align-items: center;
+    font-size: 1rem;
+    background: none;
+    border: none;
+    outline: none;
+}
+.bar-search-menu span{
+    color: var(--blue);
 }
 
 .theme-toggle {
@@ -28,16 +91,16 @@ body.dark .site-title {
     cursor: pointer;
 }
 
-.theme-icon {
+.theme-icon, #theme-icon-bell {
     font-size: 1.5rem;
-    color: white;
+    color: var(--blue);
 }
 
 body.dark .theme-icon {
-    color: #f9fafb;
+    color: var(--black);
 }
 
-.img-user-menu img {
+.img-user-menu{
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
