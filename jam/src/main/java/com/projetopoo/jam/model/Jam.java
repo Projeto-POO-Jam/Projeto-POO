@@ -19,21 +19,24 @@ public class Jam {
     @Column(length = 1000)
     private String jamDescription;
 
-    @Column(length = 100)
-    private String jamUrl;
-
     @Column
     private LocalDateTime jamStartDate;
 
     @Column
     private LocalDateTime jamEndDate;
 
-    @Column
-    private LocalDateTime jamVotingEndDate;
-
     @Lob
     @Column
     private String jamContent;
+
+    @Column
+    private String jamCover;
+
+    @Column
+    private String jamWallpaper;
+
+    @Column
+    private String jamBanner;
 
     @OneToMany(mappedBy = "subscribeJam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subscribe> jamSubscribes ;
@@ -70,14 +73,6 @@ public class Jam {
         this.jamDescription = jamDescription;
     }
 
-    public String getJamUrl() {
-        return jamUrl;
-    }
-
-    public void setJamUrl(String jamUrl) {
-        this.jamUrl = jamUrl;
-    }
-
     public LocalDateTime getJamStartDate() {
         return jamStartDate;
     }
@@ -94,20 +89,36 @@ public class Jam {
         this.jamEndDate = jamEndDate;
     }
 
-    public LocalDateTime getjamVotingEndDate() {
-        return jamVotingEndDate;
-    }
-
-    public void setjamVotingEndDate(LocalDateTime jamVotingEndDate) {
-        this.jamVotingEndDate = jamVotingEndDate;
-    }
-
     public String getJamContent() {
         return jamContent;
     }
 
     public void setJamContent(String jamContent) {
         this.jamContent = jamContent;
+    }
+
+    public String getJamCover() {
+        return jamCover;
+    }
+
+    public void setJamCover(String jamCover) {
+        this.jamCover = jamCover;
+    }
+
+    public String getJamWallpaper() {
+        return jamWallpaper;
+    }
+
+    public void setJamWallpaper(String jamWallpaper) {
+        this.jamWallpaper = jamWallpaper;
+    }
+
+    public String getJamBanner() {
+        return jamBanner;
+    }
+
+    public void setJamBanner(String jamBanner) {
+        this.jamBanner = jamBanner;
     }
 
     public List<Subscribe> getJamSubscribes() {
