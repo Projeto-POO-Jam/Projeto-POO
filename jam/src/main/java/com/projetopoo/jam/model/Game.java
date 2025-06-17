@@ -13,14 +13,23 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
 
+    @Column(nullable = false)
+    private String gameTitle;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private String gamePhoto;
+
+    @Column(nullable = false)
+    private String gameFile;
+
     @OneToMany(mappedBy = "voteGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vote> gameVotes;
 
     @OneToOne(mappedBy = "subscribeGame")
     private Subscribe gameSubscribe;
-
-    @Column(nullable = false)
-    private String gameTitle;
 
     @OneToMany(mappedBy = "commentGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> gameComment;
@@ -28,6 +37,18 @@ public class Game {
     public Game() {
 
     }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public String getGamePhoto() { return gamePhoto; }
+
+    public void setGamePhoto(String gamePhoto) { this.gamePhoto = gamePhoto; }
+
+    public String getGameFile() { return gameFile;}
+
+    public void setGameFile(String gameFile) { this.gameFile = gameFile; }
 
     public Long getGameId() {
         return gameId;
