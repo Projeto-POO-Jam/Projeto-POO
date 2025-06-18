@@ -2,6 +2,7 @@ package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.CommentRequestDTO;
 import com.projetopoo.jam.dto.CommentResponseDTO;
+import com.projetopoo.jam.dto.JamPaginatedResponseDTO;
 import com.projetopoo.jam.dto.JamRequestDTO;
 import com.projetopoo.jam.service.CommentService;
 import com.projetopoo.jam.service.JamService;
@@ -28,6 +29,19 @@ public class JamController {
             jamService.createJam(jamRequestDTO, principal.getName());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException | IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> listJams(
+            @RequestParam String month,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            JamPaginatedResponseDTO response = jamService.findJamsList(month, offset, limit);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
