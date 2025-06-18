@@ -1,10 +1,7 @@
 package com.projetopoo.jam.service;
 
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.dto.VoteRequestDTO;
-import com.projetopoo.jam.dto.VoteResponseDTO;
-import com.projetopoo.jam.dto.UserResponseDTO;
-import com.projetopoo.jam.dto.VoteRequestDTO;
-import com.projetopoo.jam.dto.VoteTotalResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.Vote;
@@ -27,6 +24,8 @@ public class VoteService {
     private GameRepository gameRepository;
     @Autowired
     private VoteRepository voteRepository;
+    @Autowired
+    private SseNotificationService sseNotificationService;
 
     @Transactional
     public VoteResponseDTO findVote(VoteRequestDTO voteRequestDTO, String identifier) throws UserValidationException {
@@ -54,12 +53,16 @@ public class VoteService {
         if(optionalVote.isPresent()) {
             voteRepository.delete(optionalVote.get());
             voteResponseDTO.setVoted(false);
-            return voteResponseDTO;
         } else {
             voteRepository.save(vote);
             voteResponseDTO.setVoted(true);
-            return voteResponseDTO;
         }
+
+        VoteTotalResponseDTO voteTotalResponseDTO = totalVotes(voteRequestDTO);
+
+        sseNotificationService.sendEventToTopic("games-update", "votes-update-" + voteRequestDTO.getVoteGameId(), voteTotalResponseDTO);
+
+        return voteResponseDTO;
     }
 
     @Transactional
