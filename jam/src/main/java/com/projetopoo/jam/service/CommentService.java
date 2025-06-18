@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -63,7 +64,7 @@ public class CommentService {
 
         User requestingUser = userRepository.findByIdentifier(identifier);
 
-        if (!(comment.getCommentUser().getUserId() == requestingUser.getUserId())) {
+        if (!(Objects.equals(comment.getCommentUser().getUserId(), requestingUser.getUserId()))) {
             throw new AccessDeniedException("Usuário não autorizado a excluir este comentário.");
         }
 
