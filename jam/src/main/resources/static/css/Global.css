@@ -9,6 +9,7 @@
         --text: var(--black);
         --background-menu: var(--white);
         --background: #f3f3f3;
+        --background-card: var(--white);
     }
 
     .dark {
@@ -17,6 +18,7 @@
         --grey: #3b3b3b;
         --background-menu: var(--grey);
         --background: var(--black);
+        --background-card: var(--grey);
     }
 
     *{

@@ -1,10 +1,11 @@
 import { fetchJamsByMonth } from '../services/jamService.js';
+import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 
 $(function() {
 
     //Mostrar Jams
     const container = $('.container-Jams');
-    const limitPerPage = 20;
+    const limitPerPage = 10;
     let loadedMonths = [];
     let monthOffsets = {};
     let isLoading = false;
@@ -22,40 +23,83 @@ $(function() {
         return date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
     }
 
+    //Função auxiliar para verificae se é mes/dia/hora/minuto
+    function formatRelativeTime(diffMs) {
+        const totalSeconds = Math.floor(diffMs / 1000);
+        const totalDays = Math.floor(totalSeconds / 86400);
+        const months = Math.floor(totalDays / 30);
+        const days = totalDays % 30;
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+        if (months > 0) {
+            return `${months} mês${months > 1 ? 'es' : ''}`;
+        }
+        if (days > 0) {
+            return `${days} dia${days > 1 ? 's' : ''}`;
+        }
+        if (hours > 0) {
+            return `${hours} hora${hours > 1 ? 's' : ''}`;
+        }
+        if (minutes > 0) {
+            return `${minutes} minuto${minutes > 1 ? 's' : ''}`;
+        }
+        return 'agora';
+    }
+
     //Função auxiliar que recebe uma jam e retorna um elemento jQuery pronto
     function createJamCard(jam) {
-        const hoje = new Date();
-        const dataInicio = new Date(jam.startDate);
-        const dataFim = new Date(jam.endDate);
+        const statusMap = {
+            SCHEDULED: 'Agendada',
+            ACTIVE: 'Em andamento',
+            FINISHED: 'Finalizada',
+        };
+        const statusText = statusMap[jam.jamStatus] || jam.jamStatus;
 
-        const statusText = (hoje >= dataInicio && hoje <= dataFim)
-            ? 'Ocorrendo'
-            : 'Fechada';
+        const agora = new Date();
+        const dataInicio = new Date(jam.jamStartDate);
+        const dataFim = new Date(jam.jamEndDate);
 
-        const formato = { day: '2-digit', month: '2-digit', year: 'numeric' };
-        const inicioStr = dataInicio.toLocaleDateString('pt-BR', formato);
-        const fimStr = dataFim.toLocaleDateString('pt-BR', formato);
+        const diffStart = dataInicio - agora;
+        const diffEnd = dataFim - agora;
 
-        const durationHtml = hoje > dataFim
-            ? `<div class="duration-jam-card"><p>Essa jam acabou</p></div>`
-            : `
+        let durationHtml;
+
+        if (diffStart > 0) {
+            // Acontece no futuro
+            durationHtml = `
                 <div class="duration-jam-card">
-                    <p>Começa no dia ${inicioStr}</p>
-                    <p>Termina no dia ${fimStr}</p>
+                    <p data-field class="skeleton">Começa em ${formatRelativeTime(diffStart)}</p>
+                    <p data-field class="skeleton">Termina em ${formatRelativeTime(diffEnd)}</p>
                 </div>
             `;
+        } else if (diffEnd > 0) {
+            // Já começou, mas ainda não acabou
+            durationHtml = `
+                <div class="duration-jam-card">
+                    <p data-field class="skeleton">Termina em ${formatRelativeTime(diffEnd)}</p>
+                </div>
+            `;
+        } else {
+            // Já terminou
+            durationHtml = `
+                <div class="duration-jam-card">
+                    <p data-field class="skeleton">Essa jam acabou</p>
+                </div>
+            `;
+        }
 
         const card = `
-            <div class="jam-card">
-                <div class="header-jam-card">
-                    <h1 class="status-jam-card">${statusText}</h1>
-                    <div class="aling-qtd-members-jam-card">
+            <div class="jam-card-home">
+                <div class="header-jam-card-home">
+                    <h1 data-field class="status-jam-card-home skeleton">${statusText}</h1>
+                    <div class="aling-qtd-members-jam-card-home">
                         <span class="material-symbols-outlined">account_circle</span>
-                        <p>${jam.qtdMembers}</p>
+                        <p data-field class="skeleton">${jam.subscribersCount}</p>
                     </div>
                 </div>
-                <div class="container-jam-card">
-                    <h1>${jam.name}</h1>
+                <div class="container-jam-card-home">
+                    <h1 data-field class="skeleton">${jam.jamTitle}</h1>
                     ${durationHtml}
                 </div>
             </div>
@@ -67,9 +111,9 @@ $(function() {
             .addClass('jam-btn-wrapper');
 
         const btn = $('<button>')
-            .addClass('jam-btn')
+            .addClass('jam-btn-home')
             .text('Ver Jam')
-            .on('click', () => window.location.href = `/jams/${jam.id}`);
+            .on('click', () => window.location.href = `/jams/${jam.jamId}`);
 
         btnWrapper.append(btn);
         newCard.append(btnWrapper);
@@ -88,13 +132,13 @@ $(function() {
             cardsContainer.append($card);
         });
 
-        // Se houver mais jams, adiciona botão de carregar mais
-        if (jams.length + monthOffsets[month] < total) {
-            const loadMore = $('<button>')
+        const shown = jams.length + monthOffsets[month];
+        if (shown < total) {
+            const $btnLoadMore = $('<button>')
                 .addClass('load-more')
                 .text('Carregar mais')
                 .on('click', () => loadMore(month));
-            section.append(loadMore);
+            section.append($btnLoadMore);
         }
 
         section.prepend(cardsContainer);
@@ -103,18 +147,25 @@ $(function() {
 
     // Faz fetch e renderiza primeira página de um mês
     function loadMonth(month) {
-        if(loadedMonths.includes(month) || isLoading) return; //ja tem o mes ou tem requisição ainda!
+        if (month < getCurrentMonth()) return;
+        if (loadedMonths.includes(month) || isLoading) return;
         isLoading = true;
         monthOffsets[month] = 0;
 
-        fetchJamsByMonth(month, 0, limitPerPage) //chama api para pegar dados
-            .then(({jams, total}) => {
-                renderMonthSection(month, jams, total) //mapeia na tela
-                monthOffsets[month] += jams.length;
+        fetchJamsByMonth(month, 0, limitPerPage)
+            .done(({ jams, total }) => {
+                // só renderiza se vier pelo menos 1 jam
+                if (jams.length > 0) {
+                    renderMonthSection(month, jams, total);
+                    const $section = container.find(`.month-section[data-month='${month}']`);
+                    removeSkeleton($section);
+                }
+
                 loadedMonths.push(month);
+                monthOffsets[month] = jams.length;
             })
-            .catch(err => console.error(`Erro ao carregar mês ${month}:`, err))
-            .finally(() => isLoading = false)
+            .fail(err => console.error(`Erro ao carregar mês ${month}:`, err))
+            .always(() => { isLoading = false; });
     }
 
     // Carrega mais do mes
@@ -123,7 +174,7 @@ $(function() {
         isLoading = true;
 
         fetchJamsByMonth(month, monthOffsets[month], limitPerPage) //Chama api
-            .then(({ jams, total }) => {
+            .done(({ jams, total }) => {
                 const section = container.find(`.month-section[data-month='${month}']`);
                 const cardsContainer = section.find('.cards-container');
                 const oldLoad = section.find('.load-more');
@@ -134,32 +185,34 @@ $(function() {
                     cardsContainer.append($card);
                 });
 
+                const $section = container.find(`.month-section[data-month='${month}']`);
+                removeSkeleton($section);
+
                 monthOffsets[month] += jams.length; //atualiza qtd de jams mostrada no mes
                 //se ainda tem mais mostra o btn de carregar mais
                 if (monthOffsets[month] < total) {
-                    const loadMore = $('<button>')
-                        .addClass('load-more')
-                        .text('Carregar mais')
-                        .on('click', () => loadMore(month));
-                    section.append(loadMore);
+                    const $btnLoadMore = $('<button>')
+                    .addClass('load-more')
+                    .text('Carregar mais')
+                    .on('click', () => loadMore(month));
+                    section.append($btnLoadMore);
                 }
             })
-            .catch(err => console.error(`Erro ao carregar mais em ${month}:`, err))
-            .finally(() => isLoading = false);
+            .fail(err => console.error(`Erro ao carregar mais em ${month}:`, err))
+            .always(() => isLoading = false);
     }
 
     // Infinite scroll: quando chegar ao fim, carrega mês anterior
     $(window).on('scroll', () => {
         const scrollBottom = $(window).scrollTop() + $(window).height();
         if (scrollBottom + 100 >= $(document).height()) {
-            let nextMonth;
-            if (loadedMonths.length === 0) nextMonth = getCurrentMonth();
-            else {
-                const last = loadedMonths[loadedMonths.length - 1];
-                const [y, m] = last.split('-').map(Number);
-                const date = new Date(y, m-2);
-                nextMonth = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
-            }
+            let nextMonth = loadedMonths.length === 0
+                ? getCurrentMonth()
+                : (() => {
+                    const [y, m] = loadedMonths[loadedMonths.length - 1].split('-').map(Number);
+                    const date = new Date(y, m, 1);
+                    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+                })();
             loadMonth(nextMonth);
         }
     });

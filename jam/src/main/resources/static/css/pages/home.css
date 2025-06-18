@@ -4,10 +4,16 @@
     margin: 1rem;
 }
 
+.teste-home{
+    height: 30rem;
+}
+
 /*View Jams*/
 .container-Jams{
     display: flex;
-    width: 100%;
+    flex-direction: column;
+    align-items: start;
+    margin: 1rem;
 }
 
 .month-section{
@@ -20,66 +26,72 @@
 .month-title{
     font-size: 22px;
     font-weight: 800;
+    margin-top: 2rem;
 }
 
 .cards-container{
     display: flex;
-    justify-content: center;
+    justify-content: start;
     flex-wrap: wrap;
     width: 100%;
+    margin: 1rem 0rem;
+    gap: 2rem;
 }
 
-.jam-card{
-    width: 15rem;
-    height: 15rem;
+.jam-card-home{
+    width: 13rem;
+    height: 100%;
     border-radius: 1rem;
-    box-shadow: -1px 3px 14px 2px rgba(0,0,0,0.75);
-    -webkit-box-shadow: -1px 3px 14px 2px rgba(0,0,0,0.75);
-    -moz-box-shadow: -1px 3px 14px 2px rgba(0,0,0,0.75);
-    padding: 6px;
+    padding: 1rem;
+    background-color: var(--background-card);
+    box-shadow: -1px 5px 6px 1px rgb(49 49 49 / 17%);
+    -webkit-box-shadow: -1px 5px 6px 1px rgb(49 49 49 / 17%);
+    -moz-box-shadow: -1px 5px 6px 1px rgb(49 49 49 / 17%);
 }
 
-.header-jam-card{
+.header-jam-card-home{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    user-select: none
 }
 
-.status-jam-card{
+.status-jam-card-home{
     font-size: 14px;
     font-weight: 400;
     color: var(--blue);
 }
 
-.aling-qtd-members-jam-card{
+.aling-qtd-members-jam-card-home{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.aling-qtd-members-jam-card span{
+.aling-qtd-members-jam-card-home span{
     margin-right: 5px;
-    font-size: 20px;
+    font-size: 14px;
 }
 
-.aling-qtd-members-jam-card p{
-    font-size: 20px;
+.aling-qtd-members-jam-card-home p{
+    font-size: 14px;
 }
 
-.container-jam-card{
+.container-jam-card-home{
     display: flex;
     flex-direction: column;
     align-items: start;
     width: 100%;
 }
 
-.container-jam-card h1{
-    font-size: 28px;
-    font-weight: 600;
-    max-width: 13rem;
+.container-jam-card-home h1{
+    font-size: 24px;
+    font-weight: 400;
+    max-width: 15rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin: 1rem 0 1.5rem 0;
 }
 
 .duration-jam-card{
@@ -90,6 +102,7 @@
 
 .duration-jam-card p{
     font-size: 14px;
+    margin-bottom: 6px;
 }
 
 .jam-btn-wrapper{
@@ -99,25 +112,32 @@
     width: 100%;
 }
 
-.jam-btn{
+.jam-btn-home{
     width: 5rem;
     padding: 10px;
     font-size: 14px;
     font-weight: 600;
     background-color: var(--blue);
-    color: var(--blue);
+    color: var(--white);
+    border: none;
     border-radius: 0.5rem;
     user-select: none;
     cursor: pointer;
-}s
+    margin-top: 0.5rem;
+}
 
-.jam-btn:hover{
+.jam-btn-home:hover{
     transform: scale(1.1);
     transition: 0.2s;
 }
 
-.load-more{
+.load-more {
     font-size: 16px;
     font-weight: 600;
     color: var(--blue);
+    border: none;
+    background: transparent;
+    user-select: none;
+    cursor: pointer;
+    margin-bottom: 1rem;
 }

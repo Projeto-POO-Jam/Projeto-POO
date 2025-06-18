@@ -7,8 +7,8 @@ import { apiRequest } from '../common/api.js';
  * @param {number} limit – Quantos itens buscar.
  * @returns {Promise<{jams: Array, total: number}>}
  */
-export function fetchJamsByMonth(month, offset = 0, limit = 20) {
-    return apiRequest('GET', `jam/listaJam?month=${month}&offset=${offset}&limit=${limit}`)
+export function fetchJamsByMonth(month, offset = 0, limit = 10) {
+    return apiRequest('GET', `api/jams/list?month=${month}&offset=${offset}&limit=${limit}`)
         .then(({ data }) => data);
 }
 
