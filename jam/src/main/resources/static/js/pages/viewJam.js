@@ -8,7 +8,7 @@ $(function() {
     const root = 'main';
 
     //Aplica skeleton
-    applySkeleton(root);
+    applySkeleton(root); //AJUSTAR AQUI NÃO ESTA FUNCIONANDO CERTO
 
     //Chama o API
     fetchViewJam(jamId)
@@ -96,6 +96,7 @@ $(function() {
         .catch(err => {
             console.error('Erro ao carregar Jam:', err);
             showError('Não foi possível carregar esta Jam.');
+            //aqui mandar para tela 404
         })
         .finally(() => {
             removeSkeleton(root);

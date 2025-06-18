@@ -48,7 +48,7 @@
 .status-jam-card{
     font-size: 14px;
     font-weight: 400;
-    color: var(--secondary-color);
+    color: var(--blue);
 }
 
 .aling-qtd-members-jam-card{
@@ -104,21 +104,20 @@
     padding: 10px;
     font-size: 14px;
     font-weight: 600;
-    background-color: var(--secondary-color);
-    color: var(--white-color);
+    background-color: var(--blue);
+    color: var(--blue);
     border-radius: 0.5rem;
     user-select: none;
     cursor: pointer;
-}
+}s
 
 .jam-btn:hover{
     transform: scale(1.1);
     transition: 0.2s;
 }
 
-
 .load-more{
     font-size: 16px;
     font-weight: 600;
-    color: var(--secondary-color);
+    color: var(--blue);
 }

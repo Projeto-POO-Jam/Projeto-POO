@@ -10,7 +10,7 @@
     width: 100%;
     max-width: 400px;
     padding: 1.5rem;
-    background-color: #ffffff;
+    background-color: var(--white);
     border-radius: 1rem;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
@@ -50,20 +50,21 @@ form {
 .form-group label {
     margin-bottom: 0.5rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--subText);
 }
 
 .form-group input {
     padding: 12px;
     font-size: 14px;
+    font-family: "Roboto", sans-serif;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     outline: none;
 }
 
 .form-group input:focus {
-    border-color: #000000;
-    box-shadow: 0 0 0 1px #4f4f4f;
+    border-color: var(--black);
+    box-shadow: 0 0 0 1px var(--subText);
 }
 
 .form-group input.error {
@@ -84,8 +85,8 @@ form {
 
 .submit-button {
     width: 100%;
-    background-color: black;
-    color: #ffffff;
+    background-color: var(--black);
+    color: var(--white);
     font-weight: 600;
     font-size: 14px;
     padding: 13px;
@@ -109,11 +110,11 @@ form {
     margin-top: 1rem;
     text-align: center;
     font-size: 0.875rem;
-    color: #4b5563;
+    color: var(--subText);
 }
 
 .signup-text a {
-    color: black;
+    color: var(--black);
     text-decoration: none;
 }
 
@@ -140,7 +141,7 @@ form {
 }
 
 .avatar-label:hover {
-    border-color: #888;
+    border-color: var(--subText);
 }
 
 .avatar-icon {
