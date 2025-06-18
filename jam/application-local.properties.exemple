@@ -1,2 +1,7 @@
 spring.datasource.username=SEU_USUARIO_MYSQL_LOCAL
 spring.datasource.password=SUA_SENHA_MYSQL_LOCAL
+
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=SEU_USUARIO_RABBITMQ
+spring.rabbitmq.password=SUA_SENHA_RABBITMQ

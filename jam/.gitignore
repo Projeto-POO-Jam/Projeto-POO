@@ -3,9 +3,13 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+
+.env
 application-local.properties
 **/upload/user/*
 !**/upload/user/.gitkeep
+**/upload/jam/*
+!**/upload/jam/.gitkeep
 
 ### STS ###
 .apt_generated
