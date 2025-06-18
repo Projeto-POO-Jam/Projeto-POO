@@ -1,6 +1,7 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.CommentResponseDTO;
+import com.projetopoo.jam.dto.JamPaginatedResponseDTO;
 import com.projetopoo.jam.dto.JamRequestDTO;
 import com.projetopoo.jam.dto.JamSseDTO;
 import com.projetopoo.jam.model.Comment;
@@ -9,6 +10,12 @@ import com.projetopoo.jam.model.JamStatus;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.JamRepository;
 import com.projetopoo.jam.repository.UserRepository;
+import com.projetopoo.jam.dto.JamSummaryDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import java.time.format.DateTimeParseException;
 
 import com.projetopoo.jam.util.ImageUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -70,7 +77,6 @@ public class JamService {
             rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), startDelay, JamStatus.ACTIVE.name());
         }
 
-        // 2. Agenda a mensagem para quando a Jam deve ser FINALIZADA
         if (jam.getJamEndDate().isAfter(now)) {
             long endDelay = Duration.between(now, jam.getJamEndDate()).toMillis();
             rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), endDelay, JamStatus.FINISHED.name());
@@ -80,6 +86,42 @@ public class JamService {
         JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
 
         sseNotificationService.sendEventToTopic("view-jams", "new-jam", jamSseDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public JamPaginatedResponseDTO findJamsList(String yearMonth, int offset, int limit) {
+        String[] parts = yearMonth.split("-");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Formato de mês inválido. Use YYYY-MM.");
+        }
+
+        int year;
+        int month;
+
+        try {
+            year = Integer.parseInt(parts[0]);
+            month = Integer.parseInt(parts[1]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Ano ou mês inválido.");
+        }
+
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.DESC, "jamStartDate"));
+
+        Page<Jam> jamPage = jamRepository.findByYearAndMonth(year, month, pageable);
+
+        List<JamSummaryDTO> jamDTOs = jamPage.getContent().stream()
+                .map(jam -> {
+                    JamSummaryDTO dto = modelMapper.map(jam, JamSummaryDTO.class);
+
+                    int count = (jam.getJamSubscribes() != null) ? jam.getJamSubscribes().size() : 0;
+                    dto.setSubscribersCount(count);
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return new JamPaginatedResponseDTO(jamDTOs, jamPage.getTotalElements());
     }
 
 }
