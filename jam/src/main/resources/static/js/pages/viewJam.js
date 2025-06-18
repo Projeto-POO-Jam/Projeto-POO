@@ -8,95 +8,72 @@ $(function() {
     const root = 'main';
 
     //Aplica skeleton
-    applySkeleton(root); //AJUSTAR AQUI NÃO ESTA FUNCIONANDO CERTO
+    applySkeleton(root);
 
-    //Chama o API
+    //Chama a API
     fetchViewJam(jamId)
         .then(data => {
-            //Mapeia os valor na tela
+            //Preenche os campos estáticos
             bindDataFields(data, root);
 
-            //Aplica wallpaper
+            //Se tiver wallpaper, aplica no <body>
             if (data.wallpaperImgUrl) {
                 $('body')
                     .css('background-image', `url(${data.wallpaperImgUrl})`)
                     .css('background-size', 'cover')
-                    .css('background-position', 'center');
+                    .css('background-position','center');
             }
 
-            //Aplica o cover dentro do container
-            if (data.coverImgUrl) {
-                $('#jam-cover-container').html(`
-                    <img
-                        src="${data.coverImgUrl}"
-                        alt="Cover da Jam"
-                        style="width:100%; height:auto;"
-                    />
+            // Monta o card de duração
+            if (data.startDate && data.endDate) {
+                const start = new Date(data.startDate);
+                const end = new Date(data.endDate);
+                const days = Math.round((end - start) / (1000 * 60 * 60 * 24));
+                $('#jam-duration-container').html(`
+                    <div class="card duration-card">
+                        <h3>Duração</h3>
+                        <p>${days} dia${days>1?'s':''} (${data.startDate} até ${data.endDate})</p>
+                        <button>Postar Game</button>
+                    </div>
                 `);
             }
 
-            //Monta o seu card de duração
-            const start = new Date(data.startDate);
-            const end = new Date(data.endDate);
-            const days = Math.round((end - start) / (1000 * 60 * 60 * 24));
-            $('#jam-duration-container').html(`
-                <div class="card duration-card">
-                    <h3>Duração</h3>
-                    <p>
-                        ${days} dia${days > 1 ? 's' : ''}
-                        (${data.startDate} até ${data.endDate})
-                    </p>
-                    <button>Postar Game</button>
-                </div>
-            `);
-
-            //Injeta o HTML livre do usuário
+            //HTML livre do usuário
+            const $userCard = $('.page-user-jam-card');
             const userHtml = data.htmlContent?.trim();
+
             if (userHtml) {
-                $('.page-user-jam-card').html(userHtml);
-
-                //Detecta fundo/borda no primeiro elemento do userHtml
-                const $first = $('.page-user-jam-card').children().first();
-                if ($first.length) {
-                    const bgColor = $first.css('background-color');
-                    const bgImage = $first.css('background-image');
-                    const bgRepeat = $first.css('background-repeat');
-                    const bgPosition = $first.css('background-position');
-                    const bgSize = $first.css('background-size');
-                    const border = $first.css('border');
-
-                    // só aplica se existir alguma definição de fundo
-                    const hasBgColor = bgColor && bgColor !== 'rgba(0, 0, 0, 0)';
-                    const hasBgImage = bgImage && bgImage !== 'none';
-                    if (hasBgColor || hasBgImage) {
-                        $('.card-view-jam').css({
-                            'background-color': bgColor,
-                            'background-image': bgImage,
-                            'background-repeat': bgRepeat,
-                            'background-position': bgPosition,
-                            'background-size': bgSize
-                        });
-                    }
-
-                    // aplica borda caso o usuário tenha definido
-                    if (border && border !== '0px none rgb(0, 0, 0)') {
-                        $('.card-view-jam').css('border', border);
-                    }
-                }
-
+                $userCard.html(userHtml);
             } else {
-                // Card Padrão
-                $('.page-user-jam-card').html(`
+                // fallback padrão
+                $userCard.html(`
                     <div class="default-jam-card">
                         <p>Descrição da Jam.</p>
                     </div>
                 `);
             }
+
+            $userCard.removeClass('skeleton');
+
+            //Transfere background/borda
+            const $first = $userCard.children().first();
+            if ($first.length) {
+                const styles = {
+                    'background-color': $first.css('background-color'),
+                    'background-image': $first.css('background-image'),
+                    'background-repeat': $first.css('background-repeat'),
+                    'background-position': $first.css('background-position'),
+                    'background-size': $first.css('background-size'),
+                    'border': $first.css('border'),
+                };
+                $('.card-view-jam').css(styles);
+            }
+
         })
         .catch(err => {
             console.error('Erro ao carregar Jam:', err);
             showError('Não foi possível carregar esta Jam.');
-            //aqui mandar para tela 404
+            //redirecionar para 404, se quiser
         })
         .finally(() => {
             removeSkeleton(root);
