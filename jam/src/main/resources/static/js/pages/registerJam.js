@@ -21,7 +21,7 @@ $(function() {
                     const now = new Date();
                     const date = new Date(value);
                     const max = new Date(); max.setFullYear(max.getFullYear() + 1);
-                    return date >= now && date <= max;
+                    return date > now && date <= max;
                 },
                 message: 'Data de início deve ser entre hoje e 1 ano a partir de hoje.'
             }
@@ -32,7 +32,7 @@ $(function() {
                     const end = new Date(value);
                     if (isNaN(start) || isNaN(end)) return false;
                     const maxEnd = new Date(start); maxEnd.setMonth(maxEnd.getMonth() + 1);
-                    return end >= start && end <= maxEnd;
+                    return end > start && end <= maxEnd;
                 },
                 message: 'Data final deve ser no máximo 1 mês após a data de início.'
             }
@@ -47,20 +47,20 @@ $(function() {
         if (!isFormValid(validationRules)) return;
 
         const formData = new FormData(form[0]);
-        formData.set('jamName', $.trim($('#jamName').val()));
-        formData.set('descricao', $.trim($('#descricao').val()));
-        formData.set('startDate', $('#startDate').val());
-        formData.set('endDate', $('#endDate').val());
-        formData.set('content', $('#content').val());
+        formData.set('jamTitle', $.trim($('#jamName').val()));
+        formData.set('jamDescription', $.trim($('#descricao').val()));
+        formData.set('jamStartDate', $('#startDate').val());
+        formData.set('jamEndDate', $('#endDate').val());
+        formData.set('jamContent', $('#content').val());
 
         const cover = $('#coverImg')[0].files[0];
-        if (cover) formData.set('coverImg', cover);
+        if (cover) formData.set('jamCover', cover);
 
         const wallpaper = $('#wallpaperImg')[0].files[0];
-        if (wallpaper) formData.set('wallpaperImg', wallpaper);
+        if (wallpaper) formData.set('jamWallpaper', wallpaper);
 
         const banner = $('#bannerImg')[0].files[0];
-        if (banner) formData.set('bannerImg', banner);
+        if (banner) formData.set('jamBanner', banner);
 
         try {
             await apiRequest('POST', 'api/jams', formData);
