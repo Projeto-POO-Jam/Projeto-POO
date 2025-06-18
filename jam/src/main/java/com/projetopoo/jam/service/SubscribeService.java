@@ -21,6 +21,8 @@ public class SubscribeService {
     private JamRepository jamRepository;
     @Autowired
     private SubscribeRepository subscribeRepository;
+    @Autowired
+    private SseNotificationService sseNotificationService;
 
     @Transactional
     public SubscribeResponseDTO toggleSubscribe(SubscribeRequestDTO subscribeRequestDTO, String identifier) {
@@ -33,12 +35,21 @@ public class SubscribeService {
         if(optionalSubscribe.isPresent()) {
             subscribeRepository.delete(optionalSubscribe.get());
             subscribeResponseDTO.setSubscribed(false);
-            return subscribeResponseDTO;
         } else {
             subscribeRepository.save(subscribe);
             subscribeResponseDTO.setSubscribed(true);
-            return subscribeResponseDTO;
         }
+
+        SubscribeTotalResponseDTO subscribeTotalResponseDTO = totalSubscribes(subscribeRequestDTO);
+        SubscribeSseDTO subscribeSseDTO = new SubscribeSseDTO();
+        subscribeSseDTO.setSubscribeJamId(subscribeRequestDTO.getSubscribeJamId());
+        subscribeSseDTO.setSubscribeTotal(subscribeTotalResponseDTO.getSubscribeTotal());
+
+        sseNotificationService.sendEventToTopic("jams-list-update", "jam-subscribes-update", subscribeSseDTO);
+
+        sseNotificationService.sendEventToTopic("jams-update", "jam-subscribes-update-" + subscribeRequestDTO.getSubscribeJamId(), subscribeTotalResponseDTO);
+
+        return subscribeResponseDTO;
     }
 
     @Transactional

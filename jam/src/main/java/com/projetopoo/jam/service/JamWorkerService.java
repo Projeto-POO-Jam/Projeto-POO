@@ -40,7 +40,9 @@ public class JamWorkerService {
 
             JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
 
-            sseNotificationService.sendEventToTopic("view-jams", "new-jam", jamSseDTO);
+            sseNotificationService.sendEventToTopic("jams-list-update", "jam-status-update", jamSseDTO);
+
+            sseNotificationService.sendEventToTopic("jams-update", "jam-status-update-" + jam.getJamId(), jamSseDTO);
         }
     }
 }

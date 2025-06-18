@@ -85,7 +85,7 @@ public class JamService {
 
         JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
 
-        sseNotificationService.sendEventToTopic("view-jams", "new-jam", jamSseDTO);
+        sseNotificationService.sendEventToTopic("jams-list-update", "jam-insert", jamSseDTO);
     }
 
     @Transactional(readOnly = true)
