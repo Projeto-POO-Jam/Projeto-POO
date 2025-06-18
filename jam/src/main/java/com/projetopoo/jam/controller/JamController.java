@@ -1,9 +1,6 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.CommentRequestDTO;
-import com.projetopoo.jam.dto.CommentResponseDTO;
-import com.projetopoo.jam.dto.JamPaginatedResponseDTO;
-import com.projetopoo.jam.dto.JamRequestDTO;
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.service.CommentService;
 import com.projetopoo.jam.service.JamService;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +26,16 @@ public class JamController {
             jamService.createJam(jamRequestDTO, principal.getName());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException | IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<?> findJam(JamRequestFindDTO jamRequestFindDTO) {
+        try {
+            JamResponse jamResponse = jamService.findJam(jamRequestFindDTO);
+            return ResponseEntity.ok(jamResponse);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

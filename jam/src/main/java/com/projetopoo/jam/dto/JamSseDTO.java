@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 public class JamSseDTO {
-    private String jamId;
+    private Long jamId;
     private String jamTitle;
     private String jamDescription;
     private LocalDateTime jamStartDate;
@@ -46,11 +46,11 @@ public class JamSseDTO {
         this.jamEndDate = jamEndDate;
     }
 
-    public String getJamId() {
+    public Long getJamId() {
         return jamId;
     }
 
-    public void setJamId(String jamId) {
+    public void setJamId(Long jamId) {
         this.jamId = jamId;
     }
 
