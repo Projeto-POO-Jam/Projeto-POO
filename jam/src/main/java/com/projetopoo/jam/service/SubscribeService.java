@@ -40,7 +40,7 @@ public class SubscribeService {
             subscribeResponseDTO.setSubscribed(true);
         }
 
-        SubscribeTotalResponseDTO subscribeTotalResponseDTO = totalSubscribes(subscribeRequestDTO);
+        SubscribeTotalResponseDTO subscribeTotalResponseDTO = totalSubscribes(subscribeRequestDTO.getSubscribeJamId());
         SubscribeSseDTO subscribeSseDTO = new SubscribeSseDTO();
         subscribeSseDTO.setSubscribeJamId(subscribeRequestDTO.getSubscribeJamId());
         subscribeSseDTO.setSubscribeTotal(subscribeTotalResponseDTO.getSubscribeTotal());
@@ -67,9 +67,9 @@ public class SubscribeService {
     }
 
     @Transactional
-    public SubscribeTotalResponseDTO totalSubscribes(SubscribeRequestDTO subscribeRequestDTO) {
+    public SubscribeTotalResponseDTO totalSubscribes(Long jamId) {
         SubscribeTotalResponseDTO subscribeTotalResponseDTO = new SubscribeTotalResponseDTO();
-        subscribeTotalResponseDTO.setSubscribeTotal(subscribeRepository.countBySubscribeJam_JamId(subscribeRequestDTO.getSubscribeJamId()));
+        subscribeTotalResponseDTO.setSubscribeTotal(subscribeRepository.countBySubscribeJam_JamId(jamId));
         return subscribeTotalResponseDTO;
     }
 

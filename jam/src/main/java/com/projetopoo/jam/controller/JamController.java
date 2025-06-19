@@ -30,10 +30,10 @@ public class JamController {
         }
     }
 
-    @GetMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<?> findJam(JamRequestFindDTO jamRequestFindDTO) {
+    @GetMapping("/{jamId}")
+    public ResponseEntity<?> findJam(@PathVariable Long jamId) {
         try {
-            JamResponse jamResponse = jamService.findJam(jamRequestFindDTO);
+            JamResponse jamResponse = jamService.findJam(jamId);
             return ResponseEntity.ok(jamResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

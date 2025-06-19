@@ -78,18 +78,18 @@ public class JamService {
             rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), endDelay, JamStatus.FINISHED.name());
         }
 
-
         JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
+        jamSseDTO.setJamTotalSubscribers(0L);
 
         sseNotificationService.sendEventToTopic("jams-list-update", "jam-insert", jamSseDTO);
     }
 
     @Transactional
-    public JamResponse findJam(JamRequestFindDTO jamRequestFindDTO) {
+    public JamResponse findJam(Long jamId) {
 
-        Optional<Jam> optionalJam = jamRepository.findByJamId(jamRequestFindDTO.getJamId());
+        Optional<Jam> optionalJam = jamRepository.findByJamId(jamId);
         if (optionalJam.isEmpty()) {
-            throw new EntityNotFoundException("Jam com o ID " + jamRequestFindDTO.getJamId() + " não encontrado.");
+            throw new EntityNotFoundException("Jam com o ID " + jamId + " não encontrado.");
         }
         JamResponse jamResponse = modelMapper.map(optionalJam.get(), JamResponse.class);
         jamResponse.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jamResponse.getJamId()));
@@ -114,22 +114,19 @@ public class JamService {
         }
 
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.DESC, "jamStartDate"));
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
 
         Page<Jam> jamPage = jamRepository.findByYearAndMonth(year, month, pageable);
 
-        List<JamSummaryDTO> jamDTOs = jamPage.getContent().stream()
+        List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
                 .map(jam -> {
-                    JamSummaryDTO dto = modelMapper.map(jam, JamSummaryDTO.class);
-
-                    int count = (jam.getJamSubscribes() != null) ? jam.getJamSubscribes().size() : 0;
-                    dto.setSubscribersCount(count);
-
-                    return dto;
+                    JamSummaryDTO jamSummaryDTO = modelMapper.map(jam, JamSummaryDTO.class);
+                    jamSummaryDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jam.getJamId()));
+                    return jamSummaryDTO;
                 })
                 .collect(Collectors.toList());
 
-        return new JamPaginatedResponseDTO(jamDTOs, jamPage.getTotalElements());
+        return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
     }
 
 }

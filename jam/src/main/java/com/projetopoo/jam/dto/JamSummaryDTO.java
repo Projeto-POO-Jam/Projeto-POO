@@ -11,7 +11,7 @@ public class JamSummaryDTO {
     private LocalDateTime jamStartDate;
     private LocalDateTime jamEndDate;
     private JamStatus jamStatus;
-    private Integer subscribersCount;
+    private Long jamTotalSubscribers;
 
     public Long getJamId() {
         return jamId;
@@ -45,12 +45,12 @@ public class JamSummaryDTO {
         this.jamEndDate = jamEndDate;
     }
 
-    public Integer getSubscribersCount() {
-        return subscribersCount;
+    public Long getJamTotalSubscribers() {
+        return jamTotalSubscribers;
     }
 
-    public void setSubscribersCount(Integer subscribersCount) {
-        this.subscribersCount = subscribersCount;
+    public void setJamTotalSubscribers(Long jamTotalSubscribers) {
+        this.jamTotalSubscribers = jamTotalSubscribers;
     }
 
     public JamStatus getJamStatus() {

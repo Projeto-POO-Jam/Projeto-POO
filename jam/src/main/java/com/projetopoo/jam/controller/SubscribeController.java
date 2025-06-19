@@ -27,9 +27,9 @@ public class SubscribeController {
         }
     }
 
-    @GetMapping("/total")
-    public ResponseEntity<SubscribeTotalResponseDTO> totalSubscribe(@RequestBody SubscribeRequestDTO subscribeRequestDTO) {
-        SubscribeTotalResponseDTO subscribeTotalResponseDTO = subscribeService.totalSubscribes(subscribeRequestDTO);
+    @GetMapping("/total/{jamId}")
+    public ResponseEntity<SubscribeTotalResponseDTO> totalSubscribe(@PathVariable Long jamId) {
+        SubscribeTotalResponseDTO subscribeTotalResponseDTO = subscribeService.totalSubscribes(jamId);
         return ResponseEntity.ok(subscribeTotalResponseDTO);
     }
 
