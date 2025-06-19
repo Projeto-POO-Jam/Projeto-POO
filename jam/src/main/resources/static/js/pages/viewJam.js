@@ -17,6 +17,17 @@ $(function() {
 
     $.when(fetchViewJam(jamId))
         .done(data => {
+            //Img cover
+            const coverContainer = $('#jam-cover-container');
+            const coverImg = $('img[data-field="jamCover"]');
+
+            if (!data.jamCover) {
+                coverContainer.remove();
+            } else {
+                coverImg.attr('src', data.jamCover)
+                    .removeClass('skeleton');
+            }
+
             //Preenche os campos estáticos
             bindDataFields(data, root);
 
@@ -100,12 +111,14 @@ $(function() {
             }
 
             //HTML livre do usuário (jamContent)
-            const $userCard = $('.page-user-jam-card');
+            const cardWrapper = $('.card-view-jam-id');
+            const userCard = cardWrapper.find('.page-user-jam-card');
             const userHtml = data.jamContent?.trim();
+
             if (userHtml) {
-                $userCard.html(userHtml);
+                userCard.html(userHtml);
             } else {
-                $userCard.html(`
+                userCard.html(`
                     <div class="default-jam-card">
                         <p>Descrição da Jam.</p>
                     </div>
@@ -113,38 +126,30 @@ $(function() {
             }
 
             //Remove as classes skeleton dos containers
-            $userCard.removeClass('skeleton');
+            userCard.removeClass('skeleton');
             $('.container-jam-card').removeClass('skeleton');
 
-            //Transfere apenas estilos válidos do primeiro filho
-            const $first = $userCard.children().first();
-            if ($first.length) {
+            // Pega o primeiro filho dentro do conteúdo do usuário
+            const firstChild = userCard.children().first()[0];
+
+            if (firstChild) {
                 const styles = {};
 
                 //Background-color
-                const bgColor = $first.css('background-color');
-                if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
-                    styles['background-color'] = bgColor;
-                }
-
-                //Background-image
-                const bgImage = $first.css('background-image');
-                if (bgImage && bgImage !== 'none') {
-                    styles['background-image']  = bgImage;
-                    styles['background-repeat'] = $first.css('background-repeat');
-                    styles['background-position'] = $first.css('background-position');
-                    styles['background-size'] = $first.css('background-size');
+                if (firstChild.style.backgroundColor) {
+                    styles['background-color'] = firstChild.style.backgroundColor;
                 }
 
                 //Border
-                const border = $first.css('border');
-                if (border && border !== '0px none rgb(0, 0, 0)') {
-                    styles['border'] = border;
+                if (firstChild.style.border && firstChild.style.border !== 'none') {
+                    styles['border'] = firstChild.style.border;
                 }
 
-                //Aplica ou cai no padrão
                 if (Object.keys(styles).length) {
-                    $('.card-view-jam-id').css(styles);
+                    cardWrapper.css(styles);
+
+                    firstChild.style.backgroundColor = '';
+                    firstChild.style.border = '';
                 }
             }
         })

@@ -19,7 +19,9 @@
 .container-Jams{
     display: flex;
     flex-direction: column;
+    justify-content: start;
     align-items: start;
+    align-self: flex-start;
     margin: 1rem;
 }
 
