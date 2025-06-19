@@ -5,6 +5,61 @@ import { setupValidation, isFormValid } from '../common/validation.js';
 $(function() {
     const form = $('#createJamForm');
 
+    //Função auxiliar para criar e configurar cada seletor de cor
+    const createColorPicker = (elementSelector, inputSelector, defaultColor) => {
+        const pickr = Pickr.create({
+            el: elementSelector,
+            theme: 'classic',
+            default: defaultColor,
+
+            swatches: [
+                '#f44336', '#e91e63', '#9c27b0', '#673ab7',
+                '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4',
+                '#009688', '#4caf50', '#8bc34a', '#cddc39',
+                '#ffeb3b', '#ffc107', '#ff9800', '#795548'
+            ],
+
+            components: {
+                preview: true,
+                opacity: true,
+                hue: true,
+                interaction: {
+                    hex: true,
+                    rgba: true,
+                    hsla: false,
+                    hsva: false,
+                    cmyk: false,
+                    input: true,
+                    clear: true,
+                    save: true
+                }
+            },
+
+            strings: {
+                save: 'Salvar',
+                clear: 'Limpar',
+                'swatches.recently-used': 'Usadas recentemente',
+            }
+        });
+
+        //Atualiza o valor do input hidden sempre que a cor for alterada
+        pickr.on('change', (color, source, instance) => {
+            $(inputSelector).val(color.toHEXA().toString());
+        }).on('save', (color, instance) => {
+            pickr.hide();
+        });
+
+        $(inputSelector).val(pickr.getColor().toHEXA().toString());
+
+        return pickr;
+    };
+
+    //Inicializa todos os seletores de cor da página
+    createColorPicker('#backgroundColorPicker', '#backgroundColor', '#2a2f3b');
+    createColorPicker('#cardBackgroundColorPicker', '#cardBackgroundColor', '#1c1e26');
+    createColorPicker('#textColorPicker', '#textColor', '#ffffff');
+    createColorPicker('#linkColorPicker', '#linkColor', '#4a90e2');
+
     //Inicializa editor WYSIWYG(Summernote)
     $('#content').summernote({
         height: 300,
@@ -52,6 +107,10 @@ $(function() {
         formData.set('jamStartDate', $('#startDate').val());
         formData.set('jamEndDate', $('#endDate').val());
         formData.set('jamContent', $('#content').val());
+        formData.set('jamBackgroundColor', $('#backgroundColor').val());
+        formData.set('jamBackgroundCardColor', $('#cardBackgroundColor').val());
+        formData.set('jamTextColor', $('#textColor').val());
+        formData.set('jamLinkColor', $('#linkColor').val());
 
         const cover = $('#coverImg')[0].files[0];
         if (cover) formData.set('jamCover', cover);
