@@ -1,7 +1,9 @@
 package com.projetopoo.jam.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
 
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,8 +27,7 @@ public class Jam {
     @Column
     private LocalDateTime jamEndDate;
 
-    @Lob
-    @Column
+    @Column(length = Integer.MAX_VALUE)
     private String jamContent;
 
     @Column
