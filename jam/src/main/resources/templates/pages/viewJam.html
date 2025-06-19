@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: Head('Página Inicial')}"></head>
+<head th:replace="~{fragments/head :: Head('Página da Jam')}"></head>
 <body class="body-view-jam">
     <div th:replace="fragments/menu :: siteMenu"></div>
 
@@ -14,31 +14,39 @@
             />
         </section>
 
-        <section class="card-view-jam-id" id="jam-content">
+        <section class="header-view-jam">
             <div class="header-jam-card">
                 <div class="details-jam-card">
                     <div class="name-jam">
-                        <h1 data-field="jamTitle" class="skeleton">Teste</h1>
+                        <h1 data-field="jamTitle" class="skeleton"></h1>
                         <p class="skeleton">
-                            Criada por:
+                            Criada por
                             <span data-field="jamUser.userName"></span>
                         </p>
                     </div>
-                    <div class="participants-jam">
-                        <h1 data-field="jamTotalSubscribers" class="skeleton"></h1>
-                        <p>Ingressou</p>
-                    </div>
                 </div>
                 <div class="options-jam-card">
-                    <button>Geral</button>
-                    <button>hank</button>
-                    <button>jogos</button>
+                    <button data-tab="geral" class="active">Geral</button>
+                    <button data-tab="rank">Rank</button>
+                    <button data-tab="jogos">Jogos</button>
                 </div>
             </div>
+        </section>
 
+
+        <section class="card-view-jam-id" id="jam-content">
             <div class="container-jam-card skeleton">
-                <div id="jam-duration-container"></div>
-                <div class="page-user-jam-card skeleton" data-field="jamContent"></div>
+                <div id="tab-content">
+                    <div id="tab-geral" class="tab-pane active">
+                        <div class="elements-aba" th:replace="~{fragments/jam/geral :: conteudoGeral}"></div>
+                    </div>
+                    <div id="tab-rank" class="tab-pane" style="display: none;">
+                        <div class="elements-aba" th:replace="~{fragments/jam/rank :: conteudoRank}"></div>
+                    </div>
+                    <div id="tab-jogos" class="tab-pane" style="display: none;">
+                        <div class="elements-aba" th:replace="~{fragments/jam/games :: conteudoJogos}"></div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
