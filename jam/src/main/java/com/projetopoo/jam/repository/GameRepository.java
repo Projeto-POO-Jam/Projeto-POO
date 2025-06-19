@@ -11,5 +11,4 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByGameId(long gameId);
-    Boolean existsGameByGameSubscribe(Subscribe gameSubscribe);
 }

@@ -44,26 +44,30 @@ public class GameService {
     public void createGame(GameResquestDTO gameResquestDTO, String identifier) throws IOException {
 
         Game game = modelMapper.map(gameResquestDTO, Game.class);
+        game.setGameId(null);
         User user = userRepository.findByIdentifier(identifier);
         Optional<Jam> jam = jamRepository.findByJamId(gameResquestDTO.getJamId());
 
         if(jam.isPresent()){
-           Optional<Subscribe> subscribe = subscribeRepository.findBySubscribeUserAndSubscribeJam(user,jam.get());
-           if(subscribe.isPresent()){
-               if(gameRepository.existsGameByGameSubscribe(subscribe.get())){
-                   throw new IllegalArgumentException("Jogo já cadastrado ");
-               }
-               else{
-                   String uuid = UUID.randomUUID().toString();
-                   game.setGamePhoto(ImageUtil.createImage(gameResquestDTO.getGamePhoto(), UPLOAD_DIRECTORY + uuid + "/img", "/upload/game/" + uuid + "/img/"));
-                   game.setGameFile(ImageUtil.createImage(gameResquestDTO.getGameFile(), UPLOAD_DIRECTORY + uuid + "/file", "/upload/game/" + uuid + "/file/"));
-                   //Descompactar
-                   gameRepository.save(game);
-               }
-           }
-           else {
-               throw new EntityNotFoundException("Subscribe não encontrada");
-           }
+            Optional<Subscribe> subscribe = subscribeRepository.findBySubscribeUserAndSubscribeJam(user,jam.get());
+            if(subscribe.isPresent()){
+                Subscribe gameSubscribe = subscribe.get();
+                if(gameSubscribe.getSubscribeGame() != null){
+                    throw new IllegalArgumentException("Jogo já cadastrado ");
+                }
+                else{
+                    String uuid = UUID.randomUUID().toString();
+                    game.setGamePhoto(ImageUtil.createImage(gameResquestDTO.getGamePhoto(), UPLOAD_DIRECTORY + uuid + "/img", "/upload/game/" + uuid + "/img/"));
+                    game.setGameFile(ImageUtil.createImage(gameResquestDTO.getGameFile(), UPLOAD_DIRECTORY + uuid + "/file", "/upload/game/" + uuid + "/file/"));
+                    //Descompactar
+                    game = gameRepository.save(game);
+                    gameSubscribe.setSubscribeGame(game);
+                    subscribeRepository.save(gameSubscribe);
+                }
+            }
+            else {
+                throw new EntityNotFoundException("Subscribe não encontrada");
+            }
         }
         else{
             throw new EntityNotFoundException("Jam não encontrada");

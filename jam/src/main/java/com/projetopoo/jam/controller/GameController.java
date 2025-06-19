@@ -22,8 +22,8 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @PostMapping
-    public ResponseEntity<?> createGame(@RequestBody GameResquestDTO gameRequestDTO, Principal principal) {
+    @PostMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<?> createGame(GameResquestDTO gameRequestDTO, Principal principal) {
         try {
             gameService.createGame(gameRequestDTO, principal.getName());
             return ResponseEntity.status(HttpStatus.CREATED).build();
