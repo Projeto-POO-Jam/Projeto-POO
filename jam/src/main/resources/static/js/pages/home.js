@@ -165,15 +165,16 @@ $(function() {
     }
 
     //Faz fetch e renderiza primeira página de um mês
+    // VERSÃO SIMPLIFICADA E MAIS ROBUSTA
+
     function loadMonth(month) {
-        if (month < getCurrentMonth()) return;
+        if (month < getCurrentMonth() && month !== getCurrentMonth()) return;
         if (loadedMonths.includes(month) || isLoading) return;
 
         isLoading = true;
         loadedMonths.push(month);
         monthOffsets[month] = 0;
 
-        //Feedback visual.
         const lastLoadMoreButton = $('.load-more').last();
         if (lastLoadMoreButton.length) {
             lastLoadMoreButton.text('Buscando mais Jams...');
@@ -185,31 +186,37 @@ $(function() {
                     renderMonthSection(month, jams, total);
                     const section = container.find(`.month-section[data-month='${month}']`);
                     removeSkeleton(section);
-
                     monthOffsets[month] = jams.length;
-                    isLoading = false;
-
-                    if (lastLoadMoreButton.length) {
-                        lastLoadMoreButton.text('Carregar mais');
-                    }
-
-                } else {
-                    const [y, m] = month.split('-').map(Number);
-                    const date = new Date(y, m - 1, 1);
-                    date.setMonth(date.getMonth() + 1);
-
-                    const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-
-                    loadMonth(nextMonth);
                 }
             })
             .fail(err => {
                 console.error(`Erro ao carregar mês ${month}:`, err);
-                isLoading = false;
+            })
+            .always(() => {
+                isLoading = false; // Garante que terminou o estado de carregamento
                 if (lastLoadMoreButton.length) {
                     lastLoadMoreButton.text('Carregar mais');
                 }
+                // Agora, com o estado atualizado, verifica se precisa de mais
+                setTimeout(checkAndLoadUntilScrollable, 0);
             });
+    }
+
+    // ela vai verificar se o mês retornado do fetch estava vazio e carregar o próximo
+    function checkAndLoadUntilScrollable() {
+        if (!isLoading && $(document).height() <= $(window).height()) {
+            const lastLoaded = loadedMonths[loadedMonths.length - 1];
+            if (!lastLoaded) return;
+
+            const section = $(`.month-section[data-month='${lastLoaded}']`);
+            if (section.find('.jam-card-home').length === 0 || $(document).height() <= $(window).height()) {
+                const [y, m] = lastLoaded.split('-').map(Number);
+                const date = new Date(y, m - 1, 1);
+                date.setMonth(date.getMonth() + 1);
+                const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                loadMonth(nextMonth);
+            }
+        }
     }
 
     //SSE handlers:
@@ -297,8 +304,8 @@ $(function() {
 
                 const sectionM = container.find(`.month-section[data-month='${month}']`);
                 removeSkeleton(sectionM);
-
                 monthOffsets[month] += jams.length; //atualiza qtd de jams mostrada no mes
+
                 //se ainda tem mais mostra o btn de carregar mais
                 if (monthOffsets[month] < total) {
                     const btnLoadMore = $('<button>')
@@ -309,7 +316,10 @@ $(function() {
                 }
             })
             .fail(err => console.error(`Erro ao carregar mais em ${month}:`, err))
-            .always(() => isLoading = false);
+            .always(() => {
+                isLoading = false;
+                setTimeout(checkAndLoadUntilScrollable, 0);
+            });
     }
 
     //Carregar proximos meses com Scroll
