@@ -21,10 +21,10 @@ public class VoteController {
     @Autowired
     private VoteService voteService;
 
-    @GetMapping
-    public ResponseEntity<?> findVote(@RequestBody VoteRequestDTO voteRequest, Principal principal) {
+    @GetMapping("/{gameId}")
+    public ResponseEntity<?> findVote(@PathVariable Long gameId, Principal principal) {
         try {
-            VoteResponseDTO voteResponseDTO = voteService.findVote(voteRequest, principal.getName());
+            VoteResponseDTO voteResponseDTO = voteService.findVote(gameId, principal.getName());
             return ResponseEntity.status(HttpStatus.CREATED).body(voteResponseDTO);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -41,9 +41,9 @@ public class VoteController {
         }
     }
 
-    @GetMapping("/total")
-    public ResponseEntity<VoteTotalResponseDTO> totalVotes(@RequestBody VoteRequestDTO voteRequest) {
-        VoteTotalResponseDTO voteTotalResponseDTO = voteService.totalVotes(voteRequest);
+    @GetMapping("/total/{gameId}")
+    public ResponseEntity<VoteTotalResponseDTO> totalVotes(@PathVariable Long gameId) {
+        VoteTotalResponseDTO voteTotalResponseDTO = voteService.totalVotes(gameId);
         return ResponseEntity.ok(voteTotalResponseDTO);
     }
 

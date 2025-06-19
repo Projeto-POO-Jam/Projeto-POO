@@ -13,6 +13,7 @@ public class JamSseDTO {
     private LocalDateTime jamStartDate;
     private LocalDateTime jamEndDate;
     private JamStatus jamStatus;
+    private Long jamTotalSubscribers;
 
     public String getJamTitle() {
         return jamTitle;
@@ -60,5 +61,13 @@ public class JamSseDTO {
 
     public void setJamStatus(JamStatus jamStatus) {
         this.jamStatus = jamStatus;
+    }
+
+    public Long getJamTotalSubscribers() {
+        return jamTotalSubscribers;
+    }
+
+    public void setJamTotalSubscribers(Long jamTotalSubscribers) {
+        this.jamTotalSubscribers = jamTotalSubscribers;
     }
 }

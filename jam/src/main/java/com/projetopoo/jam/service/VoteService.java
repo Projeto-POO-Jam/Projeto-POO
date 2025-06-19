@@ -28,10 +28,10 @@ public class VoteService {
     private SseNotificationService sseNotificationService;
 
     @Transactional
-    public VoteResponseDTO findVote(VoteRequestDTO voteRequestDTO, String identifier) throws UserValidationException {
+    public VoteResponseDTO findVote(Long gameId, String identifier) throws UserValidationException {
         VoteResponseDTO voteResponseDTO = new VoteResponseDTO();
 
-        Vote vote = getVote(voteRequestDTO, identifier);
+        Vote vote = getVote(gameId, identifier);
         Optional<Vote> optionalVote = voteRepository.findByVoteUserAndVoteGame(vote.getVoteUser(), vote.getVoteGame());
 
         if(optionalVote.isPresent()) {
@@ -47,7 +47,7 @@ public class VoteService {
     public VoteResponseDTO toggleVote(VoteRequestDTO voteRequestDTO, String identifier) {
         VoteResponseDTO voteResponseDTO = new VoteResponseDTO();
 
-        Vote vote = getVote(voteRequestDTO, identifier);
+        Vote vote = getVote(voteRequestDTO.getVoteGameId(), identifier);
         Optional<Vote> optionalVote = voteRepository.findByVoteUserAndVoteGame(vote.getVoteUser(), vote.getVoteGame());
 
         if(optionalVote.isPresent()) {
@@ -58,7 +58,7 @@ public class VoteService {
             voteResponseDTO.setVoted(true);
         }
 
-        VoteTotalResponseDTO voteTotalResponseDTO = totalVotes(voteRequestDTO);
+        VoteTotalResponseDTO voteTotalResponseDTO = totalVotes(voteRequestDTO.getVoteGameId());
 
         sseNotificationService.sendEventToTopic("games-update", "votes-update-" + voteRequestDTO.getVoteGameId(), voteTotalResponseDTO);
 
@@ -66,23 +66,23 @@ public class VoteService {
     }
 
     @Transactional
-    public Vote getVote(VoteRequestDTO voteRequestDTO, String identifier) {
+    public Vote getVote(Long gameId, String identifier) {
         Vote vote = new Vote();
 
         vote.setVoteUser(userRepository.findByIdentifier(identifier));
 
-        Optional<Game> optionalGame = gameRepository.findByGameId(voteRequestDTO.getVoteGameId());
+        Optional<Game> optionalGame = gameRepository.findByGameId(gameId);
         if (optionalGame.isEmpty()) {
-            throw new EntityNotFoundException("Jogo com o ID " + voteRequestDTO.getVoteGameId() + " não encontrado.");
+            throw new EntityNotFoundException("Jogo com o ID " + gameId + " não encontrado.");
         }
         vote.setVoteGame(optionalGame.get());
         return vote;
     }
   
     @Transactional
-    public VoteTotalResponseDTO totalVotes(VoteRequestDTO voteRequestDTO) {
+    public VoteTotalResponseDTO totalVotes(Long gameId) {
         VoteTotalResponseDTO voteTotalResponseDTO = new VoteTotalResponseDTO();
-        voteTotalResponseDTO.setVoteTotal(voteRepository.countByVoteGame_GameId(voteRequestDTO.getVoteGameId()));
+        voteTotalResponseDTO.setVoteTotal(voteRepository.countByVoteGame_GameId(gameId));
         return voteTotalResponseDTO;
     }
 

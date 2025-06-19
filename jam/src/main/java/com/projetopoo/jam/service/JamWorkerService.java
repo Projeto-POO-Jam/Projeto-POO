@@ -5,6 +5,7 @@ import com.projetopoo.jam.dto.JamSseDTO;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.JamStatus;
 import com.projetopoo.jam.repository.JamRepository;
+import com.projetopoo.jam.repository.SubscribeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class JamWorkerService {
     private ModelMapper modelMapper;
     @Autowired
     private SseNotificationService sseNotificationService;
+    @Autowired
+    private SubscribeRepository subscribeRepository;
 
 
     @Transactional
@@ -39,6 +42,7 @@ public class JamWorkerService {
             jamRepository.save(jam);
 
             JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
+            jamSseDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jamSseDTO.getJamId()));
 
             sseNotificationService.sendEventToTopic("jams-list-update", "jam-status-update", jamSseDTO);
 

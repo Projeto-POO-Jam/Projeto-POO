@@ -19,7 +19,7 @@ public class JamResponse {
     private String jamWallpaper;
     private String jamBanner;
     private JamStatus jamStatus;
-    private long jamTotalSubscribers;
+    private Long jamTotalSubscribers;
     private UserResponseDTO jamUser;
 
     public Long getJamId() {
@@ -102,11 +102,11 @@ public class JamResponse {
         this.jamStatus = jamStatus;
     }
 
-    public long getJamTotalSubscribers() {
+    public Long getJamTotalSubscribers() {
         return jamTotalSubscribers;
     }
 
-    public void setJamTotalSubscribers(long jamTotalSubscribers) {
+    public void setJamTotalSubscribers(Long jamTotalSubscribers) {
         this.jamTotalSubscribers = jamTotalSubscribers;
     }
 
