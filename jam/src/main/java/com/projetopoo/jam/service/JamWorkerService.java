@@ -32,21 +32,24 @@ public class JamWorkerService {
     public void updateJamStatus(Map<String, Object> messageBody) {
         Long jamId = ((Number) messageBody.get("jamId")).longValue();
         String statusStr = (String) messageBody.get("newJamStatus");
+        String jamToken = (String) messageBody.get("jamToken");
         JamStatus newJamStatus = JamStatus.valueOf(statusStr);
 
         Optional<Jam> optionalJam = jamRepository.findById(jamId);
 
         if (optionalJam.isPresent()) {
             Jam jam = optionalJam.get();
-            jam.setJamStatus(newJamStatus);
-            jamRepository.save(jam);
+            if(jam.getJamToken().equals(jamToken)) {
+                jam.setJamStatus(newJamStatus);
+                jamRepository.save(jam);
 
-            JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
-            jamSseDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jamSseDTO.getJamId()));
+                JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
+                jamSseDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jamSseDTO.getJamId()));
 
-            sseNotificationService.sendEventToTopic("jams-list-update", "jam-status-update", jamSseDTO);
+                sseNotificationService.sendEventToTopic("jams-list-update", "jam-status-update", jamSseDTO);
 
-            sseNotificationService.sendEventToTopic("jams-update", "jam-status-update-" + jam.getJamId(), jamSseDTO);
+                sseNotificationService.sendEventToTopic("jams-update", "jam-status-update-" + jam.getJamId(), jamSseDTO);
+            }
         }
     }
 }

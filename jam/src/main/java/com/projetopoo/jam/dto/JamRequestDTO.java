@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 
 public class JamRequestDTO {
+    private Long jamId;
     private String jamTitle;
     private String jamDescription;
     private LocalDateTime jamStartDate;
@@ -16,6 +17,14 @@ public class JamRequestDTO {
     private MultipartFile jamCover;
     private MultipartFile jamWallpaper;
     private MultipartFile jamBanner;
+
+    public Long getJamId() {
+        return jamId;
+    }
+
+    public void setJamId(Long jamId) {
+        this.jamId = jamId;
+    }
 
     public String getJamTitle() {
         return jamTitle;
