@@ -1,3 +1,10 @@
+.container-home{
+    display: flex  ;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .titleHome{
     font-size: 20px;
     font-weight: 600;
@@ -9,6 +16,7 @@
 }
 
 /*View Jams*/
+
 .container-Jams{
     display: flex;
     flex-direction: column;
@@ -31,22 +39,21 @@
 
 .cards-container{
     display: flex;
-    justify-content: start;
     flex-wrap: wrap;
-    width: 100%;
-    margin: 1rem 0rem;
     gap: 2rem;
+    align-items: stretch;
+    margin: 1.5rem 0;
 }
 
-.jam-card-home{
+.jam-card-home {
     width: 13rem;
-    height: 100%;
     border-radius: 1rem;
     padding: 1rem;
     background-color: var(--background-card);
     box-shadow: -1px 5px 6px 1px rgb(49 49 49 / 17%);
-    -webkit-box-shadow: -1px 5px 6px 1px rgb(49 49 49 / 17%);
-    -moz-box-shadow: -1px 5px 6px 1px rgb(49 49 49 / 17%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .header-jam-card-home{
