@@ -19,6 +19,10 @@ public class JamResponse {
     private String jamWallpaper;
     private String jamBanner;
     private JamStatus jamStatus;
+    private String jamBackgroundColor;
+    private String jamBackgroundCardColor;
+    private String jamTextColor;
+    private String jamLinkColor;
     private Long jamTotalSubscribers;
     private UserResponseDTO jamUser;
 
@@ -116,5 +120,37 @@ public class JamResponse {
 
     public void setJamUser(UserResponseDTO jamUser) {
         this.jamUser = jamUser;
+    }
+
+    public String getJamBackgroundColor() {
+        return jamBackgroundColor;
+    }
+
+    public void setJamBackgroundColor(String jamBackgroundColor) {
+        this.jamBackgroundColor = jamBackgroundColor;
+    }
+
+    public String getJamBackgroundCardColor() {
+        return jamBackgroundCardColor;
+    }
+
+    public void setJamBackgroundCardColor(String jamBackgroundCardColor) {
+        this.jamBackgroundCardColor = jamBackgroundCardColor;
+    }
+
+    public String getJamTextColor() {
+        return jamTextColor;
+    }
+
+    public void setJamTextColor(String jamTextColor) {
+        this.jamTextColor = jamTextColor;
+    }
+
+    public String getJamLinkColor() {
+        return jamLinkColor;
+    }
+
+    public void setJamLinkColor(String jamLinkColor) {
+        this.jamLinkColor = jamLinkColor;
     }
 }
