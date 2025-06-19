@@ -5,10 +5,24 @@ $(function() {
 
     //Mostrar Jams
     const container = $('.container-Jams');
-    const limitPerPage = 10;
+    const limitPerPage = 4;
     let loadedMonths = [];
     let monthOffsets = {};
     let isLoading = false;
+
+    //Garante que uma função seja executada no máximo uma vez a cada X milissegundos.
+    function throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        }
+    }
 
     //Pega o mês atual
     function getCurrentMonth() {
@@ -66,7 +80,7 @@ $(function() {
         let durationHtml;
 
         if (diffStart > 0) {
-            // Acontece no futuro
+            //Acontece no futuro
             durationHtml = `
                 <div class="duration-jam-card">
                     <p data-field class="skeleton">Começa em ${formatRelativeTime(diffStart)}</p>
@@ -74,14 +88,14 @@ $(function() {
                 </div>
             `;
         } else if (diffEnd > 0) {
-            // Já começou, mas ainda não acabou
+            //Já começou, mas ainda não acabou
             durationHtml = `
                 <div class="duration-jam-card">
-                    <p data-field class="skeleton">Termina em ${formatRelativeTime(diffEnd)}</p>
+                    <p data-field class="duration-solo-jam-card skeleton">Termina em ${formatRelativeTime(diffEnd)}</p>
                 </div>
             `;
         } else {
-            // Já terminou
+            //Já terminou
             durationHtml = `
                 <div class="duration-jam-card">
                     <p data-field class="skeleton">Essa jam acabou</p>
@@ -89,8 +103,13 @@ $(function() {
             `;
         }
 
+        const count = jam.subscribersCount
+            ?? jam.jamTotalSubscribers
+            ?? jam.subscribeTotal
+            ?? 0;
+
         const card = `
-            <div class="jam-card-home">
+            <div class="jam-card-home" data-jamid="${jam.jamId}">
                 <div class="header-jam-card-home">
                     <h1 data-field class="status-jam-card-home skeleton">${statusText}</h1>
                     <div class="aling-qtd-members-jam-card-home">
@@ -128,47 +147,145 @@ $(function() {
         const cardsContainer = $('<div>').addClass('cards-container');
 
         jams.forEach(jam => {
-            const $card = createJamCard(jam);
-            cardsContainer.append($card);
+            const card = createJamCard(jam);
+            cardsContainer.append(card);
         });
 
         const shown = jams.length + monthOffsets[month];
         if (shown < total) {
-            const $btnLoadMore = $('<button>')
+            const btnLoadMore = $('<button>')
                 .addClass('load-more')
                 .text('Carregar mais')
                 .on('click', () => loadMore(month));
-            section.append($btnLoadMore);
+            section.append(btnLoadMore);
         }
 
         section.prepend(cardsContainer);
         container.append(title, section);
     }
 
-    // Faz fetch e renderiza primeira página de um mês
+    //Faz fetch e renderiza primeira página de um mês
+    // VERSÃO SIMPLIFICADA E MAIS ROBUSTA
+
     function loadMonth(month) {
-        if (month < getCurrentMonth()) return;
+        if (month < getCurrentMonth() && month !== getCurrentMonth()) return;
         if (loadedMonths.includes(month) || isLoading) return;
+
         isLoading = true;
+        loadedMonths.push(month);
         monthOffsets[month] = 0;
+
+        const lastLoadMoreButton = $('.load-more').last();
+        if (lastLoadMoreButton.length) {
+            lastLoadMoreButton.text('Buscando mais Jams...');
+        }
 
         fetchJamsByMonth(month, 0, limitPerPage)
             .done(({ jams, total }) => {
-                // só renderiza se vier pelo menos 1 jam
                 if (jams.length > 0) {
                     renderMonthSection(month, jams, total);
-                    const $section = container.find(`.month-section[data-month='${month}']`);
-                    removeSkeleton($section);
+                    const section = container.find(`.month-section[data-month='${month}']`);
+                    removeSkeleton(section);
+                    monthOffsets[month] = jams.length;
                 }
-
-                loadedMonths.push(month);
-                monthOffsets[month] = jams.length;
             })
-            .fail(err => console.error(`Erro ao carregar mês ${month}:`, err))
-            .always(() => { isLoading = false; });
+            .fail(err => {
+                console.error(`Erro ao carregar mês ${month}:`, err);
+            })
+            .always(() => {
+                isLoading = false; // Garante que terminou o estado de carregamento
+                if (lastLoadMoreButton.length) {
+                    lastLoadMoreButton.text('Carregar mais');
+                }
+                // Agora, com o estado atualizado, verifica se precisa de mais
+                setTimeout(checkAndLoadUntilScrollable, 0);
+            });
     }
 
-    // Carrega mais do mes
+    // ela vai verificar se o mês retornado do fetch estava vazio e carregar o próximo
+    function checkAndLoadUntilScrollable() {
+        if (!isLoading && $(document).height() <= $(window).height()) {
+            const lastLoaded = loadedMonths[loadedMonths.length - 1];
+            if (!lastLoaded) return;
+
+            const section = $(`.month-section[data-month='${lastLoaded}']`);
+            if (section.find('.jam-card-home').length === 0 || $(document).height() <= $(window).height()) {
+                const [y, m] = lastLoaded.split('-').map(Number);
+                const date = new Date(y, m - 1, 1);
+                date.setMonth(date.getMonth() + 1);
+                const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                loadMonth(nextMonth);
+            }
+        }
+    }
+
+    //SSE handlers:
+    const stream = new EventSource('/api/events?topic=jams-list-update');
+
+    function updateJamCard(jamId, updater, payload) {
+        if (!jamId) return;
+        const card = $(`.jam-card-home[data-jamid="${jamId}"]`);
+        if (card.length) {
+            updater(card, payload);
+        }
+    }
+
+    //Cria atualização em tempo real nas jams
+    const sseHandlers = {
+        'jam-insert': (e) => {
+            const raw = JSON.parse(e.data);
+            const jam = {
+                ...raw,
+                subscribersCount: raw.jamTotalSubscribers ?? raw.subscribeTotal ?? 0
+            };
+
+            const monthKey = jam.jamStartDate.slice(0, 7);
+            const section = $(`.month-section[data-month="${monthKey}"]`);
+            const cardsContainer = section.find('.cards-container');
+            const newCard = createJamCard(jam);
+            removeSkeleton(newCard);
+
+            if (cardsContainer.length) {
+                cardsContainer.prepend(newCard);
+            } else {
+                renderMonthSection(monthKey, [jam], 1);
+            }
+        },
+
+        'subscriber-update': (e) => {
+            const payload = JSON.parse(e.data);
+            updateJamCard(payload.subscribeJamId, (card, { subscribeTotal }) => {
+                card.find('.aling-qtd-members-jam-card-home p[data-field]')
+                    .removeClass('skeleton')
+                    .text(subscribeTotal ?? 0);
+            }, payload);
+        },
+
+        'status-update': (e) => {
+            const payload = JSON.parse(e.data);
+            updateJamCard(payload.jamId, (card, { jamStatus }) => {
+                const statusMap = { SCHEDULED: 'Agendada', ACTIVE: 'Em andamento', FINISHED: 'Finalizada' };
+                const statusText = statusMap[jamStatus] || jamStatus;
+                card.find('h1.status-jam-card-home[data-field]')
+                    .removeClass('skeleton')
+                    .text(statusText);
+            }, payload);
+        }
+    };
+
+    //Adiciona os listeners de evento a partir do mapa de handlers
+    Object.entries(sseHandlers).forEach(([eventName, handler]) => {
+        stream.addEventListener(eventName, handler);
+    });
+
+    //Tratamento de erro centralizado
+    stream.onerror = (err) => {
+        console.error('SSE connection error:', err);
+        stream.close();
+    };
+
+
+    //Carrega mais do mes
     function loadMore(month) {
         if (isLoading) return;
         isLoading = true;
@@ -181,42 +298,50 @@ $(function() {
                 oldLoad.remove();
 
                 jams.forEach(jam => {
-                    const $card = createJamCard(jam);
-                    cardsContainer.append($card);
+                    const card = createJamCard(jam);
+                    cardsContainer.append(card);
                 });
 
-                const $section = container.find(`.month-section[data-month='${month}']`);
-                removeSkeleton($section);
-
+                const sectionM = container.find(`.month-section[data-month='${month}']`);
+                removeSkeleton(sectionM);
                 monthOffsets[month] += jams.length; //atualiza qtd de jams mostrada no mes
+
                 //se ainda tem mais mostra o btn de carregar mais
                 if (monthOffsets[month] < total) {
-                    const $btnLoadMore = $('<button>')
+                    const btnLoadMore = $('<button>')
                     .addClass('load-more')
                     .text('Carregar mais')
                     .on('click', () => loadMore(month));
-                    section.append($btnLoadMore);
+                    section.append(btnLoadMore);
                 }
             })
             .fail(err => console.error(`Erro ao carregar mais em ${month}:`, err))
-            .always(() => isLoading = false);
+            .always(() => {
+                isLoading = false;
+                setTimeout(checkAndLoadUntilScrollable, 0);
+            });
     }
 
-    // Infinite scroll: quando chegar ao fim, carrega mês anterior
-    $(window).on('scroll', () => {
+    //Carregar proximos meses com Scroll
+    function handleInfiniteScroll() {
         const scrollBottom = $(window).scrollTop() + $(window).height();
-        if (scrollBottom + 100 >= $(document).height()) {
-            let nextMonth = loadedMonths.length === 0
-                ? getCurrentMonth()
-                : (() => {
-                    const [y, m] = loadedMonths[loadedMonths.length - 1].split('-').map(Number);
-                    const date = new Date(y, m, 1);
-                    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
-                })();
+        if (scrollBottom + 100 >= $(document).height() && !isLoading) {
+
+            const lastLoaded = loadedMonths[loadedMonths.length - 1];
+            if (!lastLoaded) return;
+
+            const [y, m] = lastLoaded.split('-').map(Number);
+            const date = new Date(y, m - 1, 1);
+            date.setMonth(date.getMonth() + 1);
+
+            const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
             loadMonth(nextMonth);
         }
-    });
+    }
 
-    // Inicializa com mês atual
+    $(window).on('scroll', throttle(handleInfiniteScroll, 100));
+
+    // Inicializa com o mês atual
     loadMonth(getCurrentMonth());
 });
