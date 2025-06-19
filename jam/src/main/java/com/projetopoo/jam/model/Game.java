@@ -17,7 +17,7 @@ public class Game {
     private String gameTitle;
 
     @Column(nullable = false)
-    private String description;
+    private String gameDescription;
 
     @Column(nullable = false)
     private String gamePhoto;
@@ -38,9 +38,9 @@ public class Game {
 
     }
 
-    public String getDescription() { return description; }
+    public String getGameDescription() { return gameDescription; }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setGameDescription(String description) { this.gameDescription = description; }
 
     public String getGamePhoto() { return gamePhoto; }
 
