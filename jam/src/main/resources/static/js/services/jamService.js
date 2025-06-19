@@ -19,6 +19,6 @@ export function fetchJamsByMonth(month, offset = 0, limit = 4) {
  * @returns {Promise<object>} – o objeto com todos os campos da Jam
  */
 export function fetchViewJam(id) {
-    return apiRequest('GET', `api/jams/pegaViewJam/${id}`)
+    return apiRequest('GET', `api/jams/${id}`)
         .then(({ status, data }) => data);
 }

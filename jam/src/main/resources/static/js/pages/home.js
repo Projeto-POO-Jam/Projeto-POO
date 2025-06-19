@@ -103,7 +103,7 @@ $(function() {
             `;
         }
 
-        const count = jam.subscribersCount
+        const count = jam.jamTotalSubscribers
             ?? jam.jamTotalSubscribers
             ?? jam.subscribeTotal
             ?? 0;
@@ -114,7 +114,7 @@ $(function() {
                     <h1 data-field class="status-jam-card-home skeleton">${statusText}</h1>
                     <div class="aling-qtd-members-jam-card-home">
                         <span class="material-symbols-outlined">account_circle</span>
-                        <p data-field class="skeleton">${jam.subscribersCount}</p>
+                        <p data-field class="skeleton">${jam.jamTotalSubscribers}</p>
                     </div>
                 </div>
                 <div class="container-jam-card-home">
@@ -165,8 +165,6 @@ $(function() {
     }
 
     //Faz fetch e renderiza primeira página de um mês
-    // VERSÃO SIMPLIFICADA E MAIS ROBUSTA
-
     function loadMonth(month) {
         if (month < getCurrentMonth() && month !== getCurrentMonth()) return;
         if (loadedMonths.includes(month) || isLoading) return;
@@ -283,7 +281,6 @@ $(function() {
         console.error('SSE connection error:', err);
         stream.close();
     };
-
 
     //Carrega mais do mes
     function loadMore(month) {

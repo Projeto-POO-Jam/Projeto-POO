@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: Head('Página Inicial')}"></head>
+<head>
+    <div th:replace="~{fragments/head :: Head('Página Inicial')}"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
+</head>
 <body>
     <div th:replace="fragments/menu :: siteMenu"></div>
 
@@ -72,6 +75,30 @@
                     </div>
 
                     <div class="form-group form-group-jam">
+                        <label for="backgroundColor">Cor do Background</label>
+                        <div id="backgroundColorPicker"></div>
+                        <input id="backgroundColor" name="backgroundColor" type="hidden" />
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="cardBackgroundColor">Cor do Background do Card</label>
+                        <div id="cardBackgroundColorPicker"></div>
+                        <input id="cardBackgroundColor" name="cardBackgroundColor" type="hidden" />
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="textColor">Cor do Texto</label>
+                        <div id="textColorPicker"></div>
+                        <input id="textColor" name="textColor" type="hidden" />
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="linkColor">Cor dos Links</label>
+                        <div id="linkColorPicker"></div>
+                        <input id="linkColor" name="linkColor" type="hidden" />
+                    </div>
+
+                    <div class="form-group form-group-jam">
                         <label for="coverImg">Imagem Capa</label>
                         <input
                             id="coverImg"
@@ -114,6 +141,7 @@
     </main>
 
     <script th:src="@{/js/common/theme.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
     <script type="module" th:src="@{/js/pages/registerJam.js}"></script>
 </body>
 </html>

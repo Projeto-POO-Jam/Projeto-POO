@@ -3,79 +3,93 @@ import { bindDataFields } from '../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { showError } from '../common/notifications.js';
 
+import { init as initGeral } from './fragments/jam_fragments/geral.js';
+// import { init as initRank } from './fragments/jam_fragments/rank.js';
+// import { init as initGames } from './fragments/jam_fragments/games.js';
+
 $(function() {
-    const jamId = $('body').data('jam-id');
+    //Lógica abas do menu
+    $('.options-jam-card button').on('click', function() {
+        const tabId = $(this).data('tab');
+
+        // Controla a classe 'active' nos botões
+        $('.options-jam-card button').removeClass('active');
+        $(this).addClass('active');
+
+        // Mostra/Esconde o conteúdo da aba
+        $('.tab-pane').hide();
+        $('#tab-' + tabId).show();
+    });
+
+
+    //Lógica para carregar a pagina
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    const jamId = pathSegments[pathSegments.length - 1];
     const root = 'main';
 
-    //Aplica skeleton
     applySkeleton(root);
 
-    //Chama a API
-    fetchViewJam(jamId)
-        .then(data => {
-            //Preenche os campos estáticos
+    $.when(fetchViewJam(jamId))
+        .done(data => {
+            // Lógica de estilização
+            const dynamicStyles = [];
+
+            if (data.jamBackgroundColor) {
+                $('body').css('background-color', data.jamBackgroundColor);
+            }
+
+            if (data.jamBackgroundCardColor) {
+                $('#jam-content.card-view-jam-id, .details-jam-card').css('background-color', data.jamBackgroundCardColor);
+            }
+
+            if (data.jamTextColor) {
+                dynamicStyles.push(`main { color: ${data.jamTextColor}; }`);
+            }
+
+            if (data.jamLinkColor) {
+                dynamicStyles.push(`main a { color: ${data.jamLinkColor}; }`);
+                dynamicStyles.push(`main a:hover { filter: brightness(0.8); }`);
+            }
+
+            if (dynamicStyles.length > 0) {
+                const styleTag = `<style>${dynamicStyles.join('\n')}</style>`;
+                $('head').append(styleTag);
+            }
+
+            const coverContainer = $('#jam-cover-container');
+            const coverImg = $('img[data-field="jamCover"]');
+
+            if (!data.jamCover) {
+                coverContainer.remove();
+            } else {
+                const coverUrl = data.jamCover;
+                coverImg.attr('src', coverUrl).removeClass('skeleton');
+                $('body').css({
+                    'background-image': `url(${coverUrl})`,
+                    'background-size': 'cover',
+                    'background-position': 'center',
+                    'background-attachment': 'fixed'
+                });
+            }
+
+            // Preenche os campos estáticos da página
             bindDataFields(data, root);
 
-            //Se tiver wallpaper, aplica no <body>
-            if (data.wallpaperImgUrl) {
-                $('body')
-                    .css('background-image', `url(${data.wallpaperImgUrl})`)
-                    .css('background-size', 'cover')
-                    .css('background-position','center');
-            }
-
-            // Monta o card de duração
-            if (data.startDate && data.endDate) {
-                const start = new Date(data.startDate);
-                const end = new Date(data.endDate);
-                const days = Math.round((end - start) / (1000 * 60 * 60 * 24));
-                $('#jam-duration-container').html(`
-                    <div class="card duration-card">
-                        <h3>Duração</h3>
-                        <p>${days} dia${days>1?'s':''} (${data.startDate} até ${data.endDate})</p>
-                        <button>Postar Game</button>
-                    </div>
-                `);
-            }
-
-            //HTML livre do usuário
-            const $userCard = $('.page-user-jam-card');
-            const userHtml = data.htmlContent?.trim();
-
-            if (userHtml) {
-                $userCard.html(userHtml);
-            } else {
-                // fallback padrão
-                $userCard.html(`
-                    <div class="default-jam-card">
-                        <p>Descrição da Jam.</p>
-                    </div>
-                `);
-            }
-
-            $userCard.removeClass('skeleton');
-
-            //Transfere background/borda
-            const $first = $userCard.children().first();
-            if ($first.length) {
-                const styles = {
-                    'background-color': $first.css('background-color'),
-                    'background-image': $first.css('background-image'),
-                    'background-repeat': $first.css('background-repeat'),
-                    'background-position': $first.css('background-position'),
-                    'background-size': $first.css('background-size'),
-                    'border': $first.css('border'),
-                };
-                $('.card-view-jam').css(styles);
-            }
+            //Inicializar Aba
+            initGeral(data);
+            // initRank(data);
+            // initGames(data);
 
         })
-        .catch(err => {
+        .fail(err => {
             console.error('Erro ao carregar Jam:', err);
             showError('Não foi possível carregar esta Jam.');
-            //redirecionar para 404, se quiser
         })
-        .finally(() => {
-            removeSkeleton(root);
+        .always(() => {
+            setTimeout(() => {
+                removeSkeleton(root);
+                $(root).find('.skeleton').removeClass('skeleton');
+                $('.container-jam-card').removeClass('skeleton');
+            }, 100);
         });
 });
