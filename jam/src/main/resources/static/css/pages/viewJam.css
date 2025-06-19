@@ -1,3 +1,10 @@
+.body-view-jam {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
 .jam-card{
     display: flex;
     flex-direction: column;
@@ -7,22 +14,31 @@
     height: 100%;
 }
 
-.img-cover{
-
+#jam-cover-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
-.card-view-jam{
+#jam-cover-container img{
+    max-width: 100%;
+}
+
+.card-view-jam-id{
     width: 70%;
     height: 100%;
-    border: 2px solid #ddd;
     border-radius: 1rem;
-    padding: 1rem;
+    padding: 2rem;
+    background-color: var(--background);
+    margin: 2rem 0;
 }
 
 .header-jam-card{
     display: flex;
     flex-direction: column;
     width: 100%;
+    border-bottom: 1px solid var(--subText);
 }
 
 .details-jam-card{
@@ -30,20 +46,21 @@
     justify-content: space-between;
     align-items: start;
     width: 100%;
-    margin: 1rem;
-}
-
-
-.name-jam{
-
 }
 
 .name-jam h1{
-
+    font-size: 32px;
+    font-weight: bold;
 }
 
 .name-jam p{
+    font-size: 16px;
+    margin-top: 1rem;
+}
 
+.name-jam span{
+    color: var(--blue);
+    cursor: pointer;
 }
 
 .participants-jam{
@@ -53,11 +70,14 @@
 }
 
 .participants-jam h1{
-
+    font-size: 26px;
+    font-weight: bold;
 }
 
 .participants-jam p{
-
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: 400;
 }
 
 .options-jam-card{
@@ -73,4 +93,60 @@
     border: none;
     margin: 10px;
     color: var(--text);
+}
+
+.container-jam-card{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.page-user-jam-card{
+    margin-top: 2rem;
+}
+
+.card-duration-view-jam-id{
+    padding: 1.5rem;
+    border: 1px solid var(--text);
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+#jam-duration-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.range-text{
+
+}
+
+.container-card-duration-view-jam-id{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.countdown-text{
+    font-size: 16px;
+}
+
+.join-btn{
+    background-color: var(--blue);
+    border-radius: 0.5rem;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+}
+
+.join-btn:hover{
+    transform: scale(1.1);
+    transition: 0.2s;
 }

@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: Head('Página Inicial')}"></head>
-<body>
+<body class="body-view-jam">
     <div th:replace="fragments/menu :: siteMenu"></div>
 
     <main class="jam-card">
         <section id="jam-cover-container">
             <img
-                data-field="coverImgUrl"
+                data-field="jamCover"
                 data-default="/images/placeholder-cover.png"
                 alt="Cover da Jam"
                 class="skeleton"
             />
         </section>
 
-        <section class="card-view-jam" id="jam-content">
+        <section class="card-view-jam-id" id="jam-content">
             <div class="header-jam-card">
                 <div class="details-jam-card">
                     <div class="name-jam">
-                        <h1 data-field="jamName" class="skeleton">Teste</h1>
+                        <h1 data-field="jamTitle" class="skeleton">Teste</h1>
                         <p class="skeleton">
                             Criada por:
-                            <span data-field="jamCriador"></span>
+                            <span data-field="jamUser.userName"></span>
                         </p>
                     </div>
                     <div class="participants-jam">
-                        <h1 data-field="jamQtd" class="skeleton"></h1>
+                        <h1 data-field="jamTotalSubscribers" class="skeleton"></h1>
                         <p>Ingressou</p>
                     </div>
                 </div>
@@ -37,19 +37,13 @@
             </div>
 
             <div class="container-jam-card skeleton">
-                <div
-                    id="jam-duration-container"
-                    data-field="jamDuration"
-                    style="height: 80px; margin-bottom: 1rem;"
-                ></div>
-
-                <div class="page-user-jam-card skeleton" data-field="htmlContent"></div>
+                <div id="jam-duration-container"></div>
+                <div class="page-user-jam-card skeleton" data-field="jamContent"></div>
             </div>
         </section>
     </main>
 
-
     <script th:src="@{/js/common/theme.js}"></script>
-    <script type="module" th:src="@{/js/pages/viewJam.js}"></script>'
+    <script type="module" th:src="@{/js/pages/viewJam.js}"></script>
 </body>
 </html>
