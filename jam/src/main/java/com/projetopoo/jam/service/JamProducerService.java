@@ -13,10 +13,11 @@ public class JamProducerService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void scheduleJamStatusUpdate(Long jamId, long delayInMilliseconds, String newJamStatus) {
+    public void scheduleJamStatusUpdate(Long jamId, long delayInMilliseconds, String newJamStatus, String jamToken) {
         Map<String, Object> messageBody = Map.of(
                 "jamId", jamId,
-                "newJamStatus", newJamStatus
+                "newJamStatus", newJamStatus,
+                "jamToken", jamToken
         );
 
         rabbitTemplate.convertAndSend(

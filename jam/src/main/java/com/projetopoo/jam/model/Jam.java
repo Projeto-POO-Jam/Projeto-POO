@@ -42,6 +42,9 @@ public class Jam {
     @Column(nullable = false)
     private JamStatus jamStatus = JamStatus.SCHEDULED;
 
+    @Column
+    private String jamToken;
+
     @OneToMany(mappedBy = "subscribeJam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subscribe> jamSubscribes ;
 
@@ -147,5 +150,13 @@ public class Jam {
 
     public void setJamStatus(JamStatus jamStatus) {
         this.jamStatus = jamStatus;
+    }
+
+    public String getJamToken() {
+        return jamToken;
+    }
+
+    public void setJamToken(String jamToken) {
+        this.jamToken = jamToken;
     }
 }

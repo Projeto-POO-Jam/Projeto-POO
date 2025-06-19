@@ -1,10 +1,12 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.*;
+import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.JamRepository;
 import com.projetopoo.jam.repository.SubscribeRepository;
 import com.projetopoo.jam.repository.UserRepository;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import org.modelmapper.ModelMapper;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,6 +53,8 @@ public class JamService {
     @Transactional
     public void createJam(JamRequestDTO jamRequestDTO, String identifier) throws IOException {
 
+        jamRequestDTO.setJamId(null);
+
         Jam jam = modelMapper.map(jamRequestDTO, Jam.class);
 
         jam.setJamUser(userRepository.findByIdentifier(identifier));
@@ -64,24 +69,100 @@ public class JamService {
         String directoryBanner = UPLOAD_DIRECTORY + "/" + uuid + "/banner";
         jam.setJamBanner(ImageUtil.createImage(jamRequestDTO.getJamBanner(), directoryBanner, "/upload/jam/" + uuid + "/banner/"));
 
+        jam.setJamToken(UUID.randomUUID().toString());
+
         jamRepository.save(jam);
 
-        LocalDateTime now = LocalDateTime.now();
-
-        if (jam.getJamStartDate().isAfter(now)) {
-            long startDelay = Duration.between(now, jam.getJamStartDate()).toMillis();
-            rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), startDelay, JamStatus.ACTIVE.name());
-        }
-
-        if (jam.getJamEndDate().isAfter(now)) {
-            long endDelay = Duration.between(now, jam.getJamEndDate()).toMillis();
-            rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), endDelay, JamStatus.FINISHED.name());
-        }
+        scheduleJamStatusUpdate(jam);
 
         JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);
         jamSseDTO.setJamTotalSubscribers(0L);
 
         sseNotificationService.sendEventToTopic("jams-list-update", "jam-insert", jamSseDTO);
+    }
+
+    @Transactional
+    public void updateJam(JamRequestDTO jamRequestDTO, String identifier) throws IOException {
+        List<String> validationErrors = new ArrayList<>();
+
+        Optional<Jam> optionalJam = jamRepository.findByJamId(jamRequestDTO.getJamId());
+        if (optionalJam.isPresent()) {
+            Jam existingJam = optionalJam.get();
+
+            User user = userRepository.findByIdentifier(identifier);
+
+            if(user.equals(existingJam.getJamUser())) {
+                if (jamRequestDTO.getJamCover() != null && !jamRequestDTO.getJamCover().isEmpty()) {
+                    String oldPhotoPath = existingJam.getJamCover();
+
+                    String uuid = UUID.randomUUID().toString();
+                    String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/cover";
+                    existingJam.setJamCover(ImageUtil.createImage(jamRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
+
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    jamRequestDTO.setJamCover(null);
+                }
+
+                if (jamRequestDTO.getJamWallpaper() != null && !jamRequestDTO.getJamWallpaper().isEmpty()) {
+                    String oldPhotoPath = existingJam.getJamWallpaper();
+
+                    String uuid = UUID.randomUUID().toString();
+                    String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/wallpaper";
+                    existingJam.setJamWallpaper(ImageUtil.createImage(jamRequestDTO.getJamWallpaper(), directoryCover, "/upload/jam/" + uuid + "/wallpaper/"));
+
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    jamRequestDTO.setJamWallpaper(null);
+                }
+
+                if (jamRequestDTO.getJamBanner() != null && !jamRequestDTO.getJamBanner().isEmpty()) {
+                    String oldPhotoPath = existingJam.getJamBanner();
+
+                    String uuid = UUID.randomUUID().toString();
+                    String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/banner";
+                    existingJam.setJamBanner(ImageUtil.createImage(jamRequestDTO.getJamBanner(), directoryCover, "/upload/jam/" + uuid + "/banner/"));
+
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    jamRequestDTO.setJamBanner(null);
+                }
+
+                boolean updateDate = false;
+                LocalDateTime now = LocalDateTime.now();
+
+                if(jamRequestDTO.getJamStartDate() != null && !jamRequestDTO.getJamStartDate().isEqual(existingJam.getJamStartDate())) {
+                    updateDate = true;
+                    if(jamRequestDTO.getJamStartDate().isAfter(now)){
+                        existingJam.setJamStatus(JamStatus.SCHEDULED);
+                    }
+                }
+
+                if(jamRequestDTO.getJamEndDate() != null && !jamRequestDTO.getJamEndDate().isEqual(existingJam.getJamEndDate())) {
+                    updateDate = true;
+                    if(jamRequestDTO.getJamEndDate().isAfter(now)){
+                        if(jamRequestDTO.getJamStartDate().isBefore(now)){
+                            existingJam.setJamStatus(JamStatus.ACTIVE);
+                        } else {
+                            existingJam.setJamStatus(JamStatus.SCHEDULED);
+                        }
+
+                    }
+                }
+
+                if(updateDate) {
+                    existingJam.setJamToken(UUID.randomUUID().toString());
+                }
+
+                modelMapper.map(jamRequestDTO, existingJam);
+                jamRepository.save(existingJam);
+
+                if(updateDate) {
+                    scheduleJamStatusUpdate(existingJam);
+                }
+            } else {
+                throw new AccessDeniedException("Usuário não autorizado a alterar a jam.");
+            }
+        } else {
+            throw new EntityNotFoundException("Jam com o ID " + jamRequestDTO.getJamId() + " não encontrada.");
+        }
     }
 
     @Transactional
@@ -127,6 +208,20 @@ public class JamService {
                 .collect(Collectors.toList());
 
         return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
+    }
+
+    private void scheduleJamStatusUpdate(Jam jam){
+        LocalDateTime now = LocalDateTime.now();
+
+        if (jam.getJamStartDate().isAfter(now)) {
+            long startDelay = Duration.between(now, jam.getJamStartDate()).toMillis();
+            rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), startDelay, JamStatus.ACTIVE.name(), jam.getJamToken());
+        }
+
+        if (jam.getJamEndDate().isAfter(now)) {
+            long endDelay = Duration.between(now, jam.getJamEndDate()).toMillis();
+            rabbitMQProducerService.scheduleJamStatusUpdate(jam.getJamId(), endDelay, JamStatus.FINISHED.name(), jam.getJamToken());
+        }
     }
 
 }

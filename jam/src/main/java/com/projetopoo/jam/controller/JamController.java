@@ -40,6 +40,22 @@ public class JamController {
         }
     }
 
+    @PutMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<?> updateJam(JamRequestDTO jamRequestDTO, Principal principal) {
+        try {
+            jamService.updateJam(jamRequestDTO, principal.getName());
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } catch (IllegalArgumentException | IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+
     @GetMapping("/list")
     public ResponseEntity<?> listJams(
             @RequestParam String month,
