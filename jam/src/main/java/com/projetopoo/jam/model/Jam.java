@@ -45,6 +45,18 @@ public class Jam {
     @Column
     private String jamToken;
 
+    @Column
+    private String jamBackgroundColor;
+
+    @Column
+    private String jamBackgroundCardColor;
+
+    @Column
+    private String jamTextColor;
+
+    @Column
+    private String jamLinkColor;
+
     @OneToMany(mappedBy = "subscribeJam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Subscribe> jamSubscribes ;
 
@@ -158,5 +170,37 @@ public class Jam {
 
     public void setJamToken(String jamToken) {
         this.jamToken = jamToken;
+    }
+
+    public String getJamBackgroundColor() {
+        return jamBackgroundColor;
+    }
+
+    public void setJamBackgroundColor(String jamBackgroundColor) {
+        this.jamBackgroundColor = jamBackgroundColor;
+    }
+
+    public String getJamBackgroundCardColor() {
+        return jamBackgroundCardColor;
+    }
+
+    public void setJamBackgroundCardColor(String jamBackgroundCardColor) {
+        this.jamBackgroundCardColor = jamBackgroundCardColor;
+    }
+
+    public String getJamTextColor() {
+        return jamTextColor;
+    }
+
+    public void setJamTextColor(String jamTextColor) {
+        this.jamTextColor = jamTextColor;
+    }
+
+    public String getJamLinkColor() {
+        return jamLinkColor;
+    }
+
+    public void setJamLinkColor(String jamLinkColor) {
+        this.jamLinkColor = jamLinkColor;
     }
 }

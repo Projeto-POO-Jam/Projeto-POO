@@ -17,6 +17,10 @@ public class JamRequestDTO {
     private MultipartFile jamCover;
     private MultipartFile jamWallpaper;
     private MultipartFile jamBanner;
+    private String jamBackgroundColor;
+    private String jamBackgroundCardColor;
+    private String jamTextColor;
+    private String jamLinkColor;
 
     public Long getJamId() {
         return jamId;
@@ -88,5 +92,37 @@ public class JamRequestDTO {
 
     public void setJamBanner(MultipartFile jamBanner) {
         this.jamBanner = jamBanner;
+    }
+
+    public String getJamBackgroundColor() {
+        return jamBackgroundColor;
+    }
+
+    public void setJamBackgroundColor(String jamBackgroundColor) {
+        this.jamBackgroundColor = jamBackgroundColor;
+    }
+
+    public String getJamBackgroundCardColor() {
+        return jamBackgroundCardColor;
+    }
+
+    public void setJamBackgroundCardColor(String jamBackgroundCardColor) {
+        this.jamBackgroundCardColor = jamBackgroundCardColor;
+    }
+
+    public String getJamTextColor() {
+        return jamTextColor;
+    }
+
+    public void setJamTextColor(String jamTextColor) {
+        this.jamTextColor = jamTextColor;
+    }
+
+    public String getJamLinkColor() {
+        return jamLinkColor;
+    }
+
+    public void setJamLinkColor(String jamLinkColor) {
+        this.jamLinkColor = jamLinkColor;
     }
 }
