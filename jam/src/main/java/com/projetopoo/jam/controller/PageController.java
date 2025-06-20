@@ -28,6 +28,12 @@ public class PageController {
         return "pages/registerGame";
     }
 
+    @GetMapping("/viewGame/{id}")
+    public String viewGame(@PathVariable Long id) {
+        return "pages/viewGame";
+    }
+
+
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
