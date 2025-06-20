@@ -84,7 +84,7 @@ export function init(data, jamId) { // Recebe o jamId
 
         //Evento para postar o Game
         $('#jam-duration-container').on('click', '#post-game-btn', function() {
-            window.location.href = `/registerGame?jamId=${jamId}`;
+            window.location.href = `/jam/registerGame/${jamId}`;
         });
 
         //Inicia o countdown

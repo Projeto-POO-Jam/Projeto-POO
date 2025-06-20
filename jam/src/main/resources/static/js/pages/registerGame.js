@@ -4,16 +4,16 @@ import { setupValidation, isFormValid } from '../common/validation.js';
 
 $(function() {
     //Obter o ID da Jam a partir da URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const jamId = urlParams.get('jamId');
+    const pathParts = window.location.pathname.split('/');
+    const jamId = pathParts[pathParts.length - 1];
 
-    // Se não houver um jamId, o formulário não pode ser enviado.
+    // Se não houver um jamId, o formulário não pode ser enviado.s
     if (!jamId) {
         //manda ele para 404
     }
 
     //Inicializa editor WYSIWYG(Summernote)
-    $('#content').summernote({
+    $('#gameContent').summernote({
         height: 300,
         codemirror: { theme: 'default' }
     });
@@ -57,6 +57,7 @@ $(function() {
 
         formData.set('gameTitle', $('#gameTitle').val());
         formData.set('gameDescription', $('#gameDescription').val());
+        formData.set('gameContent', $('#gameContent').val());
 
         const gamePhoto = $('#gamePhoto')[0].files[0];
         if (gamePhoto) formData.set('gamePhoto', gamePhoto);
@@ -65,6 +66,7 @@ $(function() {
         if (gameFile) formData.set('gameFile', gameFile);
 
         formData.set('jamId', jamId);
+
         try {
             await apiRequest('POST', 'api/games', formData);
             showSuccess('Jogo postado com sucesso!');
