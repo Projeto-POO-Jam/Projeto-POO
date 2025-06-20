@@ -3,6 +3,8 @@ package com.projetopoo.jam.controller;
 import com.projetopoo.jam.dto.CommentRequestDTO;
 import com.projetopoo.jam.dto.CommentResponseDTO;
 import com.projetopoo.jam.dto.GameResquestDTO;
+import com.projetopoo.jam.dto.GameResponseDTO;
+import com.projetopoo.jam.dto.JamResponse;
 import com.projetopoo.jam.service.CommentService;
 import com.projetopoo.jam.service.GameService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,6 +30,16 @@ public class GameController {
             gameService.createGame(gameRequestDTO, principal.getName());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException | EntityNotFoundException | IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{gameId}")
+    public ResponseEntity<?> findGame(@PathVariable Long gameId) {
+        try {
+            GameResponseDTO gameResponse = gameService.findGame(gameId);
+            return ResponseEntity.ok(gameResponse);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
