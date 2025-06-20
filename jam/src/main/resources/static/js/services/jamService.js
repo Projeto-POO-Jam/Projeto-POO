@@ -22,3 +22,23 @@ export function fetchViewJam(id) {
     return apiRequest('GET', `api/jams/${id}`)
         .then(({ status, data }) => data);
 }
+
+/**
+ * Inscreve o usuário em uma Jam.
+ * @param {number|string} jamId - O ID da jam para se inscrever.
+ * @returns {Promise<object>}
+ */
+export function subscribeToJam(jamId) {
+    const body = { subscribeJamId: jamId };
+    return apiRequest('POST', 'api/subscribes', body);
+}
+
+/**
+ * Remove a inscrição do usuário de uma Jam.
+ * @param {number|string} jamId - O ID da jam para sair.
+ * @returns {Promise<object>}
+ */
+export function leaveJam(jamId) {
+    const body = { subscribeJamId: jamId };
+    return apiRequest('POST', 'api/subscribes', body);
+}
