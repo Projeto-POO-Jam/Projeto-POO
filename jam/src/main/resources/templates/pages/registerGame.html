@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/head :: Head('Página Inicial')}"></div>
+</head>
+<body>
+    <div th:replace="fragments/menu :: siteMenu"></div>
+
+    <main>
+        <h2 class="titleHome">Página Cadastrar JAM</h2>
+
+        <section class="container-register-game">
+            <div class="card-jam">
+                <h1>Crie sua Jam</h1>
+                <p>Preencha os campos abaixo para criar sua Jam</p>
+
+                <div th:if="${param.error}" class="alert">
+                    Ocorreu um erro ao criar a jam. Tente novamente.
+                </div>
+
+                <form class="form-game" id="createGameForm" action="" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="form-group form-group-jam">
+                        <label for="gameTitle">Nome da Jam</label>
+                        <input
+                            id="gameTitle"
+                            name="gameTitle"
+                            type="text"
+                            placeholder="ex: pinguim"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="gameTitleError" class="error-message"></p>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="gameDescription" class="tooltip" title="testando">Descrição da Jam</label>
+                        <input
+                            id="gameDescription"
+                            name="gameDescription"
+                            type="text"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="gameDescriptionError" class="error-message"></p>
+                    </div>
+
+                    <div class="division">
+                        <h1>Estilização da pagina</h1>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="gameContent">Conteúdo da Jam (HTML livre)</label>
+                        <textarea id="gameContent" name="gameContent"></textarea>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="gamePhoto">Imagem Capa</label>
+                        <input
+                            id="gamePhoto"
+                            name="gamePhoto"
+                            type="file"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                    </div>
+
+                    <div class="division">
+                        <h1>Enviar Game</h1>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="gameFile">Enviar Game</label>
+                        <input
+                            id="gameFile"
+                            name="gameFile"
+                            type="file"
+                            th:classappend="${param.error} ? ' error' : ''"
+                        />
+                        <p id="gameFileError" class="error-message"></p>
+                    </div>
+
+                    <button
+                        id="submitButton"
+                        type="submit"
+                        class="submit-button"
+                    >
+                        Postar Game
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script th:src="@{/js/common/theme.js}"></script>
+    <script type="module" th:src="@{/js/pages/registerGame.js}"></script>
+</body>
+</html>

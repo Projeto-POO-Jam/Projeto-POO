@@ -1,4 +1,4 @@
-import { fetchViewJam } from '../services/jamService.js';
+import { fetchViewJam, subscribeToJam, leaveJam } from '../services/jamService.js';
 import { bindDataFields } from '../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { showError } from '../common/notifications.js';
@@ -83,7 +83,7 @@ $(function() {
             bindDataFields(data, root);
 
             //Inicializar Aba
-            initGeral(data);
+            initGeral(data, jamId);
             // initRank(data);
             // initGames(data);
 
