@@ -36,6 +36,7 @@
 
     a {
         color: var(--black);
+        cursor: pointer;
     }
 }
 
@@ -87,3 +88,12 @@ img.skeleton {
     color: transparent;
 }
 
+
+.dark .pcr-app {
+    background: var(--background-card);
+    box-shadow: 0 0.125rem 0.5rem 0 rgba(0, 0, 0, 0.25);
+}
+
+.note-editable{
+    background-color: var(--white);
+}

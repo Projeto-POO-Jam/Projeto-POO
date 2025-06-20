@@ -68,6 +68,10 @@
 .name-jam h1{
     font-size: 32px;
     font-weight: bold;
+    max-width: 13rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .name-jam p{

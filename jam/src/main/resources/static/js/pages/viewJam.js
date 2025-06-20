@@ -59,13 +59,20 @@ $(function() {
             const coverContainer = $('#jam-cover-container');
             const coverImg = $('img[data-field="jamCover"]');
 
-            if (!data.jamCover) {
-                coverContainer.remove();
-            } else {
+            if (data.jamCover) {
                 const coverUrl = data.jamCover;
                 coverImg.attr('src', coverUrl).removeClass('skeleton');
+
+                $('.details-jam-card').css('margin-top', '-2rem');
+            } else {
+                coverContainer.remove();
+            }
+
+            if (data.jamWallpaper) {
+                // Se o papel de parede existe, define o background do <body>
+                const wallpaperUrl = data.jamWallpaper;
                 $('body').css({
-                    'background-image': `url(${coverUrl})`,
+                    'background-image': `url(${wallpaperUrl})`,
                     'background-size': 'cover',
                     'background-position': 'center',
                     'background-attachment': 'fixed'
