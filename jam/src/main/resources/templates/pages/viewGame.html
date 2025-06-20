@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: Head('Página da Jam')}"></head>
+<body class="body-view-jam">
+    <div th:replace="fragments/menu :: siteMenu"></div>
+
+    <main class="game-card">
+        <section class="card-view-game">
+            <section class="header-view-game">
+                <div class="info-view-game">
+                    <div id="img-capa-view-game">
+                        <img
+                            data-field="game-capa"
+                            data-default="/images/placeholder-cover.png"
+                            alt="Capa do Game"
+                            class="skeleton"
+                        />
+                    </div>
+                    <div class="details-view-game">
+                        <h1 data-field="gameTitle" class="skeleton"></h1>
+                        <p data-field="gameDescription" class="skeleton"></p>
+                        <div class="button-like">
+                            <span class="material-symbols-outlined">thumb_up</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="options-view-game">
+                    <button>Acessar game</button>
+                </div>
+            </section>
+            <section class="container-view-game">
+                <!--html-->
+            </section>
+        </section>
+    </main>
+
+    <script th:src="@{/js/common/theme.js}"></script>
+    <script type="module" th:src="@{/js/pages/viewGame.js}"></script>
+    </body>
+</html>
