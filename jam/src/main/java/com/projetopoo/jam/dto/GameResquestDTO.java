@@ -7,11 +7,21 @@ public class GameResquestDTO {
     private Long jamId;
     private String gameTitle;
     private String gameDescription;
+    private String gameContent;
     private MultipartFile gamePhoto;
     private MultipartFile gameFile;
 
+
     public GameResquestDTO() {
 
+    }
+
+    public String getGameContent() {
+        return gameContent;
+    }
+
+    public void setGameContent(String gameContent) {
+        this.gameContent = gameContent;
     }
 
     public Long getJamId() { return jamId; }
