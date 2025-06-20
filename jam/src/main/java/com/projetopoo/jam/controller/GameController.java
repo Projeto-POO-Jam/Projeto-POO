@@ -1,8 +1,6 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.CommentRequestDTO;
-import com.projetopoo.jam.dto.CommentResponseDTO;
-import com.projetopoo.jam.dto.GameResquestDTO;
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.service.CommentService;
 import com.projetopoo.jam.service.GameService;
 import jakarta.persistence.EntityNotFoundException;
@@ -31,4 +29,30 @@ public class GameController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/{gameId}")
+    public ResponseEntity<?> findGame(@PathVariable Long gameId) {
+        try {
+            GameResponseDTO gameResponse = gameService.findGame(gameId);
+            return ResponseEntity.ok(gameResponse);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /*
+    @GetMapping("/list")
+    public ResponseEntity<?> listJams(
+            @RequestParam int jamId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            List<GameResponseDTO> comments = gameService.findGameList(jamId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    */
+
 }
