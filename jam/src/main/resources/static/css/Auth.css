@@ -85,7 +85,7 @@ form {
 
 .submit-button {
     width: 100%;
-    background-color: var(--black);
+    background-color: var(--blue);
     color: var(--white);
     font-weight: 600;
     font-size: 14px;
@@ -98,7 +98,7 @@ form {
 
 .submit-button:hover {
     transition: 0.2s;
-    background-color: #1c1c1c;
+    background-color: #5560dd;
 }
 
 .submit-button:focus {
