@@ -25,6 +25,9 @@ public class Game {
     @Column(nullable = false)
     private String gameFile;
 
+    @Column(length = Integer.MAX_VALUE)
+    private String gameContent;
+
     @OneToMany(mappedBy = "voteGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vote> gameVotes;
 
@@ -37,6 +40,10 @@ public class Game {
     public Game() {
 
     }
+
+    public String getGameContent() {return gameContent;}
+
+    public void setGameContent(String gameContent) {this.gameContent = gameContent;}
 
     public String getGameDescription() { return gameDescription; }
 
