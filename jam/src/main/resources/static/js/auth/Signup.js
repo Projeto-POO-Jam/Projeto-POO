@@ -26,6 +26,9 @@ $(function() {
         ],
         passwordConfirm: [
             { validate: value => value === $('#password').val(), message: 'As senhas não coincidem.' }
+        ],
+        termos: [
+            { validate: () => $('#termos').is(':checked'), message: 'Você precisa concordar com os termos e políticas.' }
         ]
     };
     setupValidation(validationRules);
