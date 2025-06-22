@@ -1,27 +1,26 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.GameResquestDTO;
-import com.projetopoo.jam.dto.JamResponse;
-import com.projetopoo.jam.dto.GameResponseDTO;
-import com.projetopoo.jam.dto.UserResponseDTO;
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.Subscribe;
 import com.projetopoo.jam.model.User;
-import com.projetopoo.jam.repository.GameRepository;
-import com.projetopoo.jam.repository.JamRepository;
-import com.projetopoo.jam.repository.SubscribeRepository;
-import com.projetopoo.jam.repository.UserRepository;
+import com.projetopoo.jam.repository.*;
 import com.projetopoo.jam.util.ImageUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -40,6 +39,9 @@ public class GameService {
 
     @Autowired
     private JamRepository jamRepository;
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/upload/game/";
 
@@ -93,5 +95,24 @@ public class GameService {
         UserResponseDTO userResponseDTO = modelMapper.map(subcribe.get().getSubscribeUser(), UserResponseDTO.class);
         gameResponse.setUserResponseDTO(userResponseDTO);
         return gameResponse;
+    }
+
+    @Transactional
+    public GamePaginatedResponseDTO findGameList(Long jamId, int offset, int limit){
+
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+
+        Page<Game> gamePage = gameRepository.findByGameSubscribe_SubscribeJam_JamId(jamId, pageable);
+
+        List<GameSummaryDTO> gameSummaryDTOList = gamePage.getContent().stream()
+                .map(game -> {
+                    GameSummaryDTO gameSummaryDTO = modelMapper.map(game, GameSummaryDTO.class);
+                    gameSummaryDTO.setGameVoteTotal(voteRepository.countByVoteGame_GameId(game.getGameId()));
+                    return gameSummaryDTO;
+                })
+                .collect(Collectors.toList());
+
+        return new GamePaginatedResponseDTO(gameSummaryDTOList, gamePage.getTotalElements());
     }
 }
