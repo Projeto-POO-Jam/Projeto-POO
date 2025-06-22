@@ -39,7 +39,7 @@ public class GameController {
         try {
             GameResponseDTO gameResponse = gameService.findGame(gameId);
             return ResponseEntity.ok(gameResponse);
-        } catch (IllegalArgumentException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

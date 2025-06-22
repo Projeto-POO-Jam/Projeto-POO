@@ -2,7 +2,6 @@ package com.projetopoo.jam.dto;
 
 public class GameResponseDTO {
 
-    private Long jamId;
     private String gameTitle;
     private String gameDescription;
     private String gameContent;
@@ -29,10 +28,6 @@ public class GameResponseDTO {
     public void setUserResponseDTO(UserResponseDTO userResponseDTO) {
         this.userResponseDTO = userResponseDTO;
     }
-
-    public Long getJamId() { return jamId; }
-
-    public void setJamId(Long jamId) { this.jamId = jamId; }
 
     public String getGameTitle() { return gameTitle; }
 

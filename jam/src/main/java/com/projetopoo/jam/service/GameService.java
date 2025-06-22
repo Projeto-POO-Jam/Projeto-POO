@@ -3,6 +3,7 @@ package com.projetopoo.jam.service;
 import com.projetopoo.jam.dto.GameResquestDTO;
 import com.projetopoo.jam.dto.JamResponse;
 import com.projetopoo.jam.dto.GameResponseDTO;
+import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.Subscribe;
@@ -83,8 +84,14 @@ public class GameService {
             throw new EntityNotFoundException("Game com o ID " + gameId + " não encontrado.");
         }
         GameResponseDTO gameResponse = modelMapper.map(optionalGame.get(), GameResponseDTO.class);
-        User user = subscribeRepository.findBySubscribeGame(optionalGame.get());
-        gameResponse.setUserResponseDTO(subscribeRepository.findBySubscribeUser(user));
+
+        Optional<Subscribe> subcribe = subscribeRepository.findBySubscribeGame(optionalGame.get());
+        if (subcribe.isEmpty()) {
+            throw new EntityNotFoundException("Incrição com o GameID " + gameId + " não encontrado.");
+        }
+
+        UserResponseDTO userResponseDTO = modelMapper.map(subcribe.get().getSubscribeUser(), UserResponseDTO.class);
+        gameResponse.setUserResponseDTO(userResponseDTO);
         return gameResponse;
     }
 }

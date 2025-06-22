@@ -12,7 +12,7 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     Optional<Subscribe> findBySubscribeUserAndSubscribeJam(User subscribeUser, Jam subscribeJam);
     long countBySubscribeJam_JamId(Long jamId);
 
-    UserResponseDTO findBySubscribeUser(User subscribeUser);
+    Optional<Subscribe> findBySubscribeUser(User subscribeUser);
 
-    User findBySubscribeGame(Game subscribeGame);
+    Optional<Subscribe> findBySubscribeGame(Game subscribeGame);
 }
