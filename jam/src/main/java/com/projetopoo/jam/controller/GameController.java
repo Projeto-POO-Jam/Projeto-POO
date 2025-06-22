@@ -1,22 +1,15 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.CommentRequestDTO;
-import com.projetopoo.jam.dto.CommentResponseDTO;
-import com.projetopoo.jam.dto.GameResquestDTO;
-import com.projetopoo.jam.dto.GameResponseDTO;
-import com.projetopoo.jam.dto.JamResponse;
-import com.projetopoo.jam.service.CommentService;
+import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.service.GameService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/games")
@@ -40,6 +33,19 @@ public class GameController {
             GameResponseDTO gameResponse = gameService.findGame(gameId);
             return ResponseEntity.ok(gameResponse);
         } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<?> listGames(
+            @RequestParam Long jamId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            GamePaginatedResponseDTO response = gameService.findGameList(jamId, offset, limit);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
