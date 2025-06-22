@@ -35,6 +35,15 @@ export function bindDataFields(data, root) {
                 $el.removeClass('skeleton').removeAttr('src');
             }
         }
+        else if ($el.data('image-container')){
+            if(value){
+                $el.css('background-image', `url(${value})`);
+                $el.removeClass('skeleton');
+            }else {
+                $el.removeClass('skeleton');
+            }
+        }
+
         else if ($el.is('input') || $el.is('textarea') || $el.is('select')) {
             $el.val(value != null ? value : '')
                 .removeClass('skeleton')

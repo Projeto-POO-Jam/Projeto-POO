@@ -15,6 +15,9 @@
 
 .form-Jam{
     width: 100%;
+    background-color: var(--background-card);
+    padding: 1rem 2rem;
+    border-radius: 1rem;
 }
 
 .form-group-jam {

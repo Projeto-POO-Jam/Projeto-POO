@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="~{fragments/head :: Head('Página Inicial')}"></div>
+    <div th:replace="~{fragments/head.html :: Head('Cadastrar JAM')}"></div>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
 </head>
 <body>
-    <div th:replace="fragments/menu :: siteMenu"></div>
+    <div th:replace="~{fragments/menu.html :: siteMenu}"></div>
 
     <main>
         <h2 class="titleHome">Página Cadastrar JAM</h2>
@@ -20,118 +20,106 @@
                 </div>
 
                 <form class="form-Jam" id="createJamForm" action="" method="post" enctype="multipart/form-data" novalidate>
-                    <div class="form-group form-group-jam">
-                        <label for="jamName">Nome da Jam</label>
-                        <input
-                            id="jamName"
-                            name="jamName"
-                            type="text"
-                            placeholder="ex: pinguim"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
-                        <p id="jamNameError" class="error-message"></p>
-                    </div>
 
-                    <div class="form-group form-group-jam">
-                        <label for="descricao" class="tooltip" title="testando">Descrição da Jam</label>
-                        <input
-                            id="descricao"
-                            name="descricao"
-                            type="text"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
-                    </div>
+                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='jamName',
+                            name='jamName',
+                            type='text',
+                            icon=null,
+                            placeholder='ex: pinguim',
+                            labelText='Nome da Jam'
+                        )}"></div>
 
-                    <div class="form-group form-group-jam">
-                        <label for="startDate">Data início</label>
-                        <input
-                            id="startDate"
-                            name="startDate"
-                            type="datetime-local"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
-                        <p id="startDateError" class="error-message"></p>
-                    </div>
+                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='descricao',
+                            name='descricao',
+                            type='text',
+                            icon=null,
+                            placeholder=null,
+                            labelText='Descrição da Jam'
+                        )}"></div>
 
-                    <div class="form-group form-group-jam">
-                        <label for="endDate">Data final</label>
-                        <input
-                            id="endDate"
-                            name="endDate"
-                            type="datetime-local"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
-                        <p id="endDateError" class="error-message"></p>
-                    </div>
+                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='startDate',
+                            name='startDate',
+                            type='datetime-local',
+                            icon=null,
+                            placeholder=null,
+                            labelText='Data início'
+                        )}"></div>
+
+                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='endDate',
+                            name='endDate',
+                            type='datetime-local',
+                            icon=null,
+                            placeholder=null,
+                            labelText='Data final'
+                        )}"></div>
 
                     <div class="division">
                         <h1>Estilização da pagina</h1>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="content">Conteúdo da Jam (HTML livre)</label>
+                        <label class="label-input-padrao tooltip" for="content">Conteúdo da Jam (HTML livre)</label>
                         <textarea id="content" name="content"></textarea>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="backgroundColor">Cor do Background</label>
-                        <div id="backgroundColorPicker"></div>
-                        <input id="backgroundColor" name="backgroundColor" type="hidden" />
+                        <label class="label-input-padrao tooltip" for="backgroundColor">Cor do Background</label>
+                        <div class="info-input-padrao">
+                            <div id="backgroundColorPicker"></div>
+                            <input id="backgroundColor" name="backgroundColor" type="hidden" />
+                        </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="cardBackgroundColor">Cor do Background do Card</label>
-                        <div id="cardBackgroundColorPicker"></div>
-                        <input id="cardBackgroundColor" name="cardBackgroundColor" type="hidden" />
+                        <label class="label-input-padrao tooltip" for="cardBackgroundColor">Cor do Background do Card</label>
+                        <div class="info-input-padrao">
+                            <div id="cardBackgroundColorPicker"></div>
+                            <input id="cardBackgroundColor" name="cardBackgroundColor" type="hidden" />
+                        </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="textColor">Cor do Texto</label>
-                        <div id="textColorPicker"></div>
-                        <input id="textColor" name="textColor" type="hidden" />
+                        <label class="label-input-padrao tooltip" for="textColor">Cor do Texto</label>
+                        <div class="info-input-padrao">
+                            <div id="textColorPicker"></div>
+                            <input id="textColor" name="textColor" type="hidden" />
+                        </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="linkColor">Cor dos Links</label>
-                        <div id="linkColorPicker"></div>
-                        <input id="linkColor" name="linkColor" type="hidden" />
+                        <label class="label-input-padrao tooltip" for="linkColor">Cor dos Links</label>
+                        <div class="info-input-padrao">
+                            <div id="linkColorPicker"></div>
+                            <input id="linkColor" name="linkColor" type="hidden" />
+                        </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="coverImg">Imagem Capa</label>
-                        <input
-                            id="coverImg"
-                            name="coverImg"
-                            type="file"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
+                        <label class="label-input-padrao tooltip" for="coverImg">Imagem Capa</label>
+                        <div class="info-input-padrao">
+                            <input id="coverImg" name="coverImg" type="file" />
+                        </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="wallpaperImg">Imagem wallpaper</label>
-                        <input
-                            id="wallpaperImg"
-                            name="wallpaperImg"
-                            type="file"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
+                        <label class="label-input-padrao tooltip" for="wallpaperImg">Imagem wallpaper</label>
+                        <div class="info-input-padrao">
+                            <input id="wallpaperImg" name="wallpaperImg" type="file" />
+                        </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label for="bannerImg">Imagem banner</label>
-                        <input
-                            id="bannerImg"
-                            name="bannerImg"
-                            type="file"
-                            th:classappend="${param.error} ? ' error' : ''"
-                        />
+                        <label class="label-input-padrao tooltip" for="bannerImg">Imagem banner</label>
+                        <div class="info-input-padrao">
+                            <input id="bannerImg" name="bannerImg" type="file" />
+                        </div>
                     </div>
 
-                    <button
-                        id="submitButton"
-                        type="submit"
-                        class="submit-button"
-                    >
+                    <button id="submitButton" type="submit" class="submit-button">
                         Criar Jam
                     </button>
                 </form>

@@ -1,0 +1,81 @@
+.submit-button {
+    width: 100%;
+    background-color: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 13px;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    margin: 1rem 0;
+}
+
+.submit-button:hover {
+    transition: 0.2s;
+    background-color: #5560dd;
+}
+
+.submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-input-padrao{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 8px;
+    border-radius: 0.5rem;
+    background-color: var(--background);
+}
+
+.info-input-padrao span{
+    margin-right: 5px;
+}
+
+.label-input-padrao{
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    font-size: 14px;
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    color: var(--text);
+}
+
+.info-input-auth:focus {
+    border-color: var(--black);
+    box-shadow: 0 0 0 1px var(--subText);
+}
+
+.error-message {
+    margin: 0.5rem 0 1rem 0;
+    font-size: 14px;
+    color: var(--error) !important;
+}
+
+.info-input-auth.error {
+    border-color: var(--error);
+    box-shadow: 0 0 0 1px var(--error);
+}
+
+.info-input-auth.error:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 1px var(--error);
+}
