@@ -1,7 +1,7 @@
 @layer base {
     :root {
         --subText: #4b5563;
-        --error: #dc2626;
+        --error: #e75050 ;
         --white: #ffffff;
         --blue: #5865f2;
         --grey: #3b3b3b;
@@ -96,4 +96,13 @@ img.skeleton {
 
 .note-editable{
     background-color: var(--white);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    box-shadow: 0 0 0 50px transparent inset !important;
+    -webkit-text-fill-color: var(--text) !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
