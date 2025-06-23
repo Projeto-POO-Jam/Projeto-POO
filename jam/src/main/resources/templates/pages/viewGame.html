@@ -10,13 +10,22 @@
                 <div class="info-view-game">
                     <div id="img-capa-view-game">
                         <img
-                            data-field="game-capa"
-                            data-default="/images/placeholder-cover.png"
+                            data-field="gamePhoto"
+                            data-default="/images/iconePadrao.svg"
                             alt="Capa do Game"
-                            class="skeleton"
+                            class="capa-game skeleton"
                         />
                     </div>
                     <div class="details-view-game">
+                        <div class="actor-view-game">
+                            <img
+                                data-field="userResponseDTO.userPhoto"
+                                data-default="/images/placeholder-cover.png"
+                                alt="icone actor"
+                                class="icone-actor skeleton"
+                            />
+                            <h1 data-field="userResponseDTO.userName" class="skeleton"></h1>
+                        </div>
                         <h1 data-field="gameTitle" class="skeleton"></h1>
                         <p data-field="gameDescription" class="skeleton"></p>
                         <div class="button-like">
