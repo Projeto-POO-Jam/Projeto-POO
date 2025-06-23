@@ -1,9 +1,7 @@
 let cropper = null;
 let croppedBlob = null;
 
-/**
- * Inicializa o modal de crop usando seletores fixos.
- */
+//Inicializa o modal de crop usando seletores fixos.
 export function setupImageCrop() {
     const $input = $('#avatarInput');
     const $preview = $('#avatarPreview');
@@ -48,8 +46,7 @@ export function setupImageCrop() {
             .toBlob(blob => {
                 croppedBlob = blob;
                 const previewUrl = URL.createObjectURL(blob);
-                $preview.css('background-image', `url(${previewUrl})`);
-                $preview.addClass('has-image').removeClass('theme-aware-icon');
+                $preview.attr('src', previewUrl);
             }, 'image/jpeg', 0.9);
 
         cropper.destroy();
@@ -58,9 +55,9 @@ export function setupImageCrop() {
     });
 }
 
-/**
- * Retorna o Blob do último crop (ou null se não houver).
- */
+
+
+// Retorna o Blob do último crop (ou null se não houver).
 export function getCroppedBlob() {
     return croppedBlob;
 }
