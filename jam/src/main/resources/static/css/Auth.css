@@ -64,7 +64,6 @@
     font-size: 0.875rem;
 }
 
-
 .signup-text {
     text-align: center;
 }
@@ -92,48 +91,18 @@
     transition: border-color 0.2s;
 }
 
-.avatar-container {
-    position: relative;
-    width: 7rem;
-    height: 7rem;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    overflow: hidden;
-}
-
 .avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.theme-aware-icon {
-    display: inline-block;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-}
-
-.theme-aware-icon {
-    background-image: url('/img/iconePadraoDark.svg');
-}
-
-html.dark .theme-aware-icon {
-    background-image: url('/img/iconePadraoWhite.svg');
-}
-
-.theme-aware-icon.skeleton {
-    background-image: none !important;
-}
-
 .avatar-icon {
-    background-size: cover;
-    background-position: center;
-    border: none;
-    border-radius: 100%;
     width: 7rem;
     height: 7rem;
     cursor: pointer;
+    border-radius: 100%;
+    border: 2px solid var(--blue);
 }
 
 #cropModal {
@@ -238,7 +207,6 @@ html.dark .theme-aware-icon {
     border-radius: 1rem !important;
     background-color: var(--background) !important;
 }
-
 
 .btn-modo{
     display: flex;
