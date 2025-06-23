@@ -1,4 +1,4 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.comment;
 
 public class CommentRequestDTO {
     private String commentText;

@@ -1,6 +1,8 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.*;
+import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
+import com.projetopoo.jam.dto.game.GameResponseDTO;
+import com.projetopoo.jam.dto.game.GameResquestDTO;
 import com.projetopoo.jam.service.GameService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

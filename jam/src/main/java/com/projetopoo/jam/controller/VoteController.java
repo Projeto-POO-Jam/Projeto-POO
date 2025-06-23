@@ -1,11 +1,8 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.VoteRequestDTO;
-import com.projetopoo.jam.dto.VoteResponseDTO;
-import com.projetopoo.jam.dto.VoteTotalResponseDTO;
-import com.projetopoo.jam.exception.UserValidationException;
-import com.projetopoo.jam.model.User;
-import com.projetopoo.jam.service.UserService;
+import com.projetopoo.jam.dto.vote.VoteRequestDTO;
+import com.projetopoo.jam.dto.vote.VoteResponseDTO;
+import com.projetopoo.jam.dto.vote.VoteTotalResponseDTO;
 import com.projetopoo.jam.service.VoteService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

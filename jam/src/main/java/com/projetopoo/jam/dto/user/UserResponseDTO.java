@@ -1,4 +1,4 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.user;
 
 public class UserResponseDTO {
     private Integer userId;

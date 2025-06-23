@@ -1,8 +1,9 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.*;
+import com.projetopoo.jam.dto.subscribe.SubscribeRequestDTO;
+import com.projetopoo.jam.dto.subscribe.SubscribeResponseDTO;
+import com.projetopoo.jam.dto.subscribe.SubscribeTotalResponseDTO;
 import com.projetopoo.jam.service.SubscribeService;
-import com.projetopoo.jam.service.VoteService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

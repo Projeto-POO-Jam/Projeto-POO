@@ -1,7 +1,7 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.UserResponseDTO;
-import com.projetopoo.jam.dto.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.dto.user.UserResquestDTO;
 import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.exception.UserValidationException;
 

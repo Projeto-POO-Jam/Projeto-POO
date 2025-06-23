@@ -1,7 +1,8 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.service.CommentService;
+import com.projetopoo.jam.dto.jam.JamPaginatedResponseDTO;
+import com.projetopoo.jam.dto.jam.JamRequestDTO;
+import com.projetopoo.jam.dto.jam.JamResponse;
 import com.projetopoo.jam.service.JamService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/jams")

@@ -1,6 +1,5 @@
 package com.projetopoo.jam.repository;
 
-import com.projetopoo.jam.dto.UserResponseDTO;
 import com.projetopoo.jam.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,8 +14,6 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
     Optional<Subscribe> findBySubscribeUser(User subscribeUser);
 
     Optional<Subscribe> findBySubscribeGame(Game subscribeGame);
-
-    Optional<Subscribe> existsSubscribesBySubscribeGame(Game subscribeGame);
 
     boolean existsBySubscribeUserAndSubscribeJam(User subscribeUser, Jam subscribeJam);
 }

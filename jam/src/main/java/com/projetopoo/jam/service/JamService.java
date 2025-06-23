@@ -1,17 +1,14 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.exception.UserValidationException;
+import com.projetopoo.jam.dto.jam.*;
 import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.JamRepository;
 import com.projetopoo.jam.repository.SubscribeRepository;
 import com.projetopoo.jam.repository.UserRepository;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import java.time.format.DateTimeParseException;
 
 import com.projetopoo.jam.util.ImageUtil;
 import jakarta.persistence.EntityNotFoundException;
