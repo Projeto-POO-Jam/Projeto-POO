@@ -1,7 +1,7 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.CommentRequestDTO;
-import com.projetopoo.jam.dto.CommentResponseDTO;
+import com.projetopoo.jam.dto.comment.CommentRequestDTO;
+import com.projetopoo.jam.dto.comment.CommentResponseDTO;
 import com.projetopoo.jam.model.Comment;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.User;

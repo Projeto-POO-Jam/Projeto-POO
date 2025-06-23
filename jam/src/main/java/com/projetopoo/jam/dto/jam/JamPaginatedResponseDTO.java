@@ -1,4 +1,4 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.jam;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.config.rabbitmq.JamStatusRabbitMQConfig;
-import com.projetopoo.jam.dto.JamSseDTO;
+import com.projetopoo.jam.dto.jam.JamSseDTO;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.JamStatus;
 import com.projetopoo.jam.repository.JamRepository;

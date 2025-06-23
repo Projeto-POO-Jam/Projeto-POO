@@ -1,8 +1,6 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.jam;
 
 import com.projetopoo.jam.model.JamStatus;
-import com.projetopoo.jam.service.JamService;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 

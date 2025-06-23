@@ -1,7 +1,7 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.CommentRequestDTO;
-import com.projetopoo.jam.dto.CommentResponseDTO;
+import com.projetopoo.jam.dto.comment.CommentRequestDTO;
+import com.projetopoo.jam.dto.comment.CommentResponseDTO;
 import com.projetopoo.jam.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
