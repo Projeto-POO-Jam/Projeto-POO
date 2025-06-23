@@ -115,4 +115,7 @@ public class GameService {
 
         return new GamePaginatedResponseDTO(gameSummaryDTOList, gamePage.getTotalElements());
     }
+
+
+
 }

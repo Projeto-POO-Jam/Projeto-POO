@@ -33,4 +33,13 @@ public class SubscribeController {
         return ResponseEntity.ok(subscribeTotalResponseDTO);
     }
 
+    @GetMapping("/{jamId}")
+    public ResponseEntity<?> findSubscribe(@PathVariable Long jamId, Principal principal) {
+        try {
+            SubscribeResponseDTO subscribeResponseDTO = subscribeService.findSubscribe(jamId, principal.getName());
+            return ResponseEntity.status(HttpStatus.CREATED).body(subscribeResponseDTO);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

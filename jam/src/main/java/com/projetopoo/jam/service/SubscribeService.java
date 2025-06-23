@@ -1,9 +1,8 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.model.Game;
-import com.projetopoo.jam.model.Jam;
-import com.projetopoo.jam.model.Subscribe;
+import com.projetopoo.jam.exception.UserValidationException;
+import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +70,27 @@ public class SubscribeService {
         SubscribeTotalResponseDTO subscribeTotalResponseDTO = new SubscribeTotalResponseDTO();
         subscribeTotalResponseDTO.setSubscribeTotal(subscribeRepository.countBySubscribeJam_JamId(jamId));
         return subscribeTotalResponseDTO;
+    }
+
+    @Transactional
+    public SubscribeResponseDTO findSubscribe(Long jamId, String identifier) throws UserValidationException {
+        SubscribeResponseDTO subscribeResponseDTO = new SubscribeResponseDTO();
+
+        User user = userRepository.findByIdentifier(identifier);
+        Optional<Jam> jam = jamRepository.findByJamId(jamId);
+        if (jam.isEmpty()) {
+            throw new EntityNotFoundException("Jam com o ID " + jamId + " não encontrado.");
+        }
+
+        boolean optionalSubscribe = subscribeRepository.existsBySubscribeUserAndSubscribeJam(user, jam.get());
+
+        if(optionalSubscribe) {
+            subscribeResponseDTO.setSubscribed(true);
+            return subscribeResponseDTO;
+        } else {
+            subscribeResponseDTO.setSubscribed(false);
+            return subscribeResponseDTO;
+        }
     }
 
 }
