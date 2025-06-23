@@ -48,7 +48,8 @@ export function setupImageCrop() {
             .toBlob(blob => {
                 croppedBlob = blob;
                 const previewUrl = URL.createObjectURL(blob);
-                $preview.attr('src', previewUrl);
+                $preview.css('background-image', `url(${previewUrl})`);
+                $preview.addClass('has-image').removeClass('theme-aware-icon');
             }, 'image/jpeg', 0.9);
 
         cropper.destroy();
