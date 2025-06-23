@@ -1,4 +1,4 @@
-import { fetchGame, toggleVote } from '../services/gameService.js';
+import {fetchGame, isLike, toggleVote} from '../services/gameService.js';
 import { bindDataFields } from '../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { showError } from '../common/notifications.js';
@@ -13,36 +13,38 @@ $(function() {
     applySkeleton(root);
 
     //Busca os dados do game na API
-    $.when(fetchGame(gameId))
-        .done(gameData => {
-            //Preenche campos simples
-            bindDataFields(gameData, root);
 
-            //Trata a imagem de capa de forma específica
-            const capaImg = $('img[data-field="game-capa"]');
-            if (gameData.gameCapa) {
-                capaImg.attr('src', gameData.gameCapa);
-            } else {
-                capaImg.attr('src', capaImg.data('default')); // Usa a imagem placeholder
-            }
-
+    $.when(isLike(gameId))
+        .done(data => {
             //Lógica do botão de Like
             const likeButton = $('.button-like');
 
             //Adiciona uma classe se o usuário já curtiu
-            if (gameData.isLikedByUser) { //API retorne essa informação!!!!!!!!!!
+            if (data.voted) {
                 likeButton.addClass('liked');
             }
 
             likeButton.on('click', function() {
                 $(this).toggleClass('liked');
-
-                toggleVote(gameId)
-                    .fail(() => {
-                        showError('Erro ao registrar o voto.');
-                        $(this).toggleClass('liked');
-                    });
             });
+
+        }) .fail(err => {
+            console.error('Erro ao carregar Like:', err);
+            showError('Não foi possível carregar o like.');
+            //Pagina 404
+        })
+        .always(() => {
+            setTimeout(() => {
+                removeSkeleton(root);
+                $(root).find('.skeleton').removeClass('skeleton');
+            }, 150);
+        });
+
+
+    $.when(fetchGame(gameId))
+        .done(gameData => {
+            //Preenche campos simples
+            bindDataFields(gameData, root);
 
             //Lógica do botão "Acessar game"
             $('.options-view-game button').on('click', function() {

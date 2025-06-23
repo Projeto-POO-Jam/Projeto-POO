@@ -20,3 +20,14 @@ export function toggleVote(gameId) {
     const body = { gameId: gameId };
     return apiRequest('POST', 'api/votes', body);
 }
+
+
+/**
+ * Retorna se ja foi se o usuairo ja voto no jogo.
+ * @param {string|number} gameId - O ID do game que receberá o voto.
+ * @returns {Promise<object>} – Uma promessa que resolve com a resposta da API após a operação.
+ */
+export function isLike(gameId) {
+    return apiRequest('GET', `api/votes/${gameId}`)
+        .then(({ data }) => data);
+}
