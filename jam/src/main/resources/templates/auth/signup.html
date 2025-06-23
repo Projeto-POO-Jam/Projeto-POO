@@ -55,6 +55,16 @@
                         )}"></div>
 
                         <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='email',
+                            name='email',
+                            type='email',
+                            icon='mail',
+                            placeholder='E-mail',
+                            labelText=null,
+                            inputClass=null
+                        )}"></div>
+
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
                             id='password',
                             name='password',
                             type='password',

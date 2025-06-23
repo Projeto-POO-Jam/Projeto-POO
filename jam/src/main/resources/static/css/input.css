@@ -40,6 +40,7 @@ form {
     border-radius: 0.5rem;
     background-color: var(--background);
     border: 1px solid var(--blue);
+    user-select: none;
 }
 
 .info-input-padrao span{

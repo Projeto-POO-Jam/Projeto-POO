@@ -127,6 +127,10 @@ html.dark .theme-aware-icon {
 }
 
 .avatar-icon {
+    background-size: cover;
+    background-position: center;
+    border: none;
+    border-radius: 100%;
     width: 7rem;
     height: 7rem;
     cursor: pointer;
