@@ -26,10 +26,7 @@ import org.modelmapper.ModelMapper;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -198,6 +195,25 @@ public class JamService {
         Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
 
         Page<Jam> jamPage = jamRepository.findByYearAndMonth(year, month, pageable);
+
+        List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
+                .map(jam -> {
+                    JamSummaryDTO jamSummaryDTO = modelMapper.map(jam, JamSummaryDTO.class);
+                    jamSummaryDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jam.getJamId()));
+                    return jamSummaryDTO;
+                })
+                .collect(Collectors.toList());
+
+        return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public JamPaginatedResponseDTO findJamsBanner(int offset, int limit) {
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
+
+        List<JamStatus> statuses = Arrays.asList(JamStatus.ACTIVE, JamStatus.SCHEDULED);
+        Page<Jam> jamPage = jamRepository.findTopJamsByJamStatus(statuses, pageable);
 
         List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
                 .map(jam -> {
