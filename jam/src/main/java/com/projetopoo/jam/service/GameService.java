@@ -107,7 +107,7 @@ public class GameService {
         int pageNumber = offset / limit;
         Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
 
-        Page<Game> gamePage = gameRepository.findByGameSubscribe_SubscribeJam_JamId(jamId, pageable);
+        Page<Game> gamePage = gameRepository.findByJamIdOrderByVotes(jamId, pageable);
 
         List<GameSummaryDTO> gameSummaryDTOList = gamePage.getContent().stream()
                 .map(game -> {
