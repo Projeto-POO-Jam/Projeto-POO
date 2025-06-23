@@ -36,6 +36,16 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-bottom: 1rem;
+}
+
+.title-auth p{
+    margin-top: 0.5rem;
+}
+
+.title-auth h1{
+    font-size: 32px;
+    font-weight: bold;
 }
 
 .card h1 {

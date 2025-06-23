@@ -6,20 +6,14 @@
 </head>
 <body>
     <div th:replace="~{fragments/menu.html :: siteMenu}"></div>
-
     <main>
-        <h2 class="titleHome">Página Cadastrar JAM</h2>
-
         <section class="container-register-jam">
             <div class="card-jam">
-                <h1>Crie sua Jam</h1>
-                <p>Preencha os campos abaixo para criar sua Jam</p>
-
-                <div th:if="${param.error}" class="alert">
-                    Ocorreu um erro ao criar a jam. Tente novamente.
-                </div>
-
                 <form class="form-Jam" id="createJamForm" action="" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="title-auth">
+                        <h1>Crie sua Jam</h1>
+                        <p>Preencha os campos abaixo para criar sua Jam</p>
+                    </div>
 
                     <div th:replace="~{fragments/formComponents.html :: formInput(
                             id='jamName',
@@ -27,7 +21,8 @@
                             type='text',
                             icon=null,
                             placeholder='ex: pinguim',
-                            labelText='Nome da Jam'
+                            labelText='Nome da Jam',
+                            inputClass=null
                         )}"></div>
 
                     <div th:replace="~{fragments/formComponents.html :: formInput(
@@ -36,29 +31,30 @@
                             type='text',
                             icon=null,
                             placeholder=null,
-                            labelText='Descrição da Jam'
+                            labelText='Descrição da Jam',
+                            inputClass=null
                         )}"></div>
 
-                    <div th:replace="~{fragments/formComponents.html :: formInput(
-                            id='startDate',
-                            name='startDate',
-                            type='datetime-local',
-                            icon=null,
-                            placeholder=null,
-                            labelText='Data início'
+                    <div class="grup-inputs">
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
+                           id='startDate',
+                           name='startDate',
+                           type='text',
+                           icon=null,
+                           placeholder=null,
+                           labelText='Data início',
+                           inputClass='calendario-custom'
                         )}"></div>
 
-                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
                             id='endDate',
                             name='endDate',
-                            type='datetime-local',
+                            type='text',
                             icon=null,
                             placeholder=null,
-                            labelText='Data final'
+                            labelText='Data final',
+                            inputClass='calendario-custom'
                         )}"></div>
-
-                    <div class="division">
-                        <h1>Estilização da pagina</h1>
                     </div>
 
                     <div class="form-group form-group-jam">
@@ -66,57 +62,57 @@
                         <textarea id="content" name="content"></textarea>
                     </div>
 
-                    <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="backgroundColor">Cor do Background</label>
-                        <div class="info-input-padrao">
-                            <div id="backgroundColorPicker"></div>
-                            <input id="backgroundColor" name="backgroundColor" type="hidden" />
+                    <div class="container-de-inputs-grid">
+                        <div class="form-group form-group-jam">
+                            <label class="label-input-padrao" for="backgroundColor">Cor do Background</label>
+                            <div class="info-input-padrao">
+                                <div id="backgroundColorPicker"></div>
+                                <input type="text" id="backgroundColorCode" readonly class="input-codigo-cor" />
+                                <input id="backgroundColor" name="backgroundColor" type="hidden" />
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-jam">
+                            <label class="label-input-padrao" for="cardBackgroundColor">Cor do Background do Card</label>
+                            <div class="info-input-padrao">
+                                <div id="cardBackgroundColorPicker"></div>
+                                <input type="text" id="cardBackgroundColorCode" readonly class="input-codigo-cor" />
+                                <input id="cardBackgroundColor" name="cardBackgroundColor" type="hidden" />
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-jam">
+                            <label class="label-input-padrao" for="textColor">Cor do Texto</label>
+                            <div class="info-input-padrao">
+                                <div id="textColorPicker"></div>
+                                <input type="text" id="textColorCode" readonly class="input-codigo-cor" />
+                                <input id="textColor" name="textColor" type="hidden" />
+                            </div>
+                        </div>
+
+                        <div class="form-group form-group-jam">
+                            <label class="label-input-padrao" for="linkColor">Cor dos Links</label>
+                            <div class="info-input-padrao">
+                                <div id="linkColorPicker"></div>
+                                <input type="text" id="linkColorCode" readonly class="input-codigo-cor" />
+                                <input id="linkColor" name="linkColor" type="hidden" />
+                            </div>
                         </div>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="cardBackgroundColor">Cor do Background do Card</label>
-                        <div class="info-input-padrao">
-                            <div id="cardBackgroundColorPicker"></div>
-                            <input id="cardBackgroundColor" name="cardBackgroundColor" type="hidden" />
-                        </div>
+                        <label class="label-input-padrao">Imagem Capa</label>
+                        <input type="file" class="filepond" name="imagemCapa"/>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="textColor">Cor do Texto</label>
-                        <div class="info-input-padrao">
-                            <div id="textColorPicker"></div>
-                            <input id="textColor" name="textColor" type="hidden" />
-                        </div>
+                        <label class="label-input-padrao">Imagem wallpaper</label>
+                        <input type="file" class="filepond" name="imagemWallpaper"/>
                     </div>
 
                     <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="linkColor">Cor dos Links</label>
-                        <div class="info-input-padrao">
-                            <div id="linkColorPicker"></div>
-                            <input id="linkColor" name="linkColor" type="hidden" />
-                        </div>
-                    </div>
-
-                    <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="coverImg">Imagem Capa</label>
-                        <div class="info-input-padrao">
-                            <input id="coverImg" name="coverImg" type="file" />
-                        </div>
-                    </div>
-
-                    <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="wallpaperImg">Imagem wallpaper</label>
-                        <div class="info-input-padrao">
-                            <input id="wallpaperImg" name="wallpaperImg" type="file" />
-                        </div>
-                    </div>
-
-                    <div class="form-group form-group-jam">
-                        <label class="label-input-padrao tooltip" for="bannerImg">Imagem banner</label>
-                        <div class="info-input-padrao">
-                            <input id="bannerImg" name="bannerImg" type="file" />
-                        </div>
+                        <label class="label-input-padrao">Imagem banner</label>
+                        <input type="file" class="filepond" name="imagemBanner"/>
                     </div>
 
                     <button id="submitButton" type="submit" class="submit-button">
