@@ -47,7 +47,7 @@
     background-color: #555 !important;
     color: transparent !important;
     pointer-events: none !important;
-    border-radius: 8px !important;
+    border-radius: 8px;
 }
 
 .skeleton::after {

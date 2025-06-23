@@ -30,11 +30,22 @@
     border-radius: 1rem;
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
+
 .title-auth{
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
+    margin-bottom: 1rem;
+}
+
+.title-auth p{
+    margin-top: 0.5rem;
+}
+
+.title-auth h1{
+    font-size: 32px;
+    font-weight: bold;
 }
 
 .card h1 {
@@ -53,84 +64,6 @@
     font-size: 0.875rem;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    margin-top: 2rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.info-input-auth{
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    padding: 8px;
-    border-radius: 0.5rem;
-    background-color: var(--background);
-}
-
-.info-input-auth span{
-    margin-right: 5px;
-}
-
-.form-group input {
-    font-size: 14px;
-    width: 100%;
-    font-family: "Roboto", sans-serif;
-    outline: none;
-    background-color: transparent;
-    border: none;
-    color: var(--text);
-}
-
-.info-input-auth:focus {
-    border-color: var(--black);
-    box-shadow: 0 0 0 1px var(--subText);
-}
-
-.info-input-auth.error {
-    border-color: var(--error);
-    box-shadow: 0 0 0 1px var(--error);
-}
-
-.info-input-auth.error:focus {
-    border-color: var(--error);
-    box-shadow: 0 0 0 1px var(--error);
-}
-
-.error-message {
-    margin: 0.5rem 0 1rem 0;
-    font-size: 14px;
-    color: var(--error) !important;
-
-}
-
-.submit-button {
-    width: 100%;
-    background-color: var(--blue);
-    color: var(--white);
-    font-weight: 600;
-    font-size: 16px;
-    padding: 13px;
-    border: none;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    margin: 1rem 0;
-}
-
-.submit-button:hover {
-    transition: 0.2s;
-    background-color: #5560dd;
-}
-
-.submit-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #bfdbfe;
-}
 
 .signup-text {
     text-align: center;
@@ -155,23 +88,48 @@ form {
 .avatar-label {
     display: inline-block;
     cursor: pointer;
-    border-radius: 50%;
     overflow: hidden;
-    width: 7rem;
-    height: 7rem;
-    border: 2px solid #ccc;
     transition: border-color 0.2s;
 }
 
-.avatar-label:hover {
-    border-color: var(--subText);
+.avatar-container {
+    position: relative;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    overflow: hidden;
 }
 
-.avatar-icon {
-    display: block;
+.avatar-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.theme-aware-icon {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.theme-aware-icon {
+    background-image: url('/img/iconePadraoDark.svg');
+}
+
+html.dark .theme-aware-icon {
+    background-image: url('/img/iconePadraoWhite.svg');
+}
+
+.theme-aware-icon.skeleton {
+    background-image: none !important;
+}
+
+.avatar-icon {
+    width: 7rem;
+    height: 7rem;
+    cursor: pointer;
 }
 
 #cropModal {
@@ -276,6 +234,7 @@ form {
     border-radius: 1rem !important;
     background-color: var(--background) !important;
 }
+
 
 .btn-modo{
     display: flex;

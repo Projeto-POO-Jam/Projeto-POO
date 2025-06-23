@@ -1,0 +1,116 @@
+.submit-button {
+    width: 100%;
+    background-color: var(--blue);
+    color: var(--white);
+    font-weight: 600;
+    font-size: 16px;
+    padding: 13px;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    margin: 1rem 0;
+}
+
+.submit-button:hover {
+    transition: 0.2s;
+    background-color: #5560dd;
+}
+
+.submit-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-input-padrao{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 8px;
+    border-radius: 0.5rem;
+    background-color: var(--background);
+    border: 1px solid var(--blue);
+}
+
+.info-input-padrao span{
+    margin-right: 5px;
+}
+
+.label-input-padrao{
+    margin-bottom: 0.5rem;
+}
+
+.form-group input {
+    font-size: 14px;
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    color: var(--text);
+}
+
+.info-input-auth:focus {
+    border-color: var(--black);
+    box-shadow: 0 0 0 1px var(--subText);
+}
+
+.error-message {
+    margin: 0.5rem 0 1rem 0;
+    font-size: 14px;
+    color: var(--error) !important;
+}
+
+.info-input-auth.error {
+    border-color: var(--error);
+    box-shadow: 0 0 0 1px var(--error);
+}
+
+.info-input-auth.error:focus {
+    border-color: var(--error);
+    box-shadow: 0 0 0 1px var(--error);
+}
+
+.grup-inputs {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    gap: 1rem;
+}
+
+.grup-inputs > div {
+    flex: 1;
+}
+
+.container-de-inputs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1.5rem 2rem;
+}
+
+.container-de-inputs-grid > div {
+    width: calc(50% - 1rem);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none !important;
+    -webkit-appearance: none !important;
+}
+
+input[type="date"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%233498db' viewBox='0 0 16 16'%3E%3Cpath d='M8 7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 7zm2-3h-4a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zm-1 0v1H7V4h2zM3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 10px center !important;
+    cursor: pointer !important;
+}

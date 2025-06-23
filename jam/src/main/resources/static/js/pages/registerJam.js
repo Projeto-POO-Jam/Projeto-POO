@@ -6,11 +6,13 @@ $(function() {
     const form = $('#createJamForm');
 
     //Função auxiliar para criar e configurar cada seletor de cor
-    const createColorPicker = (elementSelector, inputSelector, defaultColor) => {
+    const createColorPicker = (elementSelector, inputSelector, displaySelector, defaultColor) => {
+        const safeDefaultColor = defaultColor || '#42445A';
+
         const pickr = Pickr.create({
             el: elementSelector,
             theme: 'classic',
-            default: defaultColor,
+            default: safeDefaultColor,
 
             components: {
                 preview: true,
@@ -27,36 +29,87 @@ $(function() {
                     save: true
                 }
             },
-
             strings: {
                 save: 'Salvar',
-                clear: 'Limpar',
-                'swatches.recently-used': 'Usadas recentemente',
+                clear: 'Limpar'
             }
         });
 
-        //Atualiza o valor do input hidden sempre que a cor for alterada
-        pickr.on('change', (color, source, instance) => {
-            $(inputSelector).val(color.toHEXA().toString());
-        }).on('save', (color, instance) => {
+        // Função para atualizar os inputs
+        const updateInputs = (color) => {
+            if (!color) return; // Segurança extra
+            const hexaColor = color.toHEXA().toString();
+
+            $(inputSelector).val(hexaColor);
+
+            if (displaySelector) {
+                $(displaySelector).val(hexaColor);
+            }
+        };
+
+        pickr.on('change', (color) => updateInputs(color));
+
+        pickr.on('save', (color, instance) => {
+            updateInputs(color);
             pickr.hide();
         });
 
-        $(inputSelector).val(pickr.getColor().toHEXA().toString());
+        updateInputs(pickr.getColor());
 
         return pickr;
     };
 
     //Inicializa todos os seletores de cor da página
-    createColorPicker('#backgroundColorPicker', '#backgroundColor', '#2a2f3b');
-    createColorPicker('#cardBackgroundColorPicker', '#cardBackgroundColor', '#1c1e26');
-    createColorPicker('#textColorPicker', '#textColor', '#ffffff');
-    createColorPicker('#linkColorPicker', '#linkColor', '#4a90e2');
+    createColorPicker('#backgroundColorPicker', '#backgroundColor', '#backgroundColorCode', '#F8F9FA');
+    createColorPicker('#cardBackgroundColorPicker', '#cardBackgroundColor', '#cardBackgroundColorCode', '#FFFFFF');
+    createColorPicker('#textColorPicker', '#textColor', '#textColorCode', '#212529');
+    createColorPicker('#linkColorPicker', '#linkColor', '#linkColorCode', '#007BFF');
 
     //Inicializa editor WYSIWYG(Summernote)
     $('#content').summernote({
         height: 300,
         codemirror: { theme: 'default' }
+    });
+
+
+    //biblioteca de img
+    FilePond.registerPlugin(
+        FilePondPluginFileValidateType,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginImagePreview
+    );
+
+    // Pega todos os inputs com a classe 'filepond' e os transforma
+    const simpleInputs = document.querySelectorAll('input.filepond');
+    simpleInputs.forEach(inputElement => {
+        FilePond.create(inputElement, {
+            labelIdle: `Arraste e solte seu arquivo ou <span class="filepond--label-action">Procure</span>`,
+            imagePreviewHeight: 170,
+            stylePanelLayout: 'integrated',
+            styleLoadIndicatorPosition: 'center bottom',
+            styleProgressIndicatorPosition: 'right bottom',
+            styleButtonRemoveItemPosition: 'left bottom',
+            styleButtonProcessItemPosition: 'right bottom',
+        });
+    });
+
+    //biblioteca do input data:
+    flatpickr(".calendario-custom", {
+        // Opções básicas
+        dateFormat: "d/m/Y H:i",
+        enableTime: true,
+
+        locale: {
+            firstDayOfWeek: 1,
+            weekdays: {
+                shorthand: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+                longhand: ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"],
+            },
+            months: {
+                shorthand: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+                longhand: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+            },
+        }
     });
 
     //Validação
