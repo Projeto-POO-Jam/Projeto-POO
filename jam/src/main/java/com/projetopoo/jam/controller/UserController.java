@@ -5,6 +5,7 @@ import com.projetopoo.jam.dto.user.UserResquestDTO;
 import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.exception.UserValidationException;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +22,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> findUser(@PathVariable Long userId) {
-        UserResponseDTO user = userService.findUser(userId);
+    @GetMapping
+    public ResponseEntity<UserResponseDTO> findUser(Principal principal) {
+        UserResponseDTO user = userService.findUser(principal.getName());
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/id/{userId}")
+    public ResponseEntity<?> findUserId(@PathVariable Long userId) {
+        try {
+            UserResponseDTO user = userService.findUserId(userId);
+            return ResponseEntity.ok(user);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping(consumes = { "multipart/form-data" })
