@@ -20,7 +20,7 @@
                             name='jamName',
                             type='text',
                             icon=null,
-                            placeholder='ex: pinguim',
+                            placeholder=null,
                             labelText='Nome da Jam',
                             inputClass=null
                         )}"></div>
@@ -102,17 +102,20 @@
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem Capa</label>
-                        <input type="file" class="filepond" name="imagemCapa"/>
+                        <input type="file" class="filepond" name="imagemCapa" id="coverImg"/>
+                        <p id="coverImgError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem wallpaper</label>
-                        <input type="file" class="filepond" name="imagemWallpaper"/>
+                        <input type="file" class="filepond" name="imagemWallpaper" id="wallpaperImg"/>
+                        <p id="wallpaperImgError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem banner</label>
-                        <input type="file" class="filepond" name="imagemBanner"/>
+                        <input type="file" class="filepond" name="imagemBanner" id="bannerImg"/>
+                        <p id="bannerImgError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <button id="submitButton" type="submit" class="submit-button">
