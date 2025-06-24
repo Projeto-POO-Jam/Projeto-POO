@@ -35,8 +35,7 @@ public class CommentController {
             description = "Adiciona um comentário a um jogo. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Comentário criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content),
-            @ApiResponse(responseCode = "403", description = "Acesso negado", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
     })
     public ResponseEntity<?> createComment(@RequestBody CommentRequestDTO commentRequestDTO, Principal principal) {
         try {

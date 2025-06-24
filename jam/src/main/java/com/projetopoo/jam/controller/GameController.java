@@ -35,9 +35,7 @@ public class GameController {
             description = "Cria um novo jogo vinculada a uma Jam. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Jogo criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida ou erro no upload de arquivos", content = @Content),
-            @ApiResponse(responseCode = "403", description = "Acesso negado", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Requisição inválida ou erro no upload de arquivos", content = @Content)
     })
     public ResponseEntity<?> createGame(GameResquestDTO gameRequestDTO, Principal principal) {
         try {
@@ -59,7 +57,7 @@ public class GameController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = GameResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Jogo não encontrado", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Jogo não encontrado", content = @Content)
     })
     public ResponseEntity<?> findGame(@PathVariable Long gameId) {
         try {
