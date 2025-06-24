@@ -33,10 +33,14 @@
 }
 
 .capa-game {
-    max-width: 12rem;
-    min-height: 14rem;
-    border-radius: 1rem;
     user-select: none;
+    width: 13rem;
+    height: 16rem;
+    border-radius: 1rem;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .details-view-game{

@@ -1,0 +1,78 @@
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.rank-grid{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 5rem;
+}
+
+.card-game-unic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.game-card-photo {
+    width: 13rem;
+    height: 16rem;
+    border-radius: 1rem;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-card-title {
+    padding: 1rem;
+    font-weight: bold;
+    font-size: 18px;
+    max-width: 13rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-game-unic .game-card-photo,
+.card-game-unic .game-card-title {
+    transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.card-game-unic:hover .game-card-photo {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 12px 13px rgb(0 0 0 / 34%);
+    filter: brightness(1.1);
+}
+
+.card-game-unic:hover .game-card-title {
+    transform: translateY(-5px);
+}
+
+.title-aba-games{
+    display: flex;
+    flex-direction: column;
+}
+
+.title-aba-games h1{
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.title-aba-games p {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 0.5rem;
+}
+
+
+.rank-position{
+    margin-bottom: 2rem;
+}
