@@ -4,6 +4,12 @@ import com.projetopoo.jam.dto.subscribe.SubscribeRequestDTO;
 import com.projetopoo.jam.dto.subscribe.SubscribeResponseDTO;
 import com.projetopoo.jam.dto.subscribe.SubscribeTotalResponseDTO;
 import com.projetopoo.jam.service.SubscribeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +20,25 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/subscribes")
+@Tag(
+        name = "Subscriptions",
+        description = "Endpoints relacionados as inscrições em Jams")
 public class SubscribeController {
     @Autowired
     private SubscribeService subscribeService;
 
     @PostMapping
+    @Operation(
+            summary = "Alterna a inscrição um usuário em uma Jam",
+            description = "Alterna a inscrição de um usuário em uma Jam especificada. " +
+                    "Se o usuário não estiver inscrito na Jam especificada, cira uma nova inscrição para um usuário nessa Jam. " +
+                    "Se o usuário já estiver inscrito na Jam especificada, exclui a inscrição atual dessa Jam")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Inscrição alternada com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SubscribeResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada")
+    })
     public ResponseEntity<?> toggleSubscribe(@RequestBody SubscribeRequestDTO subscribeRequestDTO, Principal principal) {
         try {
             SubscribeResponseDTO subscribeResponseDTO = subscribeService.toggleSubscribe(subscribeRequestDTO, principal.getName());
@@ -29,12 +49,31 @@ public class SubscribeController {
     }
 
     @GetMapping("/total/{jamId}")
+    @Operation(
+            summary = "Total de inscrições em uma Jam",
+            description = "Retorna o número total de inscrições em uma Jam específica.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Total de inscrições retornado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubscribeTotalResponseDTO.class)))
+    })
     public ResponseEntity<SubscribeTotalResponseDTO> totalSubscribe(@PathVariable Long jamId) {
         SubscribeTotalResponseDTO subscribeTotalResponseDTO = subscribeService.totalSubscribes(jamId);
         return ResponseEntity.ok(subscribeTotalResponseDTO);
     }
 
     @GetMapping("/{jamId}")
+    @Operation(
+            summary = "Busca inscrição do usuário na Jam",
+            description = "Busca se o usuário já está inscrito na Jam")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Inscrição do usuário retornado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubscribeResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada")
+    })
     public ResponseEntity<?> findSubscribe(@PathVariable Long jamId, Principal principal) {
         try {
             SubscribeResponseDTO subscribeResponseDTO = subscribeService.findSubscribe(jamId, principal.getName());
