@@ -23,6 +23,7 @@
 
 #jam-cover-container img{
     max-width: 100%;
+    max-height: 35rem;
 }
 
 .header-view-jam{
@@ -59,7 +60,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 10rem;
+    padding: 1rem 4rem;
     border-radius: 3rem 0.5rem 3rem 0.5rem;
     margin-top: 2rem;
     background-color: var(--background-card);
@@ -68,7 +69,7 @@
 .name-jam h1{
     font-size: 32px;
     font-weight: bold;
-    max-width: 13rem;
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -199,4 +200,15 @@
 .elements-aba,
 .tab-pane{
     width: 100%;
+}
+
+
+#tab-content {
+    position: relative;
+    overflow: hidden;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-pane {
+    transition: opacity 0.3s ease-in-out;
 }
