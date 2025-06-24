@@ -52,7 +52,8 @@ public class UserService {
             throw new UserValidationException(validationErrors);
         }
 
-        user.setUserPhoto(ImageUtil.createImage(userResquestDTO.getUserPhoto(), UPLOAD_DIRECTORY, "/upload/user/"));
+        user.setUserPhoto(ImageUtil.createImage(userResquestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
+        user.setUserBanner(ImageUtil.createImage(userResquestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
         userRepository.save(user);
@@ -88,11 +89,21 @@ public class UserService {
         if (user.getUserPhoto() != null && !user.getUserPhoto().isEmpty()) {
             String oldPhotoPath = existingUser.getUserPhoto();
 
-            String newPhotoPath = ImageUtil.createImage(user.getUserPhoto(), UPLOAD_DIRECTORY, "/upload/user/");
+            String newPhotoPath = ImageUtil.createImage(user.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/");
             existingUser.setUserPhoto(newPhotoPath);
 
             ImageUtil.deleteImage(oldPhotoPath);
             user.setUserPhoto(null);
+        }
+
+        if (user.getUserBanner() != null && !user.getUserBanner().isEmpty()) {
+            String oldBannerPath = existingUser.getUserBanner();
+
+            String newBannerPath = ImageUtil.createImage(user.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/");
+            existingUser.setUserBanner(newBannerPath);
+
+            ImageUtil.deleteImage(oldBannerPath);
+            user.setUserBanner(null);
         }
 
         modelMapper.map(user, existingUser);

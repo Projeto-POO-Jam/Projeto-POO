@@ -1,20 +1,27 @@
 package com.projetopoo.jam.dto.user;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class UserResponseDTO {
-    private Integer userId;
+    private Long userId;
     private String userName;
-    private String userPhoto;
     private String userEmail;
+    private String userPhoto;
+    private String userBanner;
+    private String userGitHub;
+    private String userLinkedIn;
+    private String userFacebook;
+    private String userInstagram;
 
     public UserResponseDTO() {
 
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -40,5 +47,45 @@ public class UserResponseDTO {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public String getUserBanner() {
+        return userBanner;
+    }
+
+    public void setUserBanner(String userBanner) {
+        this.userBanner = userBanner;
+    }
+
+    public String getUserGitHub() {
+        return userGitHub;
+    }
+
+    public void setUserGitHub(String userGitHub) {
+        this.userGitHub = userGitHub;
+    }
+
+    public String getUserLinkedIn() {
+        return userLinkedIn;
+    }
+
+    public void setUserLinkedIn(String userLinkedIn) {
+        this.userLinkedIn = userLinkedIn;
+    }
+
+    public String getUserFacebook() {
+        return userFacebook;
+    }
+
+    public void setUserFacebook(String userFacebook) {
+        this.userFacebook = userFacebook;
+    }
+
+    public String getUserInstagram() {
+        return userInstagram;
+    }
+
+    public void setUserInstagram(String userInstagram) {
+        this.userInstagram = userInstagram;
     }
 }
