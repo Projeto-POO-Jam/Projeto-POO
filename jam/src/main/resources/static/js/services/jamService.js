@@ -42,3 +42,14 @@ export function leaveJam(jamId) {
     const body = { subscribeJamId: jamId };
     return apiRequest('POST', 'api/subscribes', body);
 }
+
+
+/**
+ * Busca Jams para o banner da home.
+ * @param {number} limit – Quantos itens buscar.
+ * @returns {Promise<{jams: Array, total: number}>}
+ */
+export function fetchBannerJams(limit = 5) {
+    return apiRequest('GET', `api/jams/banner?limit=${limit}`)
+        .then(({ data }) => data);
+}
