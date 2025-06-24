@@ -205,8 +205,8 @@ public class JamService {
     }
 
     @Transactional(readOnly = true)
-    public JamPaginatedResponseDTO findJamsBanner(int offset, int limit) {
-        int pageNumber = offset / limit;
+    public JamPaginatedResponseDTO findJamsBanner(int limit) {
+        int pageNumber = 0;
         Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
 
         List<JamStatus> statuses = Arrays.asList(JamStatus.ACTIVE, JamStatus.SCHEDULED);
