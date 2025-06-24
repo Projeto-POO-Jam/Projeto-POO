@@ -2,6 +2,7 @@ package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserWithIdResponseDTO;
 import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.exception.UserValidationException;
 
@@ -58,9 +59,9 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Usuário não encontrado", content = @Content)
     })
-    public ResponseEntity<?> findUserId(@PathVariable Long userId) {
+    public ResponseEntity<?> findUserId(@PathVariable Long userId, Principal principal) {
         try {
-            UserResponseDTO user = userService.findUserId(userId);
+            UserWithIdResponseDTO user = userService.findUserId(userId, principal.getName());
             return ResponseEntity.ok(user);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

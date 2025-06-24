@@ -2,6 +2,7 @@ package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserWithIdResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -105,10 +107,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDTO findUserId(Long userId) {
+    public UserWithIdResponseDTO findUserId(Long userId, String identifier) {
         Optional<User> user = userRepository.findByUserId(userId);
+        User currentUser = userRepository.findByIdentifier(identifier);
         if(user.isPresent()) {
-            return modelMapper.map(user.get(), UserResponseDTO.class);
+            UserWithIdResponseDTO userWithIdResponseDTO = modelMapper.map(user.get(), UserWithIdResponseDTO.class);
+            userWithIdResponseDTO.setUserCurrent(Objects.equals(userWithIdResponseDTO.getUserId(), currentUser.getUserId()));
+            return userWithIdResponseDTO;
         } else {
             throw new EntityNotFoundException("Usuario não encontrado");
         }
