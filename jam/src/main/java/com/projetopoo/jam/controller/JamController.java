@@ -72,7 +72,7 @@ public class JamController {
     @GetMapping("/list")
     @Operation(
             summary = "Busca Jams de um mês específico",
-            description = "Retorna os detalhes das Jams de um mês especifico de forma paginada.")
+            description = "Retorna uma lista paginada de todas as Jams de um mês especifico.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",

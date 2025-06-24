@@ -30,14 +30,14 @@ public class SubscribeController {
     @PostMapping
     @Operation(
             summary = "Alterna a inscrição um usuário em uma Jam",
-            description = "Alterna a inscrição de um usuário em uma Jam especificada. " +
-                    "Se o usuário não estiver inscrito na Jam especificada, cira uma nova inscrição para um usuário nessa Jam. " +
+            description = "Alterna a inscrição de um usuário em uma Jam especificada.<br> " +
+                    "Se o usuário não estiver inscrito na Jam especificada, cira uma nova inscrição para o usuário nessa Jam.<br> " +
                     "Se o usuário já estiver inscrito na Jam especificada, exclui a inscrição atual dessa Jam")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Inscrição alternada com sucesso",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Jam não encontrada")
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
     })
     public ResponseEntity<?> toggleSubscribe(@RequestBody SubscribeRequestDTO subscribeRequestDTO, Principal principal) {
         try {
@@ -72,7 +72,7 @@ public class SubscribeController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Jam não encontrada")
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
     })
     public ResponseEntity<?> findSubscribe(@PathVariable Long jamId, Principal principal) {
         try {
