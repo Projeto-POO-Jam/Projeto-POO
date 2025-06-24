@@ -1,5 +1,6 @@
 package com.projetopoo.jam.dto.user;
 
+import jakarta.persistence.Column;
 import org.springframework.web.multipart.MultipartFile;
 
 public class UserResquestDTO {
@@ -7,6 +8,11 @@ public class UserResquestDTO {
     private String userEmail;
     private String userPassword;
     private MultipartFile userPhoto;
+    private MultipartFile userBanner;
+    private String userGitHub;
+    private String userLinkedIn;
+    private String userFacebook;
+    private String userInstagram;
 
     public UserResquestDTO() {
 
@@ -42,5 +48,45 @@ public class UserResquestDTO {
 
     public void setUserPhoto(MultipartFile userPhoto) {
         this.userPhoto = userPhoto;
+    }
+
+    public MultipartFile getUserBanner() {
+        return userBanner;
+    }
+
+    public void setUserBanner(MultipartFile userBanner) {
+        this.userBanner = userBanner;
+    }
+
+    public String getUserGitHub() {
+        return userGitHub;
+    }
+
+    public void setUserGitHub(String userGitHub) {
+        this.userGitHub = userGitHub;
+    }
+
+    public String getUserLinkedIn() {
+        return userLinkedIn;
+    }
+
+    public void setUserLinkedIn(String userLinkedIn) {
+        this.userLinkedIn = userLinkedIn;
+    }
+
+    public String getUserFacebook() {
+        return userFacebook;
+    }
+
+    public void setUserFacebook(String userFacebook) {
+        this.userFacebook = userFacebook;
+    }
+
+    public String getUserInstagram() {
+        return userInstagram;
+    }
+
+    public void setUserInstagram(String userInstagram) {
+        this.userInstagram = userInstagram;
     }
 }

@@ -9,7 +9,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+    private Long userId;
 
     @Column(unique = true, nullable = false, length = 60)
     private String userName;
@@ -17,11 +17,26 @@ public class User {
     @Column(nullable = false)
     private String userPassword;
 
+    @Column(unique = true, nullable = false)
+    private String userEmail;
+
     @Column
     private String userPhoto;
 
-    @Column(unique = true, nullable = false)
-    private String userEmail;
+    @Column
+    private String userBanner;
+
+    @Column
+    private String userGitHub;
+
+    @Column
+    private String userLinkedIn;
+
+    @Column
+    private String userFacebook;
+
+    @Column
+    private String userInstagram;
 
     @OneToMany(mappedBy = "voteUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vote> userVotes;
@@ -40,7 +55,7 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public User(int userId, String userPassword, String userName, String userPhoto, String userEmail) {
+    public User(Long userId, String userPassword, String userName, String userPhoto, String userEmail) {
         this.userId = userId;
         this.userPassword = userPassword;
         this.userName = userName;
@@ -48,11 +63,11 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -102,5 +117,45 @@ public class User {
 
     public void setUserComments(List<Comment> userComments) {
         this.userComments = userComments;
+    }
+
+    public String getUserBanner() {
+        return userBanner;
+    }
+
+    public void setUserBanner(String userBanner) {
+        this.userBanner = userBanner;
+    }
+
+    public String getUserGitHub() {
+        return userGitHub;
+    }
+
+    public void setUserGitHub(String userGitHub) {
+        this.userGitHub = userGitHub;
+    }
+
+    public String getUserLinkedIn() {
+        return userLinkedIn;
+    }
+
+    public void setUserLinkedIn(String userLinkedIn) {
+        this.userLinkedIn = userLinkedIn;
+    }
+
+    public String getUserFacebook() {
+        return userFacebook;
+    }
+
+    public void setUserFacebook(String userFacebook) {
+        this.userFacebook = userFacebook;
+    }
+
+    public String getUserInstagram() {
+        return userInstagram;
+    }
+
+    public void setUserInstagram(String userInstagram) {
+        this.userInstagram = userInstagram;
     }
 }
