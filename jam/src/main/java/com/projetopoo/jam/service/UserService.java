@@ -99,7 +99,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserResponseDTO findUser(Long userId) {
+    public UserResponseDTO findUser(String identifier) {
+        User user = userRepository.findByIdentifier(identifier);
+        return modelMapper.map(user, UserResponseDTO.class);
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponseDTO findUserId(Long userId) {
         Optional<User> user = userRepository.findByUserId(userId);
         if(user.isPresent()) {
             return modelMapper.map(user.get(), UserResponseDTO.class);
