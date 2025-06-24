@@ -34,4 +34,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
         return user;
     }
+
+    Optional<User> findByUserId(Long userId);
 }

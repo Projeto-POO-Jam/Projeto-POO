@@ -21,9 +21,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<UserResponseDTO> findUser(Principal principal) {
-        UserResponseDTO user = userService.findUser(principal.getName());
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponseDTO> findUser(@PathVariable Long userId) {
+        UserResponseDTO user = userService.findUser(userId);
         return ResponseEntity.ok(user);
     }
 
