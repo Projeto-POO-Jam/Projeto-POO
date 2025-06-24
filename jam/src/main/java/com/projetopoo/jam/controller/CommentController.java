@@ -4,6 +4,7 @@ import com.projetopoo.jam.dto.comment.CommentRequestDTO;
 import com.projetopoo.jam.dto.comment.CommentResponseDTO;
 import com.projetopoo.jam.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,8 +24,7 @@ import java.util.List;
 @RequestMapping("/api/comments")
 @Tag(
         name = "Comentários",
-        description = "Endpoints relacionados aos comentários de jogos"
-)
+        description = "Endpoints relacionados aos comentários de jogos")
 public class CommentController {
     @Autowired
     private CommentService commentService;
