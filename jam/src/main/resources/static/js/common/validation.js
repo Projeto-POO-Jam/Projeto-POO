@@ -1,33 +1,55 @@
+// Função auxiliar que faz a validação de um único campo
+function runFieldValidation(fieldId, rules) {
+    const input = $(`#${fieldId}`);
+    const err = $(`#${fieldId}Error`);
+    const container = input.hasClass('filepond') ? input.parent() : input;
+
+    const value = input.hasClass('filepond') ? null : input.val();
+    const failedRule = rules.find(rule => !rule.validate(value));
+
+    if (failedRule) {
+        err.text(failedRule.message).addClass('visible');
+        container.addClass('error');
+        return false;
+    } else {
+        err.removeClass('visible');
+        container.removeClass('error');
+        setTimeout(() => {
+            if (!err.hasClass('visible')) {
+                err.text('');
+            }
+        }, 200);
+        return true;
+    }
+}
+
 /**
- * Configura validação (blur e input) para cada campo.
- * @param {Object} rulesMap - mapeia fieldId -> array de regras { validate: fn, message: string }
+ * Configura a validação em tempo real para um mapa de regras de um formulário.
  */
 export function setupValidation(rulesMap) {
     Object.entries(rulesMap).forEach(([fieldId, rules]) => {
         const input = $(`#${fieldId}`);
-        const err = $(`#${fieldId}Error`);
+        //O listener agora simplesmente chama a nossa função auxiliar
+        const listener = () => runFieldValidation(fieldId, rules);
 
-        input.on('blur input',() => {
-            const val = $.trim(input.val());
-            const failed = rules.find(rule => !rule.validate(val));
-            if (failed) {
-                err.text(failed.message);
-                input.addClass('error');
-            } else {
-                err.text('');
-                input.removeClass('error');
-            }
-        });
+        if (input.hasClass('filepond')) {
+            const element = input[0];
+            element.addEventListener('FilePond:addfile', listener);
+            element.addEventListener('FilePond:processfile', listener);
+            element.addEventListener('FilePond:removefile', listener);
+        } else {
+            input.on('blur input', listener);
+        }
     });
 }
 
 /**
- * Verifica se todos os campos estão válidos forçando o `blur`.
- * Retorna true se nenhum campo tiver mensagem de erro.
+ * Força a validação de todos os campos e retorna o estado de validade geral.
  */
 export function isFormValid(rulesMap) {
-    return Object.keys(rulesMap).every(id => {
-        $(`#${id}`).trigger('blur');
-        return $(`#${id}Error`).text() === '';
+    const validationResults = Object.entries(rulesMap).map(([fieldId, rules]) => {
+        return runFieldValidation(fieldId, rules);
     });
+    //Retorna true apenas se TODOS os resultados no array forem true
+    return validationResults.every(isValid => isValid);
 }

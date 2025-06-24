@@ -7,7 +7,7 @@
 }
 
 .card-jam{
-    width: 60%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,6 +28,7 @@
 .dark .note-editor.note-frame {
     background: var(--background);
     border: 1px solid #444;
+    margin-top: 0.5rem;
 }
 
 .dark .note-toolbar {
@@ -168,6 +169,7 @@
     border-bottom-color: var(--background-card) !important;
 }
 
+
 /* modo dark para bliblioteca de data! */
 .dark .flatpickr-calendar {
     background: var(--background) !important;
@@ -239,7 +241,6 @@
     border-radius: 0.46rem !important;
 }
 
-
 .filepond--root {
     width: 100%;
     min-height: 100px;
@@ -247,6 +248,7 @@
 
 .filepond--panel {
     border-radius: 5px;
+    background-color: transparent !important;
 }
 
 .filepond--drop-label {
@@ -260,4 +262,30 @@
 
 .filepond--root .filepond--credits[style]{
     display: none !important;
+}
+
+.filepond--drop-label{
+    background: var(--background) !important;
+    border-radius: 1rem !important;
+    cursor: pointer !important;
+}
+
+#gameFile .filepond--file {
+    background: var(--background) !important;;
+    display: flex !important;
+    justify-content: center !important;;
+    align-items: center !important;
+    color: var(--text) !important;
+}
+
+.filepond--root{
+    min-height: 5rem !important;
+}
+
+.filepond--image-preview{
+    background: var(--background) !important;
+}
+
+.filepond--image-preview-overlay-idle{
+    color: rgb(105 105 105 / 40%) !important;
 }

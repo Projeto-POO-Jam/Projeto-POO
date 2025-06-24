@@ -67,9 +67,19 @@ form {
 }
 
 .error-message {
-    margin: 0.5rem 0 1rem 0;
     font-size: 14px;
     color: var(--error) !important;
+    margin: 0.5rem 0 0.5rem 0;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.error-message.visible {
+    opacity: 1;
+}
+
+.error-message.img-form-group-game.visible {
+    margin-top: -7rem !important;
 }
 
 .info-input-auth.error {
