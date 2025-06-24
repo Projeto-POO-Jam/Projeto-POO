@@ -70,11 +70,9 @@ public class JamController {
     }
 
     @GetMapping("/banner")
-    public ResponseEntity<?> bannerJams(
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "6") int limit) {
+    public ResponseEntity<?> bannerJams(@RequestParam(defaultValue = "6") int limit) {
         try {
-            JamPaginatedResponseDTO response = jamService.findJamsBanner(offset, limit);
+            JamPaginatedResponseDTO response = jamService.findJamsBanner(limit);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
