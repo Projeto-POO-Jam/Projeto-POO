@@ -1,9 +1,5 @@
 package com.projetopoo.jam.service;
 
-
-import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.model.*;
-
 import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.game.GameResponseDTO;
 import com.projetopoo.jam.dto.game.GameResquestDTO;
