@@ -1,10 +1,7 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.model.Game;
-import com.projetopoo.jam.model.Jam;
-import com.projetopoo.jam.model.Subscribe;
-import com.projetopoo.jam.model.User;
+import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.*;
 import com.projetopoo.jam.util.ImageUtil;
 
@@ -15,10 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -115,4 +114,53 @@ public class GameService {
 
         return new GamePaginatedResponseDTO(gameSummaryDTOList, gamePage.getTotalElements());
     }
+
+    @Transactional
+    public void updateGame(GameResquestDTO gameRequestDTO, String identifier) throws IOException {
+        List<String> validationErrors = new ArrayList<>();
+
+        Game game = modelMapper.map(gameRequestDTO, Game.class);
+
+        Optional<Game> optionalGame = gameRepository.findByGameId(game.getGameId());
+
+        if (optionalGame.isPresent()) {
+            Game existingGame = optionalGame.get();
+
+            User user = userRepository.findByIdentifier(identifier);
+
+            if(subscribeRepository.existsBySubscribeGameAndSubscribeUser(optionalGame.get(),user)) {
+                if (gameRequestDTO.getGamePhoto() != null && !gameRequestDTO.getGamePhoto().isEmpty()) {
+                    String oldPhotoPath = existingGame.getGamePhoto();
+
+                    String uuid = UUID.randomUUID().toString();
+                    String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/img";
+                    existingGame.setGamePhoto(ImageUtil.createImage(gameRequestDTO.getGamePhoto(), directoryCover, "/upload/game/" + uuid + "/img/"));
+
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    gameRequestDTO.setGamePhoto(null);
+                }
+
+                if (gameRequestDTO.getGameFile() != null && !gameRequestDTO.getGameFile().isEmpty()) {
+                    String oldPhotoPath = existingGame.getGameFile();
+
+                    String uuid = UUID.randomUUID().toString();
+                    String directoryCover = UPLOAD_DIRECTORY + "/"  + uuid + "/file";
+                        existingGame.setGameFile(ImageUtil.createImage(gameRequestDTO.getGameFile(), directoryCover, "/upload/game/" + uuid + "/file/"));
+
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    gameRequestDTO.setGameFile(null);
+                }
+
+                modelMapper.map(gameRequestDTO, existingGame);
+                gameRepository.save(existingGame);
+
+
+            } else {
+                throw new AccessDeniedException("Usuário não autorizado a alterar a Game.");
+            }
+        } else {
+            throw new EntityNotFoundException("Game com o ID " + game.getGameId() + " não encontrada.");
+        }
+    }
+
 }
