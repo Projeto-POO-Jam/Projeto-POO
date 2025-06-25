@@ -1,4 +1,6 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.game;
+
+import com.projetopoo.jam.dto.user.UserResponseDTO;
 
 public class GameResponseDTO {
 

@@ -1,7 +1,19 @@
 package com.projetopoo.jam.service;
 
+
 import com.projetopoo.jam.dto.*;
 import com.projetopoo.jam.model.*;
+
+import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
+import com.projetopoo.jam.dto.game.GameResponseDTO;
+import com.projetopoo.jam.dto.game.GameResquestDTO;
+import com.projetopoo.jam.dto.game.GameSummaryDTO;
+import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.model.Game;
+import com.projetopoo.jam.model.Jam;
+import com.projetopoo.jam.model.Subscribe;
+import com.projetopoo.jam.model.User;
+
 import com.projetopoo.jam.repository.*;
 import com.projetopoo.jam.util.ImageUtil;
 
@@ -102,8 +114,23 @@ public class GameService {
         int pageNumber = offset / limit;
         Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
 
-        Page<Game> gamePage = gameRepository.findByGameSubscribe_SubscribeJam_JamId(jamId, pageable);
+        Page<Game> gamePage = gameRepository.findByJamIdOrderByVotes(jamId, pageable);
 
+        return addGameTotal(gamePage);
+    }
+
+    @Transactional
+    public GamePaginatedResponseDTO findGameListByUserId(Long userId, int offset, int limit){
+
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+
+        Page<Game> gamePage = gameRepository.findByUserIdOrderByVotes(userId, pageable);
+
+        return addGameTotal(gamePage);
+    }
+
+    private GamePaginatedResponseDTO addGameTotal(Page<Game> gamePage) {
         List<GameSummaryDTO> gameSummaryDTOList = gamePage.getContent().stream()
                 .map(game -> {
                     GameSummaryDTO gameSummaryDTO = modelMapper.map(game, GameSummaryDTO.class);

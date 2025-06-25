@@ -6,6 +6,17 @@
     align-items: center;
 }
 
-.form-game {
+.form-game{
     width: 100%;
+    background-color: var(--background-card);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.card-game{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

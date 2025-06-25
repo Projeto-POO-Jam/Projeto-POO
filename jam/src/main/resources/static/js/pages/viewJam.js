@@ -1,24 +1,44 @@
-import { fetchViewJam, subscribeToJam, leaveJam } from '../services/jamService.js';
+import { fetchViewJam } from '../services/jamService.js';
 import { bindDataFields } from '../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { showError } from '../common/notifications.js';
 
 import { init as initGeral } from './fragments/jam_fragments/geral.js';
-// import { init as initRank } from './fragments/jam_fragments/rank.js';
-// import { init as initGames } from './fragments/jam_fragments/games.js';
+import { init as initRank } from './fragments/jam_fragments/rank.js';
+import { init as initGames } from './fragments/jam_fragments/games.js';
 
 $(function() {
     //Lógica abas do menu
-    $('.options-jam-card button').on('click', function() {
-        const tabId = $(this).data('tab');
+    $('.options-jam-card button').on('click', function(e) {
+        e.preventDefault();
 
-        // Controla a classe 'active' nos botões
+        const button = $(this);
+        const tabId = button.data('tab');
+        const targetTab = $('#tab-' + tabId);
+
+        //Encontra o painel que está atualmente visível para poder escondê-lo.
+        const activeTab = $('.tab-pane:visible');
+
+        //Se a aba clicada já for a ativa, não faz nada.
+        if (targetTab.is(activeTab)) {
+            return;
+        }
+
+        //Controla a classe 'active' nos botões.
         $('.options-jam-card button').removeClass('active');
-        $(this).addClass('active');
+        button.addClass('active');
 
-        // Mostra/Esconde o conteúdo da aba
-        $('.tab-pane').hide();
-        $('#tab-' + tabId).show();
+        //Define uma duração padrão para a animação.
+        const animationDuration = 400;
+
+        activeTab.slideUp(animationDuration, 'swing', function() {
+            $(this).removeClass('active');
+
+            //Deslize para baixo
+            targetTab.slideDown(animationDuration, 'swing', function() {
+                $(this).addClass('active');
+            });
+        });
     });
 
 
@@ -84,8 +104,8 @@ $(function() {
 
             //Inicializar Aba
             initGeral(data, jamId);
-            // initRank(data);
-            // initGames(data);
+            initRank(data, jamId);
+            initGames(data, jamId);
 
         })
         .fail(err => {

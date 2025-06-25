@@ -1,17 +1,14 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.exception.UserValidationException;
+import com.projetopoo.jam.dto.jam.*;
 import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.JamRepository;
 import com.projetopoo.jam.repository.SubscribeRepository;
 import com.projetopoo.jam.repository.UserRepository;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import java.time.format.DateTimeParseException;
 
 import com.projetopoo.jam.util.ImageUtil;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,10 +23,7 @@ import org.modelmapper.ModelMapper;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -198,6 +192,25 @@ public class JamService {
         Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
 
         Page<Jam> jamPage = jamRepository.findByYearAndMonth(year, month, pageable);
+
+        List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
+                .map(jam -> {
+                    JamSummaryDTO jamSummaryDTO = modelMapper.map(jam, JamSummaryDTO.class);
+                    jamSummaryDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jam.getJamId()));
+                    return jamSummaryDTO;
+                })
+                .collect(Collectors.toList());
+
+        return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public JamPaginatedResponseDTO findJamsBanner(int limit) {
+        int pageNumber = 0;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
+
+        List<JamStatus> statuses = Arrays.asList(JamStatus.ACTIVE, JamStatus.SCHEDULED);
+        Page<Jam> jamPage = jamRepository.findTopJamsByJamStatus(statuses, pageable);
 
         List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
                 .map(jam -> {

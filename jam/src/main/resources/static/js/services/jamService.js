@@ -12,7 +12,6 @@ export function fetchJamsByMonth(month, offset = 0, limit = 4) {
         .then(({ data }) => data);
 }
 
-
 /**
  * Busca todos os dados da view da Jam
  * @param {number|string} id – o ID da Jam
@@ -24,21 +23,44 @@ export function fetchViewJam(id) {
 }
 
 /**
- * Inscreve o usuário em uma Jam.
- * @param {number|string} jamId - O ID da jam para se inscrever.
+ * Alterna (inscreve/desinscreve) a inscrição do usuário em uma Jam.
+ * @param {number|string} jamId - O ID da jam.
  * @returns {Promise<object>}
  */
-export function subscribeToJam(jamId) {
+export function toggleSubscription(jamId) {
     const body = { subscribeJamId: jamId };
     return apiRequest('POST', 'api/subscribes', body);
 }
 
 /**
- * Remove a inscrição do usuário de uma Jam.
- * @param {number|string} jamId - O ID da jam para sair.
- * @returns {Promise<object>}
+ * Verifica se o usuário atual está inscrito em uma Jam específica.
+ * @param {number|string} jamId - O ID da Jam.
+ * @returns {Promise<{subscribed: boolean}>} Uma promessa que resolve com o status da inscrição.
  */
-export function leaveJam(jamId) {
-    const body = { subscribeJamId: jamId };
-    return apiRequest('POST', 'api/subscribes', body);
+export function checkSubscriptionStatus(jamId) {
+    return apiRequest('GET', `api/subscribes/${jamId}`)
+        .then(({ data }) => data);
 }
+
+/**
+ * Busca Jams para o banner da home.
+ * @param {number} limit – Quantos itens buscar.
+ * @returns {Promise<{jams: Array, total: number}>}
+ */
+export function fetchBannerJams(limit = 5) {
+    return apiRequest('GET', `api/jams/banner?limit=${limit}`)
+        .then(({ data }) => data);
+}
+
+/**
+ * Busca a lista de jogos de uma Jam.
+ * @param {number|string} jamId - O ID da Jam.
+ * @param {number} offset - Quantos itens pular.
+ * @param {number} limit - Quantos itens buscar.
+ * @returns {Promise<{games: Array, total: number}>}
+ */
+export function fetchJamGames(jamId, offset = 0, limit = 20) {
+    return apiRequest('GET', `api/games/list?jamId=${jamId}&offset=${offset}&limit=${limit}`)
+        .then(({ data }) => data);
+}
+

@@ -9,20 +9,9 @@ header.site-header {
 
 .site-logo {
     width: 4rem; height: 4rem;
-    /*
-        Primeira Logo
-        background-image: url("logo1");
-    */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-}
-
-body.dark .site-logo {
-    /*
-        Segunda Logo
-        background-image: url("logo2");
-    */
 }
 
 .container-menu{

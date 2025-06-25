@@ -1,13 +1,13 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.jam;
 
 import com.projetopoo.jam.model.JamStatus;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 public class JamSummaryDTO {
     private Long jamId;
     private String jamTitle;
+    private String jamBanner;
     private LocalDateTime jamStartDate;
     private LocalDateTime jamEndDate;
     private JamStatus jamStatus;
@@ -27,6 +27,14 @@ public class JamSummaryDTO {
 
     public void setJamTitle(String jamTitle) {
         this.jamTitle = jamTitle;
+    }
+
+    public String getJamBanner() {
+        return jamBanner;
+    }
+
+    public void setJamBanner(String jamBanner) {
+        this.jamBanner = jamBanner;
     }
 
     public LocalDateTime getJamStartDate() {

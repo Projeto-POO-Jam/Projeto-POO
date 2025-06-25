@@ -16,6 +16,23 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByGameId(long gameId);
-    Page<Game> findByGameSubscribe_SubscribeJam_JamId(Long jamId, Pageable pageable);
+
+    @Query("SELECT g " +
+            "FROM " +
+                "Game g " +
+            "WHERE " +
+                "g.gameSubscribe.subscribeJam.jamId = :jamId " +
+            "ORDER BY " +
+                "SIZE(g.gameVotes) DESC")
+    Page<Game> findByJamIdOrderByVotes(@Param("jamId") Long jamId, Pageable pageable);
+
+    @Query("SELECT g " +
+            "FROM " +
+                "Game g " +
+            "WHERE " +
+                "g.gameSubscribe.subscribeUser.userId = :userId " +
+            "ORDER BY " +
+                "SIZE(g.gameVotes) DESC")
+    Page<Game> findByUserIdOrderByVotes(@Param("userId") Long userId, Pageable pageable);
 
 }

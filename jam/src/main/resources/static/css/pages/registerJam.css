@@ -7,7 +7,7 @@
 }
 
 .card-jam{
-    width: 60%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,12 +15,277 @@
 
 .form-Jam{
     width: 100%;
+    background-color: var(--background-card);
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
 }
 
 .form-group-jam {
     margin-top: 1rem;
 }
 
-.division{
-    margin: 2rem 1rem;
+.dark .note-editor.note-frame {
+    background: var(--background);
+    border: 1px solid #444;
+    margin-top: 0.5rem;
+}
+
+.dark .note-toolbar {
+    background-color: var(--background);
+    border-bottom: 1px solid #444;
+}
+
+.dark .note-btn {
+    color: var(--text);
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.dark .note-btn:hover,
+.dark .note-btn:focus,
+.dark .note-btn:active {
+    color: var(--text);
+    background-color: #33383f;
+}
+
+.dark .note-btn.dropdown-toggle::after {
+    filter: invert(100%) brightness(150%);
+}
+
+.dark .dropdown-menu {
+    background-color: var(--background);
+    border: 1px solid #444;
+}
+
+.dark .dropdown-item {
+    color: var(--text);
+}
+
+.dark .dropdown-item:hover {
+    background-color: #33383f;
+}
+
+.dark .note-editable {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+.dark .note-popover .popover-content,
+.dark .note-modal .modal-content {
+    background-color: var(--background);
+    color: var(--text);
+}
+
+.dark .note-modal .modal-header {
+    background-color: #1c2128;
+    border-bottom: 1px solid #444;
+}
+
+.dark .note-modal .modal-header .close {
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.dark .note-form-label {
+    color: var(--text);
+}
+
+.dark .note-input {
+    background-color: #101214;
+    color: var(--text);
+    border: 1px solid #444;
+}
+
+.note-icon-font:before {
+    content: "";
+    background: var(--background) !important;
+    color: var(--text) !important;
+}
+
+/* modo claro para bliblioteca de data! */
+
+.flatpickr-calendar {
+    background: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+}
+
+.flatpickr-month,
+.flatpickr-weekday,
+.flatpickr-time .flatpickr-am-pm {
+    color: #333333 !important;
+    background-color: var(--background) !important;
+}
+
+.flatpickr-months .flatpickr-prev-month svg,
+.flatpickr-months .flatpickr-next-month svg {
+    fill: #333333 !important;
+}
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months{
+    background-color: var(--background) !important;
+}
+
+.flatpickr-day {
+    color: #333333 !important;
+}
+
+.flatpickr-day:hover {
+    background: #f5f5f5 !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.today {
+    background: #007bff !important;
+    border-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+.flatpickr-day.today:not(.selected) {
+    color: #333 !important;
+    background: #f0f0f0 !important;
+}
+
+.flatpickr-calendar.hasTime .flatpickr-time {
+    border-top: 1px solid var(--text) !important;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    opacity: 0.5 !important;
+}
+
+.flatpickr-time .numInput {
+    color: #333 !important;
+    background: transparent !important;
+}
+
+.flatpickr-time .numInput:hover {
+    background: #f5f5f5 !important;
+}
+
+.flatpickr-calendar.arrowTop:after{
+    border-bottom-color: var(--background-card) !important;
+}
+
+
+/* modo dark para bliblioteca de data! */
+.dark .flatpickr-calendar {
+    background: var(--background) !important;
+    border: 1px solid #444 !important;
+}
+
+.dark .flatpickr-month,
+.dark .flatpickr-weekday,
+.dark .flatpickr-day,
+.dark .flatpickr-time .numInput,
+.dark .flatpickr-time .flatpickr-am-pm {
+    color: var(--text) !important;
+    background-color: var(--background) !important;
+}
+
+.dark .flatpickr-months .flatpickr-prev-month svg,
+.dark .flatpickr-months .flatpickr-next-month svg {
+    fill: var(--text) !important;
+}
+
+.dark .flatpickr-day:hover,
+.dark .flatpickr-time .numInput:hover,
+.dark .flatpickr-time .flatpickr-am-pm:hover {
+    background: #33383f !important;
+}
+
+.dark .flatpickr-day.selected,
+.dark .flatpickr-day.today {
+    background: var(--blue) !important;
+    border-color: var(--blue) !important;
+    color: #ffffff !important;
+}
+.dark .flatpickr-day.today:not(.selected) {
+    color: var(--text) !important;
+    background: #33383f !important;
+}
+
+.dark .flatpickr-time .flatpickr-time-separator,
+.dark .flatpickr-time .flatpickr-am-pm-separator {
+    color: var(--text) !important;
+}
+/* fim biblioteca */
+
+.info-input-padrao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input-codigo-cor {
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    font-family: monospace;
+    width: 100px;
+}
+
+.pcr-button {
+    width: 32px;
+    height: 32px;
+}
+
+.pickr .pcr-button::before{
+    background: none !important;
+}
+
+.pickr .pcr-button::after{
+    border-radius: 0.46rem !important;
+}
+
+.filepond--root {
+    width: 100%;
+    min-height: 100px;
+}
+
+.filepond--panel {
+    border-radius: 5px;
+    background-color: transparent !important;
+}
+
+.filepond--drop-label {
+    color: #555;
+}
+
+.filepond--drop-label.filepond--drop-label label{
+    color: var(--text) !important;
+    cursor: pointer;
+}
+
+.filepond--root .filepond--credits[style]{
+    display: none !important;
+}
+
+.filepond--drop-label{
+    background: var(--background) !important;
+    border-radius: 1rem !important;
+    cursor: pointer !important;
+}
+
+#gameFile .filepond--file {
+    background: var(--background) !important;;
+    display: flex !important;
+    justify-content: center !important;;
+    align-items: center !important;
+    color: var(--text) !important;
+}
+
+.filepond--root{
+    min-height: 5rem !important;
+}
+
+.filepond--image-preview{
+    background: var(--background) !important;
+}
+
+.filepond--image-preview-overlay-idle{
+    color: rgb(105 105 105 / 40%) !important;
 }

@@ -1,12 +1,9 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.jam;
 
+import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.model.JamStatus;
-import com.projetopoo.jam.model.Subscribe;
-import com.projetopoo.jam.model.User;
-import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class JamResponse {
     private Long jamId;

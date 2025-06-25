@@ -1,4 +1,4 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.subscribe;
 
 public class SubscribeSseDTO {
     private Long subscribeJamId;

@@ -1,4 +1,4 @@
-package com.projetopoo.jam.dto;
+package com.projetopoo.jam.dto.game;
 
 import org.springframework.web.multipart.MultipartFile;
 

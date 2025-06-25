@@ -1,50 +1,74 @@
-import { fetchGame, toggleVote } from '../services/gameService.js';
+import { fetchGame, isLike, toggleVote, fetchTotalVotes } from '../services/gameService.js';
+import { fetchCurrentUser } from '../services/userService.js'; // NOVO
+import { fetchComments, postComment } from '../services/commentService.js'; // NOVO
 import { bindDataFields } from '../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { showError } from '../common/notifications.js';
 
 $(function() {
-    //Pega o ID do game pela URL
+    //Pega id na URL
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const gameId = pathSegments[pathSegments.length - 1];
     const root = 'main.game-card';
 
-    //Aplica o efeito de Skeleton
+    //Seletores de elementos
+    const likeButton = $('.button-like');
+    const likeCountSpan = $('.like-count');
+    const commentsContainer = $('#comments');
+    const commentInput = $('#comment-user-input');
+    const sendCommentBtn = $('#send-comment-btn');
+    const userCommentIcon = $('.post-comment .icone-actor-comments');
+
     applySkeleton(root);
 
-    //Busca os dados do game na API
-    $.when(fetchGame(gameId))
-        .done(gameData => {
-            //Preenche campos simples
+    //Configuração do SSE
+    const stream = new EventSource('/api/events?topic=games-update');
+    const voteEventName = `votes-update-${gameId}`;
+    stream.addEventListener(voteEventName, (e) => {
+        const payload = JSON.parse(e.data);
+        if (payload.voteTotal !== undefined) {
+            likeCountSpan.text(payload.voteTotal);
+        }
+    });
+
+    stream.onerror = (err) => {
+        console.error(`SSE connection error on topic 'games-update':`, err);
+        stream.close();
+    };
+
+    //Função para renderizar um comentário
+    function renderComment(comment) {
+        const commentHtml = `
+            <div class="comment-card">
+                <img
+                    src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
+                    data-default="/images/iconePadrao.svg"
+                    alt="comment actor icon"
+                    class="icone-actor-comments"
+                    onerror="this.src=this.dataset.default"
+                />
+                <div class="comment-content">
+                    <p class="comment-username">${comment.commentUser.userName}</p>
+                    <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p> 
+                </div>
+            </div>
+        `;
+        return $(commentHtml);
+    }
+
+    //Carregamento de dados iniciais
+    $.when(
+        fetchGame(gameId),
+        isLike(gameId),
+        fetchTotalVotes(gameId),
+        fetchCurrentUser(),
+        fetchComments(gameId)
+    )
+        .done((gameData, likeStatus, voteCount, currentUser, comments) => {
+
+            //Preenche os dados do game
             bindDataFields(gameData, root);
 
-            //Trata a imagem de capa de forma específica
-            const capaImg = $('img[data-field="game-capa"]');
-            if (gameData.gameCapa) {
-                capaImg.attr('src', gameData.gameCapa);
-            } else {
-                capaImg.attr('src', capaImg.data('default')); // Usa a imagem placeholder
-            }
-
-            //Lógica do botão de Like
-            const likeButton = $('.button-like');
-
-            //Adiciona uma classe se o usuário já curtiu
-            if (gameData.isLikedByUser) { //API retorne essa informação!!!!!!!!!!
-                likeButton.addClass('liked');
-            }
-
-            likeButton.on('click', function() {
-                $(this).toggleClass('liked');
-
-                toggleVote(gameId)
-                    .fail(() => {
-                        showError('Erro ao registrar o voto.');
-                        $(this).toggleClass('liked');
-                    });
-            });
-
-            //Lógica do botão "Acessar game"
             $('.options-view-game button').on('click', function() {
                 if (gameData.UrlDoGame) {
                     window.open(gameData.UrlDoGame, '_blank');
@@ -53,23 +77,46 @@ $(function() {
                 }
             });
 
-            //Lógica para injetar o HTML do usuário
             const container = $('.container-view-game');
             const userHtml = gameData.gameContent?.trim();
-
             if (userHtml) {
                 const sanitizedHtml = $('<div>').html(userHtml);
-                // Remove todas as tags <script> para segurança
                 sanitizedHtml.find('script').remove();
                 container.html(sanitizedHtml.html());
             } else {
-                container.html('<p class="text-center p-4">O desenvolvedor não adicionou conteúdo adicional.</p>');
+                container.html('<p>O desenvolvedor não adicionou conteúdo adicional.</p>');
             }
+
+            //Configura o estado inicial do botão de Like
+            if (likeStatus && likeStatus.voted) {
+                likeButton.addClass('liked');
+            }
+
+            //Configura a contagem inicial de votos
+            if (voteCount) {
+                likeCountSpan.text(voteCount.total ?? 0);
+            }
+
+            //Lógica de Comentários
+            //Define a foto do usuário
+            if (currentUser && currentUser.userPhoto) {
+                userCommentIcon.attr('src', currentUser.userPhoto);
+            }
+
+            //Renderiza os comentários existentes
+            commentsContainer.empty();
+            if (comments && comments.length > 0) {
+                comments.forEach(comment => {
+                    commentsContainer.append(renderComment(comment));
+                });
+            } else {
+                commentsContainer.html('<p class="not-comments">Ainda não há comentários. Seja o primeiro a comentar!</p>');
+            }
+
         })
         .fail(err => {
-            console.error('Erro ao carregar o Game:', err);
-            showError('Não foi possível carregar as informações deste game.');
-            //Pagina 404
+            console.error('Uma ou mais chamadas iniciais falharam:', err);
+            showError('Não foi possível carregar as informações desta página.');
         })
         .always(() => {
             setTimeout(() => {
@@ -77,4 +124,53 @@ $(function() {
                 $(root).find('.skeleton').removeClass('skeleton');
             }, 150);
         });
+
+
+    //Lógica de clique do Like
+    likeButton.on('click', function() {
+        $(this).toggleClass('liked');
+        toggleVote(gameId)
+            .fail(() => {
+                showError('Ocorreu um erro ao registrar seu voto.');
+                $(this).toggleClass('liked');
+            });
+    });
+
+    //Lógica para enviar comentário
+    sendCommentBtn.on('click', function() {
+        const commentText = commentInput.val().trim();
+        if (!commentText) {
+            showError('O comentário não pode estar vazio.');
+            return;
+        }
+
+        const originalIcon = $(this).text();
+        $(this).text('pending');
+
+        postComment(commentText, gameId)
+            .done((newComment) => {
+                if (commentsContainer.find('p.not-comments').length > 0) {
+                    commentsContainer.empty();
+                }
+
+                //Adiciona o novo comentário no topo da lista
+                const newCommentElement = renderComment(newComment);
+                commentsContainer.prepend(newCommentElement);
+                commentInput.val('');
+            })
+            .fail(() => {
+                showError('Ocorreu um erro ao postar seu comentário.');
+            })
+            .always(() => {
+                $(this).text(originalIcon);
+            });
+    });
+
+    //Permite enviar com a tecla Enter
+    commentInput.on('keypress', function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            sendCommentBtn.click();
+        }
+    });
 });

@@ -1,9 +1,4 @@
-package com.projetopoo.jam.dto;
-
-import com.projetopoo.jam.model.Game;
-import com.projetopoo.jam.model.JamStatus;
-
-import java.time.LocalDateTime;
+package com.projetopoo.jam.dto.game;
 
 public class GameSummaryDTO {
     private Long gameId;

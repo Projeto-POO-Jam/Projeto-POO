@@ -1,29 +1,71 @@
-import { subscribeToJam, leaveJam } from '../../../services/jamService.js';
+import { toggleSubscription, checkSubscriptionStatus } from '../../../services/jamService.js';
+import { applySkeleton } from '../../../common/skeleton.js';
 
-//Função para ser chamada quando os dados da Jam estiverem prontos
-export function init(data, jamId) { // Recebe o jamId
-    //Monta o card de duração
+//Função que apenas desenha os botões corretos na tela.
+function updateSubscriptionUI(isSubscribed) {
+    const actionContainer = $('#jam-action-container');
+
+    if (isSubscribed) {
+        actionContainer.html(`
+            <button id="post-game-btn" class="join-btn">Postar Jogo</button>
+            <button id="toggle-subscription-btn" class="leave-jam-link">Sair da Jam</button>
+        `);
+    } else {
+        actionContainer.html('<button id="toggle-subscription-btn" class="join-btn">Participar da Jam</button>');
+    }
+}
+
+
+export function init(data, jamId) {
+    //Configuração do SSE
+    const stream = new EventSource('/api/events?topic=jams-update');
+
+    //Handler para atualização de inscritos
+    const subscribesEventName = `jam-subscribes-update-${jamId}`;
+    stream.addEventListener(subscribesEventName, (e) => {
+        const payload = JSON.parse(e.data);
+        if (payload.subscribeTotal !== undefined) {
+            $('.participants-jam h1').text(payload.subscribeTotal ?? 0);
+        }
+    });
+
+    //Handler para atualização de status
+    const statusEventName = `jam-status-update-${jamId}`;
+    stream.addEventListener(statusEventName, (e) => {
+        const payload = JSON.parse(e.data);
+        if (payload.jamStatus) {
+            data.jamStatus = payload.jamStatus;
+
+            //Força a re-execução da função de contagem regressiva
+            updateCountdown(data, start, end, timer);
+        }
+    });
+
+    //Tratamento de erro
+    stream.onerror = (err) => {
+        console.error(`SSE connection error on topic 'jams-update':`, err);
+        stream.close();
+    };
+    //FIM da configuração do SSE
+
+    let start, end, timer;
+
     if (data.jamStartDate && data.jamEndDate) {
-        const start = new Date(data.jamStartDate);
-        const end = new Date(data.jamEndDate);
+        start = new Date(data.jamStartDate);
+        end = new Date(data.jamEndDate);
         const now = new Date();
 
-        const fmtStart = start.toLocaleDateString('pt-BR');
-        const fmtEnd = end.toLocaleDateString('pt-BR');
-
+        //Monta o template
         $('#jam-duration-container').html(`
             <div class="card-duration-view-jam-id duration-card">
-                <p class="range-text">
-                    Tempo de Inscrição: ${fmtStart} até ${fmtEnd}
-                </p>
+                <p class="range-text">Inscrições de ${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}</p>
                 <div class="participants-jam">
-                    <h1 class="skeleton">${data.jamTotalSubscribers}</h1>
-                    <p>Ingressou</p>
+                    <h1>${data.jamTotalSubscribers}</h1>
+                    <p>Participantes</p>
                 </div>
                 <div class="container-card-duration-view-jam-id">
                     <div class="countdown-text">
-                        <span id="cd-prefix">Inicia em</span>
-                        <span id="cd-timer">--:--:--:--</span>
+                        <span id="cd-prefix">Inicia em</span><span id="cd-timer">--:--:--:--</span>
                     </div>
                     <div id="jam-action-container"></div>
                 </div>
@@ -32,100 +74,93 @@ export function init(data, jamId) { // Recebe o jamId
 
         const actionContainer = $('#jam-action-container');
 
-        //Verifica se a Jam já acabou. Se sim, não mostra nenhum botão.
         if (now < end) {
-            if (data.subscribed) {
-                showJoinedState();
-            } else {
-                showJoinButton();
-            }
+            const skeletonButtonHtml = '<button data-field="action-button-placeholder" class="join-btn"></button>';
+            actionContainer.html(skeletonButtonHtml);
+            applySkeleton(actionContainer);
+
+            checkSubscriptionStatus(jamId)
+                .done(response => {
+                    updateSubscriptionUI(response.subscribed);
+                })
+                .fail(() => actionContainer.html('<p class="error-message">Erro ao verificar inscrição.</p>'));
         }
 
-        function showJoinButton() {
-            actionContainer.html('<button id="join-jam-btn" class="join-btn">Participar</button>');
-        }
-
-        function showJoinedState() {
-            actionContainer.html(`
-                <button id="post-game-btn" class="join-btn">Postar Game</button>
-                <a href="#" id="leave-jam-btn" class="leave-jam-link">Sair da Jam</a>
-            `);
-        }
-
-
-        // Evento para entrar na Jam
-        $('#jam-duration-container').on('click', '#join-jam-btn', function() {
+        $('#jam-duration-container').on('click', '#toggle-subscription-btn', function() {
             const btn = $(this);
+            const wasSubscribed = btn.text().includes('Sair da Jam');
+
             btn.prop('disabled', true).text('Processando...');
 
-            subscribeToJam(jamId)
-                .done(response => {
-                    showJoinedState();
+            toggleSubscription(jamId)
+                .done(() => {
+                    checkSubscriptionStatus(jamId)
+                        .done(response => {
+                            updateSubscriptionUI(response.subscribed);
+                        })
+                        .fail(() => actionContainer.html('<p class="error-message">Erro ao atualizar status.</p>'));
                 })
-                .fail(err => {
-                    btn.prop('disabled', false).text('Participar');
+                .fail(() => {
+                    updateSubscriptionUI(wasSubscribed);
                 });
         });
 
-        //Evento para sair da Jam
-        $('#jam-duration-container').on('click', '#leave-jam-btn', function(e) {
-            e.preventDefault();
-            const link = $(this);
-            link.css('pointer-events', 'none').text('Saindo...');
+        timer = setInterval(() => updateCountdown(data, start, end, timer), 1000);
+        updateCountdown(data, start, end, timer);
 
-            leaveJam(jamId)
-                .done(response => {
-                    showJoinButton();
-                })
-                .fail(err => {
-                    link.css('pointer-events', 'auto').text('Sair da Jam');
-                });
-        });
-
-        //Evento para postar o Game
         $('#jam-duration-container').on('click', '#post-game-btn', function() {
-            window.location.href = `/jam/registerGame/${jamId}`;
+            window.location.href = `/jams/registerGame/${jamId}`;
         });
-
-        //Inicia o countdown
-        const timer = setInterval(() => updateCountdown(start, end, timer), 1000);
-        updateCountdown(start, end, timer);
     }
 
-    //Lógica do HTML do usuario (seu código original, sem alterações)
     const userCard = $('.page-user-jam-card');
     const userHtml = data.jamContent?.trim();
-
     if (userHtml) {
         const sanitizedHtml = $('<div>').html(userHtml);
         sanitizedHtml.find('script').remove();
         userCard.html(sanitizedHtml.html());
     } else {
-        userCard.html(`
-            <div class="default-jam-card">
-                <p>Descrição da Jam.</p>
-            </div>
-        `);
+        userCard.html('<p>O organizador ainda não adicionou uma descrição para esta Jam.</p>');
     }
 }
 
-//Função de countdown (seu código original, sem alterações)
-function updateCountdown(start, end, timer) {
-    const now = new Date();
-    let diff = start - now;
-    let prefix = 'Inicia em';
 
-    if (diff <= 0 && now < end) {
-        diff = end - now;
-        prefix = 'Encerra em';
-        //Fazer logica para não deixar o usuario não se inclever ainda!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    } else if (now >= end) {
+//A função oara atualizar a duração
+function updateCountdown(data, start, end, timer) {
+    //Verifica primeiro o status vindo do servidor via SSE
+    if (data.jamStatus === 'FINISHED') {
         $('#cd-prefix').text('Encerrado');
         $('#cd-timer').text('00:00:00:00');
-        $('#jam-action-container').empty(); // Remove os botões se a jam acabou
+        $('#jam-action-container').empty();
         clearInterval(timer);
         return;
+    }
+
+    const now = new Date();
+    let diff = start - now;
+    let period = 'registration';
+
+    if (diff <= 0) { //Se a data de início já passou
+        if (now < end) {
+            diff = end - now; //Calcula o tempo restante até o fim
+            period = 'running';
+        } else {
+            period = 'ended';
+        }
+    }
+
+    //A verificação abaixo ainda é útil para o carregamento inicial da página,
+    if (period === 'ended') {
+        $('#cd-prefix').text('Encerrado');
+        $('#cd-timer').text('00:00:00:00');
+        $('#jam-action-container').empty();
+        clearInterval(timer);
+        return;
+    }
+
+    const joinBtn = $('#toggle-subscription-btn');
+    if (period === 'running' && joinBtn.text().includes('Participar')) {
+        joinBtn.prop('disabled', true).text('Inscrições encerradas');
     }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -136,6 +171,6 @@ function updateCountdown(start, end, timer) {
     const pad = (num) => String(num).padStart(2, '0');
     const formattedTime = `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
 
-    $('#cd-prefix').text(prefix);
+    $('#cd-prefix').text(period === 'running' ? 'Encerra em' : 'Inicia em');
     $('#cd-timer').text(formattedTime);
 }

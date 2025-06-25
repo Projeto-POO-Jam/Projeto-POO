@@ -10,17 +10,27 @@
                 <div class="info-view-game">
                     <div id="img-capa-view-game">
                         <img
-                            data-field="game-capa"
-                            data-default="/images/placeholder-cover.png"
+                            data-field="gamePhoto"
+                            data-default="/images/iconePadrao.svg"
                             alt="Capa do Game"
-                            class="skeleton"
+                            class="capa-game skeleton"
                         />
                     </div>
                     <div class="details-view-game">
+                        <div class="actor-view-game">
+                            <img
+                                data-field="userResponseDTO.userPhoto"
+                                data-default="/images/iconePadrao.svg"
+                                alt="icone actor"
+                                class="icone-actor skeleton"
+                            />
+                            <h1 data-field="userResponseDTO.userName" class="skeleton"></h1>
+                        </div>
                         <h1 data-field="gameTitle" class="skeleton"></h1>
                         <p data-field="gameDescription" class="skeleton"></p>
                         <div class="button-like">
-                            <span class="material-symbols-outlined">thumb_up</span>
+                            <span class="icone-like material-symbols-outlined">thumb_up</span>
+                            <span class="like-count skeleton">0</span>
                         </div>
                     </div>
                 </div>
@@ -30,6 +40,25 @@
             </section>
             <section class="container-view-game">
                 <!--html-->
+            </section>
+
+            <section class="container-comments">
+                <div class="post-comment">
+                    <img
+                        data-field="userPhoto"
+                        data-default="/images/iconePadrao.svg"
+                        alt="comment actor icon"
+                        class="icone-actor-comments skeleton"
+                    />
+
+                    <input type="text" name="comment-input" id="comment-user-input" placeholder="Escreva um comentário...">
+
+                    <span id="send-comment-btn" class="material-symbols-outlined">send</span>
+                </div>
+
+                <div id="comments">
+
+                </div>
             </section>
         </section>
     </main>

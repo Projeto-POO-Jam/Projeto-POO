@@ -2,8 +2,14 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="conteudoJogos">
-        <h1>Jogos Enviados</h1>
-        <p>Veja aqui os jogos participantes.</p>
+        <div class="title-aba-games">
+            <h1>Jogos Enviados</h1>
+            <p>Veja aqui os jogos participantes. Clique em um jogo para ver mais detalhes e votar.</p>
+        </div>
+
+        <div id="games-list-container" class="games-grid">
+
+        </div>
     </div>
 </body>
 </html>

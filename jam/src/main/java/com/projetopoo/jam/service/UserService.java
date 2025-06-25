@@ -1,13 +1,16 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.UserResponseDTO;
-import com.projetopoo.jam.dto.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.dto.user.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserWithIdResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
 import com.projetopoo.jam.util.ImageUtil;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -47,7 +52,8 @@ public class UserService {
             throw new UserValidationException(validationErrors);
         }
 
-        user.setUserPhoto(ImageUtil.createImage(userResquestDTO.getUserPhoto(), UPLOAD_DIRECTORY, "/upload/user/"));
+        user.setUserPhoto(ImageUtil.createImage(userResquestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
+        user.setUserBanner(ImageUtil.createImage(userResquestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
         userRepository.save(user);
@@ -83,11 +89,21 @@ public class UserService {
         if (user.getUserPhoto() != null && !user.getUserPhoto().isEmpty()) {
             String oldPhotoPath = existingUser.getUserPhoto();
 
-            String newPhotoPath = ImageUtil.createImage(user.getUserPhoto(), UPLOAD_DIRECTORY, "/upload/user/");
+            String newPhotoPath = ImageUtil.createImage(user.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/");
             existingUser.setUserPhoto(newPhotoPath);
 
             ImageUtil.deleteImage(oldPhotoPath);
             user.setUserPhoto(null);
+        }
+
+        if (user.getUserBanner() != null && !user.getUserBanner().isEmpty()) {
+            String oldBannerPath = existingUser.getUserBanner();
+
+            String newBannerPath = ImageUtil.createImage(user.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/");
+            existingUser.setUserBanner(newBannerPath);
+
+            ImageUtil.deleteImage(oldBannerPath);
+            user.setUserBanner(null);
         }
 
         modelMapper.map(user, existingUser);
@@ -99,6 +115,19 @@ public class UserService {
     public UserResponseDTO findUser(String identifier) {
         User user = userRepository.findByIdentifier(identifier);
         return modelMapper.map(user, UserResponseDTO.class);
+    }
+
+    @Transactional(readOnly = true)
+    public UserWithIdResponseDTO findUserId(Long userId, String identifier) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        User currentUser = userRepository.findByIdentifier(identifier);
+        if(user.isPresent()) {
+            UserWithIdResponseDTO userWithIdResponseDTO = modelMapper.map(user.get(), UserWithIdResponseDTO.class);
+            userWithIdResponseDTO.setUserCurrent(Objects.equals(userWithIdResponseDTO.getUserId(), currentUser.getUserId()));
+            return userWithIdResponseDTO;
+        } else {
+            throw new EntityNotFoundException("Usuario não encontrado");
+        }
     }
 
 }

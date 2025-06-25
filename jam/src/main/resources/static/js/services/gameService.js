@@ -17,6 +17,26 @@ export function fetchGame(id) {
  * @returns {Promise<object>} – Uma promessa que resolve com a resposta da API após a operação.
  */
 export function toggleVote(gameId) {
-    const body = { gameId: gameId };
+    const body = { voteGameId: gameId };
     return apiRequest('POST', 'api/votes', body);
+}
+
+/**
+ * Retorna se ja foi se o usuairo ja voto no jogo.
+ * @param {string|number} gameId - O ID do game que receberá o voto.
+ * @returns {Promise<object>} – Uma promessa que resolve com a resposta da API após a operação.
+ */
+export function isLike(gameId) {
+    return apiRequest('GET', `api/votes/${gameId}`)
+        .then(({ data }) => data);
+}
+
+/**
+ * Busca o número total de votos para um game específico.
+ * @param {string|number} gameId - O ID do game.
+ * @returns {Promise<object>} - Uma promessa que resolve com o total de votos.
+ */
+export function fetchTotalVotes(gameId) {
+    return apiRequest('GET', `api/votes/total/${gameId}`)
+        .then(({ data }) => data);
 }

@@ -1,7 +1,7 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.CommentRequestDTO;
-import com.projetopoo.jam.dto.CommentResponseDTO;
+import com.projetopoo.jam.dto.comment.CommentRequestDTO;
+import com.projetopoo.jam.dto.comment.CommentResponseDTO;
 import com.projetopoo.jam.model.Comment;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.User;
@@ -35,6 +35,8 @@ public class CommentService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private SseNotificationService sseNotificationService;
 
     @Transactional
     public void createComment(CommentRequestDTO commentRequestDTO, String identifier) {
@@ -52,6 +54,10 @@ public class CommentService {
         comment.setCommentGame(optionalGame.get());
 
         commentRepository.save(comment);
+
+        CommentResponseDTO commentResponseDTO= modelMapper.map(comment, CommentResponseDTO.class);
+
+        sseNotificationService.sendEventToTopic("games-update", "comments-update-" + commentRequestDTO.getGameId(), commentResponseDTO);
     }
 
     @Transactional
@@ -68,7 +74,10 @@ public class CommentService {
             throw new AccessDeniedException("Usuário não autorizado a excluir este comentário.");
         }
 
+        CommentResponseDTO commentResponseDTO= modelMapper.map(comment, CommentResponseDTO.class);
         commentRepository.delete(comment);
+
+        sseNotificationService.sendEventToTopic("games-update", "comments-delete-" + comment.getCommentGame().getGameId(), commentResponseDTO);
     }
 
     @Transactional

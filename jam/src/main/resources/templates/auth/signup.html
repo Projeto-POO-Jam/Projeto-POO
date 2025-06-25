@@ -43,61 +43,46 @@
 
                     <form id="signupForm" action="/signup" method="post" enctype="multipart/form-data" novalidate>
                         <div th:replace="~{fragments/imageCropComponent :: imageCrop}"></div>
-                        <div class="form-group">
-                            <div class="info-input-auth">
-                                <span class="material-symbols-outlined">person</span>
-                                <input
-                                    id="username"
-                                    name="username"
-                                    type="text"
-                                    placeholder="Username"
-                                    th:classappend="${param.error} ? ' error' : ''"
-                                />
-                            </div>
-                            <p id="usernameError" class="error-message"></p>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="info-input-auth">
-                                <span class="material-symbols-outlined">mail</span>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    placeholder="E-mail"
-                                    th:classappend="${param.error} ? ' error' : ''"
-                                />
-                            </div>
-                            <p id="emailError" class="error-message"></p>
-                        </div>
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='username',
+                            name='username',
+                            type='text',
+                            icon='person',
+                            placeholder='Username',
+                            labelText=null,
+                            inputClass=null
+                        )}"></div>
 
-                        <div class="form-group">
-                            <div class="info-input-auth">
-                                <span class="material-symbols-outlined">lock</span>
-                                <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="Senha"
-                                    th:classappend="${param.error} ? ' error' : ''"
-                                />
-                            </div>
-                            <p id="passwordError" class="error-message"></p>
-                        </div>
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='email',
+                            name='email',
+                            type='email',
+                            icon='mail',
+                            placeholder='E-mail',
+                            labelText=null,
+                            inputClass=null
+                        )}"></div>
 
-                        <div class="form-group">
-                            <div class="info-input-auth">
-                                <span class="material-symbols-outlined">lock</span>
-                                <input
-                                    id="passwordConfirm"
-                                    name="passwordConfirm"
-                                    type="password"
-                                    placeholder="Confirmar Senha"
-                                    th:classappend="${param.error} ? ' error' : ''"
-                                />
-                            </div>
-                            <p id="passwordConfirmError" class="error-message"></p>
-                        </div>
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='password',
+                            name='password',
+                            type='password',
+                            icon='lock',
+                            placeholder='Senha',
+                            labelText=null,
+                            inputClass=null
+                        )}"></div>
+
+                        <div th:replace="~{fragments/formComponents.html :: formInput(
+                            id='passwordConfirm',
+                            name='passwordConfirm',
+                            type='password',
+                            icon='lock',
+                            placeholder='Confirmar Senha',
+                            labelText=null,
+                            inputClass=null
+                        )}"></div>
 
                         <div class="checkbox-container">
                             <div class="aling-checkbox">

@@ -10,6 +10,8 @@ application-local.properties
 !**/upload/user/.gitkeep
 **/upload/jam/*
 !**/upload/jam/.gitkeep
+**/upload/game/*
+!**/upload/game/.gitkeep
 
 ### STS ###
 .apt_generated

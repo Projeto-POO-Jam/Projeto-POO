@@ -1,12 +1,17 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.VoteRequestDTO;
-import com.projetopoo.jam.dto.VoteResponseDTO;
-import com.projetopoo.jam.dto.VoteTotalResponseDTO;
-import com.projetopoo.jam.exception.UserValidationException;
-import com.projetopoo.jam.model.User;
-import com.projetopoo.jam.service.UserService;
+import com.projetopoo.jam.dto.subscribe.SubscribeResponseDTO;
+import com.projetopoo.jam.dto.subscribe.SubscribeTotalResponseDTO;
+import com.projetopoo.jam.dto.vote.VoteRequestDTO;
+import com.projetopoo.jam.dto.vote.VoteResponseDTO;
+import com.projetopoo.jam.dto.vote.VoteTotalResponseDTO;
 import com.projetopoo.jam.service.VoteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +22,24 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/votes")
+@Tag(
+        name = "Votes",
+        description = "Endpoints relacionados aos votos em Jogos")
 public class VoteController {
     @Autowired
     private VoteService voteService;
 
     @GetMapping("/{gameId}")
+    @Operation(
+            summary = "Busca voto do usuário no Jogo",
+            description = "Busca se o usuário já votou no Jogo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Voto do usuário retornado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubscribeResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content)
+    })
     public ResponseEntity<?> findVote(@PathVariable Long gameId, Principal principal) {
         try {
             VoteResponseDTO voteResponseDTO = voteService.findVote(gameId, principal.getName());
@@ -32,6 +50,17 @@ public class VoteController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Alterna o voto um usuário em um Jogo",
+            description = "Alterna o voto de um usuário em um Jogo especificado.<br> " +
+                    "Se o usuário não tiver votado no Jogo especificado, cira um novo voto para o usuário nesse Jogo.<br> " +
+                    "Se o usuário já tiver votado no Jogo especificado, exclui o voto atual desse Jogo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Voto alternado com sucesso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SubscribeResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content)
+    })
     public ResponseEntity<?> toggleVote(@RequestBody VoteRequestDTO voteRequest, Principal principal) {
         try {
             VoteResponseDTO voteResponseDTO = voteService.toggleVote(voteRequest, principal.getName());
@@ -42,6 +71,15 @@ public class VoteController {
     }
 
     @GetMapping("/total/{gameId}")
+    @Operation(
+            summary = "Total de votos em um Jogo",
+            description = "Retorna o número total de votos em um Jogo específico.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Total de votos retornado com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SubscribeTotalResponseDTO.class)))
+    })
     public ResponseEntity<VoteTotalResponseDTO> totalVotes(@PathVariable Long gameId) {
         VoteTotalResponseDTO voteTotalResponseDTO = voteService.totalVotes(gameId);
         return ResponseEntity.ok(voteTotalResponseDTO);

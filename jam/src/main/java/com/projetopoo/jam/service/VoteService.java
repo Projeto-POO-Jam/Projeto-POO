@@ -1,7 +1,8 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.*;
-import com.projetopoo.jam.dto.VoteRequestDTO;
+import com.projetopoo.jam.dto.vote.VoteRequestDTO;
+import com.projetopoo.jam.dto.vote.VoteResponseDTO;
+import com.projetopoo.jam.dto.vote.VoteTotalResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.Game;
 import com.projetopoo.jam.model.Vote;
