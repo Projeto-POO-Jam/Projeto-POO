@@ -22,7 +22,6 @@ export function fetchViewJam(id) {
         .then(({ status, data }) => data);
 }
 
-
 /**
  * Alterna (inscreve/desinscreve) a inscrição do usuário em uma Jam.
  * @param {number|string} jamId - O ID da jam.
@@ -42,7 +41,6 @@ export function checkSubscriptionStatus(jamId) {
     return apiRequest('GET', `api/subscribes/${jamId}`)
         .then(({ data }) => data);
 }
-
 
 /**
  * Busca Jams para o banner da home.
