@@ -109,6 +109,21 @@ public class GameService {
 
         Page<Game> gamePage = gameRepository.findByJamIdOrderByVotes(jamId, pageable);
 
+        return addGameTotal(gamePage);
+    }
+
+    @Transactional
+    public GamePaginatedResponseDTO findGameListByUserId(Long userId, int offset, int limit){
+
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+
+        Page<Game> gamePage = gameRepository.findByUserIdOrderByVotes(userId, pageable);
+
+        return addGameTotal(gamePage);
+    }
+
+    private GamePaginatedResponseDTO addGameTotal(Page<Game> gamePage) {
         List<GameSummaryDTO> gameSummaryDTOList = gamePage.getContent().stream()
                 .map(game -> {
                     GameSummaryDTO gameSummaryDTO = modelMapper.map(game, GameSummaryDTO.class);
@@ -119,7 +134,6 @@ public class GameService {
 
         return new GamePaginatedResponseDTO(gameSummaryDTOList, gamePage.getTotalElements());
     }
-
 
 
 }
