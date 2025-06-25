@@ -1,8 +1,13 @@
 package com.projetopoo.jam.controller;
 
+import com.projetopoo.jam.dto.jam.JamSseDTO;
+import com.projetopoo.jam.dto.subscribe.SubscribeSseDTO;
+import com.projetopoo.jam.dto.subscribe.SubscribeTotalResponseDTO;
+import com.projetopoo.jam.dto.vote.VoteTotalResponseDTO;
 import com.projetopoo.jam.service.SseNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,8 +32,55 @@ public class SseController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Conexão estabelecida com sucesso. O stream de eventos será enviado.",
-                    content = @Content(mediaType = MediaType.TEXT_EVENT_STREAM_VALUE))
+                    description = """
+                            Conexão SSE estabelecida com sucesso. O servidor começará a enviar eventos para o cliente.
+                            Cada evento segue o formato `event: <nome-do-evento>` seguido por `data: <payload-json>`.
+                            
+                            ---
+                            
+                            ### Tópico: `jams-list-update`
+                            Eventos relacionados a atualizações na lista geral de Jams.
+                            
+                            * **Evento:** `jam-insert`
+                                * **Descrição:** Notifica quando uma nova Jam é criada.
+                                * **Payload (`data`):** Um objeto `JamSseDTO`.
+                            * **Evento:** `jam-subscribes-update`
+                                * **Descrição:** Notifica quando o número de inscritos em uma Jam é alterado.
+                                * **Payload (`data`):** Um objeto `SubscribeSseDTO`.
+                            * **Evento:** `jam-status-update`
+                                * **Descrição:** Notifica quando o status de uma Jam é alterado.
+                                * **Payload (`data`):** Um objeto `JamSseDTO`.
+
+                            ---
+                            
+                            ### Tópico: `jams-update`
+                            Eventos relacionados a atualizações de uma Jam.
+                            
+                            * **Evento:** `jam-subscribes-update-{jamId}`
+                                * **Descrição:** Notifica quando o total de inscritos em uma Jam é alterado.
+                                * **Payload (`data`):** Um objeto `SubscribeTotalResponseDTO`.
+                            * **Evento:** `jam-status-update-{jamId}`
+                                * **Descrição:** Notifica quando o status da Jam é alterado.
+                                * **Payload (`data`):** Um objeto `JamSseDTO`.
+                            
+                            ---
+                            
+                            ### Tópico: `games-update`
+                            Eventos relacionados a atualizações em jogos.
+                            
+                            * **Evento:** `votes-update-{gameId}`
+                                * **Descrição:** Notifica quando o total de votos em um jogo é alterado.
+                                * **Payload (`data`):** Um objeto `VoteTotalResponseDTO`.
+                            * **Evento:** `comments-update-{gameId}`
+                                * **Descrição:** Notifica quando um novo comentario é feito no jogo.
+                                * **Payload (`data`):** Um objeto `CommentResponseDTO`.
+                            * **Evento:** `comments-delete-{gameId}`
+                                * **Descrição:** Notifica quando um comentario é excluido no jogo.
+                                * **Payload (`data`):** Um objeto `CommentResponseDTO`.
+                            """,
+                    content = @Content
+
+            )
     })
     public SseEmitter handleSseEvents(@RequestParam String topic) {
         SseEmitter emitter = new SseEmitter(3600000L);
