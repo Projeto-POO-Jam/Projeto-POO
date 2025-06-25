@@ -15,5 +15,8 @@ public interface SubscribeRepository extends JpaRepository<Subscribe, Long> {
 
     Optional<Subscribe> findBySubscribeGame(Game subscribeGame);
 
+    boolean existsBySubscribeGameAndSubscribeUser(Game subscribeGame, User subscribeUser);
+
     boolean existsBySubscribeUserAndSubscribeJam(User subscribeUser, Jam subscribeJam);
+
 }
