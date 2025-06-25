@@ -15,10 +15,44 @@ function updateSubscriptionUI(isSubscribed) {
     }
 }
 
+
 export function init(data, jamId) {
+    //Configuração do SSE
+    const stream = new EventSource('/api/events?topic=jams-update');
+
+    //Handler para atualização de inscritos
+    const subscribesEventName = `jam-subscribes-update-${jamId}`;
+    stream.addEventListener(subscribesEventName, (e) => {
+        const payload = JSON.parse(e.data);
+        if (payload.subscribeTotal !== undefined) {
+            $('.participants-jam h1').text(payload.subscribeTotal ?? 0);
+        }
+    });
+
+    //Handler para atualização de status
+    const statusEventName = `jam-status-update-${jamId}`;
+    stream.addEventListener(statusEventName, (e) => {
+        const payload = JSON.parse(e.data);
+        if (payload.jamStatus) {
+            data.jamStatus = payload.jamStatus;
+
+            //Força a re-execução da função de contagem regressiva
+            updateCountdown(data, start, end, timer);
+        }
+    });
+
+    //Tratamento de erro
+    stream.onerror = (err) => {
+        console.error(`SSE connection error on topic 'jams-update':`, err);
+        stream.close();
+    };
+    //FIM da configuração do SSE
+
+    let start, end, timer;
+
     if (data.jamStartDate && data.jamEndDate) {
-        const start = new Date(data.jamStartDate);
-        const end = new Date(data.jamEndDate);
+        start = new Date(data.jamStartDate);
+        end = new Date(data.jamEndDate);
         const now = new Date();
 
         //Monta o template
@@ -45,7 +79,6 @@ export function init(data, jamId) {
             actionContainer.html(skeletonButtonHtml);
             applySkeleton(actionContainer);
 
-            //Chama o verificador
             checkSubscriptionStatus(jamId)
                 .done(response => {
                     updateSubscriptionUI(response.subscribed);
@@ -55,27 +88,15 @@ export function init(data, jamId) {
 
         $('#jam-duration-container').on('click', '#toggle-subscription-btn', function() {
             const btn = $(this);
-            const participantsH1 = $('.participants-jam h1');
-            const currentCount = parseInt(participantsH1.text(), 10);
-
-            //Verifica o estado ANTES do clique, para saber se vamos somar ou subtrair
             const wasSubscribed = btn.text().includes('Sair da Jam');
 
             btn.prop('disabled', true).text('Processando...');
 
-            //Chama a API
             toggleSubscription(jamId)
                 .done(() => {
                     checkSubscriptionStatus(jamId)
                         .done(response => {
-                            //Atualiza a UI com os botões corretos
                             updateSubscriptionUI(response.subscribed);
-
-                            if (response.subscribed && !wasSubscribed) {
-                                participantsH1.text(currentCount + 1);
-                            } else if (!response.subscribed && wasSubscribed) {
-                                participantsH1.text(currentCount - 1);
-                            }
                         })
                         .fail(() => actionContainer.html('<p class="error-message">Erro ao atualizar status.</p>'));
                 })
@@ -84,12 +105,12 @@ export function init(data, jamId) {
                 });
         });
 
+        timer = setInterval(() => updateCountdown(data, start, end, timer), 1000);
+        updateCountdown(data, start, end, timer);
+
         $('#jam-duration-container').on('click', '#post-game-btn', function() {
             window.location.href = `/jams/registerGame/${jamId}`;
         });
-
-        const timer = setInterval(() => updateCountdown(start, end, timer), 1000);
-        updateCountdown(start, end, timer);
     }
 
     const userCard = $('.page-user-jam-card');
@@ -103,20 +124,32 @@ export function init(data, jamId) {
     }
 }
 
-function updateCountdown(start, end, timer) {
+
+//A função oara atualizar a duração
+function updateCountdown(data, start, end, timer) {
+    //Verifica primeiro o status vindo do servidor via SSE
+    if (data.jamStatus === 'FINISHED') {
+        $('#cd-prefix').text('Encerrado');
+        $('#cd-timer').text('00:00:00:00');
+        $('#jam-action-container').empty();
+        clearInterval(timer);
+        return;
+    }
+
     const now = new Date();
     let diff = start - now;
     let period = 'registration';
 
-    if (diff <= 0) {
+    if (diff <= 0) { //Se a data de início já passou
         if (now < end) {
-            diff = end - now;
+            diff = end - now; //Calcula o tempo restante até o fim
             period = 'running';
         } else {
             period = 'ended';
         }
     }
 
+    //A verificação abaixo ainda é útil para o carregamento inicial da página,
     if (period === 'ended') {
         $('#cd-prefix').text('Encerrado');
         $('#cd-timer').text('00:00:00:00');
