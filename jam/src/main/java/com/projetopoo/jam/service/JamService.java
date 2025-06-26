@@ -1,5 +1,6 @@
 package com.projetopoo.jam.service;
 
+import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.*;
 import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.JamRepository;
@@ -193,15 +194,7 @@ public class JamService {
 
         Page<Jam> jamPage = jamRepository.findByYearAndMonth(year, month, pageable);
 
-        List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
-                .map(jam -> {
-                    JamSummaryDTO jamSummaryDTO = modelMapper.map(jam, JamSummaryDTO.class);
-                    jamSummaryDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jam.getJamId()));
-                    return jamSummaryDTO;
-                })
-                .collect(Collectors.toList());
-
-        return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
+        return getJamPaginatedResponseDTO(jamPage);
     }
 
     @Transactional(readOnly = true)
@@ -212,15 +205,7 @@ public class JamService {
         List<JamStatus> statuses = Arrays.asList(JamStatus.ACTIVE, JamStatus.SCHEDULED);
         Page<Jam> jamPage = jamRepository.findTopJamsByJamStatus(statuses, pageable);
 
-        List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
-                .map(jam -> {
-                    JamSummaryDTO jamSummaryDTO = modelMapper.map(jam, JamSummaryDTO.class);
-                    jamSummaryDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jam.getJamId()));
-                    return jamSummaryDTO;
-                })
-                .collect(Collectors.toList());
-
-        return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
+        return getJamPaginatedResponseDTO(jamPage);
     }
 
     private void scheduleJamStatusUpdate(Jam jam){
@@ -237,4 +222,26 @@ public class JamService {
         }
     }
 
+
+    @Transactional
+    public JamPaginatedResponseDTO findJamListByUserId(Long userId, int offset, int limit){
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamId"));
+
+        Page<Jam> jamPage = jamRepository.findByUserIdOrderByJamId(userId,pageable);
+
+        return getJamPaginatedResponseDTO(jamPage);
+    }
+
+    private JamPaginatedResponseDTO getJamPaginatedResponseDTO(Page<Jam> jamPage) {
+        List<JamSummaryDTO> jamSummaryDTOList = jamPage.getContent().stream()
+                .map(jam -> {
+                    JamSummaryDTO jamSummaryDTO = modelMapper.map(jam, JamSummaryDTO.class);
+                    jamSummaryDTO.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jam.getJamId()));
+                    return jamSummaryDTO;
+                })
+                .collect(Collectors.toList());
+
+        return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
+    }
 }
