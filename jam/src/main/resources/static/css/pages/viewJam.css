@@ -344,7 +344,6 @@
     height: 7rem;
     border-radius: 1rem 1rem 0 0;
     background-color: var(--blue);
-
 }
 
 .rank-1,
@@ -369,3 +368,31 @@
     }
 }
 
+.podio-rank1,
+.podio-rank2,
+.podio-rank3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.podium-icon-img {
+    height: 60%;
+    width: auto;
+    animation-duration: 3s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+    animation-name: surgir2;
+    animation-timing-function: ease-out;
+    user-select: none;
+}
+
+@keyframes surgir2 {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

@@ -108,8 +108,6 @@ $(async function() {
             // Preenche os campos estáticos da página
             bindDataFields(data, root);
 
-
-
             const rankButton = $('button[data-tab="rank"]');
             const rankTabContent = $('#tab-rank');
             const jamEndDate = new Date(data.jamEndDate);

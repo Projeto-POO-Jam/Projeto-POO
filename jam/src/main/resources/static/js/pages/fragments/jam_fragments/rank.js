@@ -3,60 +3,60 @@ import { showError } from '../../../common/notifications.js';
 import { applySkeleton, removeSkeleton } from '../../../common/skeleton.js';
 import { bindDataFields } from '../../../common/bindDataFields.js';
 
-//Cria o template para um card do ranking
+//Cria a estrutura base para um item do ranking
 function createRankCardTemplate(rank) {
     const cardHtml = `
-        <a class="card-game-unic">
-            <span class="rank-position"></span>
-            <img class="game-card-photo" data-field="gamePhoto" alt="Capa do jogo">
-            <div class="game-card-title" data-field="gameTitle"></div>
-            <div class="podio-rank${rank} bg-jam-color"></div>
-        </a>
+        <div class="aling-hank">
+            <a class="card-game-unic">
+                <img class="game-card-photo" data-field="gamePhoto" alt="Capa do jogo">
+                <div class="game-card-title" data-field="gameTitle"></div>
+            </a>
+            <div class="podio-rank${rank} bg-jam-color">
+                </div>
+        </div>
     `;
     return $(cardHtml);
 }
 
-//Preenche o card do ranking com os dados do jogo
-function populateRankCard(card, game, rank) {
-    bindDataFields(game, card);
+//Preenche a estrutura com os dados do jogo e insere a imagem no pódio.
+function populateRankCard(newCard, game, rank) {
+    const gameLink = newCard.find('.card-game-unic');
+    bindDataFields(game, gameLink);
 
-    const image = card.find('img[data-field="gamePhoto"]');
-
+    const image = gameLink.find('img[data-field="gamePhoto"]');
     if (game.gamePhoto) {
         image.attr('src', game.gamePhoto);
     } else {
         image.attr('src', '../../../../img/imgCardGamePadrao.jpg');
     }
+    gameLink.attr('href', `/viewGame/${game.gameId}`);
+    image.attr('alt', `Capa do jogo ${game.gameTitle}`);
 
-    card.attr('href', `/viewGame/${game.gameId}`);
-    card.find('img[data-field="gamePhoto"]').attr('alt', `Capa do jogo ${game.gameTitle}`);
+    //Adiciona a classe principal para posicionamento
+    newCard.addClass(`rank-${rank}`);
 
-    card.addClass(`rank-${rank}`);
+    //Encontra o container do pódio específico e insere a imagem da medalha
+    const podioContainer = newCard.find(`.podio-rank${rank}`);
 
-    card.find('.rank-position').text(`${rank}º`);
+    const medalImagePath = `../../../../img/medal/${rank}.png`;
+    const medalHtml = `<img src="${medalImagePath}" alt="Posição ${rank}" class="podium-icon-img">`;
 
-    removeSkeleton(card);
+    podioContainer.html(medalHtml);
+    removeSkeleton(newCard);
 }
 
-//Função principal para buscar e renderizar o ranking
+//Função principal que busca os jogos e monta o ranking.
 function loadRank(jamId) {
     const rankContainer = $('#rank-list-container');
     const limit = 3;
     const offset = 0;
 
-    //Limpa o container e aplica o skeleton
     rankContainer.empty();
-    for (let i = 0; i < limit; i++) {
-        rankContainer.append(createRankCardTemplate(i));
-    }
     applySkeleton(rankContainer);
 
-    //Busca na API
     fetchJamGames(jamId, offset, limit)
         .done(response => {
             const { games } = response;
-
-            //Limpa os skeletons antes de adicionar os cards reais
             rankContainer.empty();
 
             if (games.length === 0) {
@@ -64,9 +64,8 @@ function loadRank(jamId) {
                 return;
             }
 
-            //Para cada jogo, cria e popula um card de ranking
             games.forEach((game, index) => {
-                const rank = index + 1; // A posição é o índice + 1
+                const rank = index + 1;
                 const newCard = createRankCardTemplate(rank);
                 populateRankCard(newCard, game, rank);
                 rankContainer.append(newCard);
@@ -85,6 +84,5 @@ function loadRank(jamId) {
 export function init(data, jamId) {
     const rankContainer = $('#rank-list-container');
     if (!rankContainer.length) return;
-
     loadRank(jamId);
 }
