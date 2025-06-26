@@ -31,4 +31,15 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
             "ORDER BY " +
                 "SIZE(j.jamSubscribes) DESC")
     Page<Jam> findTopJamsByJamStatus(@Param("statuses") List<JamStatus> statuses, Pageable pageable);
+
+    @Query("SELECT j " +
+            "FROM " +
+                "Jam j, " +
+                "Subscribe s " +
+            "WHERE " +
+                "j.jamId = s.subscribeJam.jamId " +
+                "AND s.subscribeUser.userId = :userId " +
+            "ORDER BY " +
+                "j.jamId DESC")
+    Page<Jam> findByUserIdOrderByJamId(@Param("userId") Long userId, Pageable pageable);
 }

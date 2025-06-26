@@ -1,5 +1,6 @@
 package com.projetopoo.jam.controller;
 
+import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.JamPaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.JamRequestDTO;
 import com.projetopoo.jam.dto.jam.JamResponse;
@@ -141,6 +142,30 @@ public class JamController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/user")
+    @Operation(
+            summary = "Lista todos os jam de um usuário",
+            description = "Retorna uma lista paginada de todos os jam de um usuário em ordem de id.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Jam listados com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
+    })
+    public ResponseEntity<?> findGameListByUserId(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            JamPaginatedResponseDTO response = jamService.findJamListByUserId(userId, offset, limit);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
