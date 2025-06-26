@@ -1,11 +1,11 @@
-import { fetchViewJam } from '../services/jamService.js';
-import { bindDataFields } from '../common/bindDataFields.js';
-import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
-import { showError } from '../common/notifications.js';
+import { fetchViewJam } from '../../services/jamService.js';
+import { bindDataFields } from '../../common/bindDataFields.js';
+import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
+import { showError } from '../../common/notifications.js';
 
-import { init as initGeral } from './fragments/jam_fragments/geral.js';
-import { init as initRank } from './fragments/jam_fragments/rank.js';
-import { init as initGames } from './fragments/jam_fragments/games.js';
+import { init as initGeral } from '../fragments/jam_fragments/geral.js';
+import { init as initRank } from '../fragments/jam_fragments/rank.js';
+import { init as initGames } from '../fragments/jam_fragments/games.js';
 
 $(async function() {
     //Lógica abas do menu

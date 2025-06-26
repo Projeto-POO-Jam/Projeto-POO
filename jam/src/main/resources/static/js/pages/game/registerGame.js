@@ -1,7 +1,7 @@
-import { apiRequest } from '../common/api.js';
-import { showSuccess, showError } from '../common/notifications.js';
-import { setupValidation, isFormValid } from '../common/validation.js';
-import { registerFilePondPlugins, createFilePondInstance } from '../common/filepond-helper.js';
+import { apiRequest } from '../../common/api.js';
+import { showSuccess, showError } from '../../common/notifications.js';
+import { setupValidation, isFormValid } from '../../common/validation.js';
+import { registerFilePondPlugins, createFilePondInstance } from '../../common/filepond-helper.js';
 
 $(function() {
     //Obter o ID da Jam a partir da URL

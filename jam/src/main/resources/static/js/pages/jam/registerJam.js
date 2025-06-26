@@ -1,8 +1,8 @@
-import { apiRequest } from '../common/api.js';
-import { showSuccess, showError } from '../common/notifications.js';
-import { setupValidation, isFormValid } from '../common/validation.js';
+import { apiRequest } from '../../common/api.js';
+import { showSuccess, showError } from '../../common/notifications.js';
+import { setupValidation, isFormValid } from '../../common/validation.js';
 // NOVO: Importa as funções auxiliares do FilePond
-import { registerFilePondPlugins, createFilePondInstance } from '../common/filepond-helper.js';
+import { registerFilePondPlugins, createFilePondInstance } from '../../common/filepond-helper.js';
 
 $(function() {
     const form = $('#createJamForm');
