@@ -1,6 +1,6 @@
 import { fetchGame, isLike, toggleVote, fetchTotalVotes } from '../services/gameService.js';
-import { fetchCurrentUser } from '../services/userService.js'; // NOVO
-import { fetchComments, postComment } from '../services/commentService.js'; // NOVO
+import { fetchCurrentUser } from '../services/userService.js';
+import { fetchComments, postComment, deleteComment } from '../services/commentService.js';
 import { bindDataFields } from '../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { showError } from '../common/notifications.js';
@@ -23,11 +23,39 @@ $(function() {
 
     //Configuração do SSE
     const stream = new EventSource('/api/events?topic=games-update');
+
+    //SSE para votos
     const voteEventName = `votes-update-${gameId}`;
     stream.addEventListener(voteEventName, (e) => {
         const payload = JSON.parse(e.data);
         if (payload.voteTotal !== undefined) {
             likeCountSpan.text(payload.voteTotal);
+        }
+    });
+
+    //SSE para novos comentarios
+    const commentsUpdateEventName = `comments-update-${gameId}`;
+    stream.addEventListener(commentsUpdateEventName, (e) =>{
+        const newComment = JSON.parse(e.data);
+
+        if(commentsContainer.find('p.not-comments').length > 0){
+            commentsContainer.empty();
+        }
+
+        const newCommentElement = renderComment(newComment);
+        commentsContainer.prepend(newCommentElement);
+    })
+
+    //SSE para exclusão de comentários
+    const commentsDeleteEventName = `comments-delete-${gameId}`;
+    stream.addEventListener(commentsDeleteEventName, (e) => {
+        const payload = JSON.parse(e.data);
+        if (payload.commentId) {
+            $(`.comment-card[data-comment-id="${payload.commentId}"]`).remove();
+
+            if (commentsContainer.children().length === 0) {
+                commentsContainer.html('<p class="not-comments">Ainda não há comentários. Seja o primeiro a comentar!</p>');
+            }
         }
     });
 
@@ -39,22 +67,43 @@ $(function() {
     //Função para renderizar um comentário
     function renderComment(comment) {
         const commentHtml = `
-            <div class="comment-card">
-                <img
-                    src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
-                    data-default="/images/iconePadrao.svg"
-                    alt="comment actor icon"
-                    class="icone-actor-comments"
-                    onerror="this.src=this.dataset.default"
-                />
-                <div class="comment-content">
-                    <p class="comment-username">${comment.commentUser.userName}</p>
-                    <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p> 
+            <div class="comment-card"  class="comment-card" data-comment-id="${comment.commentId}">
+                <div class="container-user-comment">
+                     <img
+                        src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
+                        data-default="/images/iconePadrao.svg"
+                        alt="comment actor icon"
+                        class="icone-actor-comments"
+                        onerror="this.src=this.dataset.default"
+                    />
+                    <div class="comment-content">
+                        <p class="comment-username">${comment.commentUser.userName}</p>
+                        <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p> 
+                    </div>
+                </div>
+                <div class="delete-comments">
+                    <span class="material-symbols-outlined">delete</span>
                 </div>
             </div>
         `;
         return $(commentHtml);
     }
+
+    //Excluir Comentario
+    commentsContainer.on('click', '.delete-comments', function() {
+        const commentCard = $(this).closest('.comment-card');
+        const commentId = commentCard.data('comment-id');
+
+        if (!commentId) {
+            console.error('ID do comentário não encontrado.');
+            return;
+        }
+
+        deleteComment(commentId)
+            .fail(() => {
+                showError('Ocorreu um erro ao excluir o comentário.');
+            });
+    });
 
     //Carregamento de dados iniciais
     $.when(
@@ -149,13 +198,6 @@ $(function() {
 
         postComment(commentText, gameId)
             .done((newComment) => {
-                if (commentsContainer.find('p.not-comments').length > 0) {
-                    commentsContainer.empty();
-                }
-
-                //Adiciona o novo comentário no topo da lista
-                const newCommentElement = renderComment(newComment);
-                commentsContainer.prepend(newCommentElement);
                 commentInput.val('');
             })
             .fail(() => {

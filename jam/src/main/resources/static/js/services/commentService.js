@@ -24,3 +24,12 @@ export function postComment(commentText, gameId) {
     return apiRequest('POST', 'api/comments', body)
         .then(({ data }) => data);
 }
+
+/**
+ * Exclui um comentário.
+ * @param {string|number} commentId - O ID do comentário a ser excluído.
+ * @returns {Promise<object>} - Uma promessa que resolve com a resposta da API.
+ */
+export function deleteComment(commentId) {
+    return apiRequest('DELETE', `api/comments/${commentId}`);
+}

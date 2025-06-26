@@ -7,15 +7,15 @@
     <main class="game-card">
         <section class="card-view-game">
             <section class="header-view-game">
+                <div id="img-capa-view-game">
+                    <img
+                        data-field="gamePhoto"
+                        data-default="/images/iconePadrao.svg"
+                        alt="Capa do Game"
+                        class="capa-game skeleton"
+                    />
+                </div>
                 <div class="info-view-game">
-                    <div id="img-capa-view-game">
-                        <img
-                            data-field="gamePhoto"
-                            data-default="/images/iconePadrao.svg"
-                            alt="Capa do Game"
-                            class="capa-game skeleton"
-                        />
-                    </div>
                     <div class="details-view-game">
                         <div class="actor-view-game">
                             <img
@@ -28,15 +28,16 @@
                         </div>
                         <h1 data-field="gameTitle" class="skeleton"></h1>
                         <p data-field="gameDescription" class="skeleton"></p>
+                    </div>
+                    <div class="options-view-game">
+                        <button>Acessar game</button>
                         <div class="button-like">
                             <span class="icone-like material-symbols-outlined">thumb_up</span>
                             <span class="like-count skeleton">0</span>
                         </div>
                     </div>
                 </div>
-                <div class="options-view-game">
-                    <button>Acessar game</button>
-                </div>
+
             </section>
             <section class="container-view-game">
                 <!--html-->
