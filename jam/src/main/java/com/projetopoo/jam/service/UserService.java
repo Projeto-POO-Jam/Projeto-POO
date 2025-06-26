@@ -2,7 +2,7 @@ package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserResquestDTO;
-import com.projetopoo.jam.dto.user.UserWithIdResponseDTO;
+import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
@@ -10,7 +10,6 @@ import com.projetopoo.jam.util.ImageUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -118,13 +117,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserWithIdResponseDTO findUserId(Long userId, String identifier) {
+    public UserWithCurrentResponseDTO findUserId(Long userId, String identifier) {
         Optional<User> user = userRepository.findByUserId(userId);
         User currentUser = userRepository.findByIdentifier(identifier);
         if(user.isPresent()) {
-            UserWithIdResponseDTO userWithIdResponseDTO = modelMapper.map(user.get(), UserWithIdResponseDTO.class);
-            userWithIdResponseDTO.setUserCurrent(Objects.equals(userWithIdResponseDTO.getUserId(), currentUser.getUserId()));
-            return userWithIdResponseDTO;
+            UserWithCurrentResponseDTO userWithCurrentResponseDTO = modelMapper.map(user.get(), UserWithCurrentResponseDTO.class);
+            userWithCurrentResponseDTO.setUserCurrent(Objects.equals(userWithCurrentResponseDTO.getUserId(), currentUser.getUserId()));
+            return userWithCurrentResponseDTO;
         } else {
             throw new EntityNotFoundException("Usuario não encontrado");
         }

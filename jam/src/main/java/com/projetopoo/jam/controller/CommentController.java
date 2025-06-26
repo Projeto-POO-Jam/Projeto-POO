@@ -58,8 +58,8 @@ public class CommentController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = CommentResponseDTO.class)))
     })
-    public ResponseEntity<List<CommentResponseDTO>> findCommentsList(@PathVariable Long gameId) {
-        List<CommentResponseDTO> comments = commentService.findCommentsList(gameId);
+    public ResponseEntity<List<CommentResponseDTO>> findCommentsList(@PathVariable Long gameId, Principal principal) {
+        List<CommentResponseDTO> comments = commentService.findCommentsList(gameId, principal.getName());
         return ResponseEntity.ok(comments);
     }
 

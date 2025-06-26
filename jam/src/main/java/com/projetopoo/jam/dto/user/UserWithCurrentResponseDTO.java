@@ -1,6 +1,6 @@
 package com.projetopoo.jam.dto.user;
 
-public class UserWithIdResponseDTO extends UserResponseDTO{
+public class UserWithCurrentResponseDTO extends UserResponseDTO{
     private boolean userCurrent;
 
     public boolean isUserCurrent() {
