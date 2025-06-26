@@ -94,7 +94,7 @@ $(function() {
 
             //Configura a contagem inicial de votos
             if (voteCount) {
-                likeCountSpan.text(voteCount.total ?? 0);
+                likeCountSpan.text(voteCount.voteTotal ?? 0);
             }
 
             //Lógica de Comentários

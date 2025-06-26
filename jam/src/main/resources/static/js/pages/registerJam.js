@@ -35,13 +35,23 @@ $(function() {
             if (displaySelector) $(displaySelector).val(hexaColor);
         };
 
-        pickr.on('change', (color) => updateInputs(color));
+        //Função para limpar os inputs
+        const clearInputs = () => {
+            $(inputSelector).val('');
+            if (displaySelector) $(displaySelector).val('');
+        };
+
         pickr.on('save', (color, instance) => {
             updateInputs(color);
             pickr.hide();
         });
 
-        updateInputs(pickr.getColor());
+        //Adiciona o evento 'clear' para limpar os valores quando o usuário clicar em "Limpar"
+        pickr.on('clear', (instance) => {
+            clearInputs();
+        });
+
+        $(displaySelector).val('');
         return pickr;
     };
 
@@ -185,7 +195,7 @@ $(function() {
         try {
             await apiRequest('POST', 'api/jams', formData);
             showSuccess('Jam criada com sucesso!');
-            setTimeout(() => window.location.href = '/jams', 2000);
+            setTimeout(() => window.location.href = '/home', 2000);
         } catch(err) {
             showError('Erro ao criar Jam.');
             submitButton.prop('disabled', false).text('Criar Jam');

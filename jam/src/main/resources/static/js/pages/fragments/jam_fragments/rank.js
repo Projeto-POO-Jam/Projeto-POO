@@ -4,12 +4,13 @@ import { applySkeleton, removeSkeleton } from '../../../common/skeleton.js';
 import { bindDataFields } from '../../../common/bindDataFields.js';
 
 //Cria o template para um card do ranking
-function createRankCardTemplate() {
+function createRankCardTemplate(rank) {
     const cardHtml = `
         <a class="card-game-unic">
             <span class="rank-position"></span>
             <img class="game-card-photo" data-field="gamePhoto" alt="Capa do jogo">
             <div class="game-card-title" data-field="gameTitle"></div>
+            <div class="podio-rank${rank} bg-jam-color"></div>
         </a>
     `;
     return $(cardHtml);
@@ -30,6 +31,8 @@ function populateRankCard(card, game, rank) {
     card.attr('href', `/viewGame/${game.gameId}`);
     card.find('img[data-field="gamePhoto"]').attr('alt', `Capa do jogo ${game.gameTitle}`);
 
+    card.addClass(`rank-${rank}`);
+
     card.find('.rank-position').text(`${rank}º`);
 
     removeSkeleton(card);
@@ -44,7 +47,7 @@ function loadRank(jamId) {
     //Limpa o container e aplica o skeleton
     rankContainer.empty();
     for (let i = 0; i < limit; i++) {
-        rankContainer.append(createRankCardTemplate());
+        rankContainer.append(createRankCardTemplate(i));
     }
     applySkeleton(rankContainer);
 
@@ -64,13 +67,12 @@ function loadRank(jamId) {
             //Para cada jogo, cria e popula um card de ranking
             games.forEach((game, index) => {
                 const rank = index + 1; // A posição é o índice + 1
-                const newCard = createRankCardTemplate();
+                const newCard = createRankCardTemplate(rank);
                 populateRankCard(newCard, game, rank);
                 rankContainer.append(newCard);
             });
         })
         .fail(err => {
-            console.error('Erro ao buscar o ranking da Jam:', err);
             showError('Não foi possível carregar o ranking.');
             rankContainer.html('<p class="error-message">Ocorreu um erro ao carregar o ranking.</p>');
         })
@@ -82,7 +84,7 @@ function loadRank(jamId) {
 //Função de inicialização
 export function init(data, jamId) {
     const rankContainer = $('#rank-list-container');
-    if (!rankContainer.length) return; // Só executa se o container existir na página
+    if (!rankContainer.length) return;
 
     loadRank(jamId);
 }

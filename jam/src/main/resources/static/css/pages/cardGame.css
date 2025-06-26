@@ -19,6 +19,7 @@
     align-items: center;
     cursor: pointer;
     text-decoration: none;
+    filter: none !important;
 }
 
 .game-card-photo {
@@ -49,7 +50,6 @@
 .card-game-unic:hover .game-card-photo {
     transform: translateY(-10px) scale(1.05);
     box-shadow: 0 12px 13px rgb(0 0 0 / 34%);
-    filter: brightness(1.1);
 }
 
 .card-game-unic:hover .game-card-title {
