@@ -5,10 +5,7 @@ import com.projetopoo.jam.dto.game.GameResponseDTO;
 import com.projetopoo.jam.dto.game.GameResquestDTO;
 import com.projetopoo.jam.dto.game.GameSummaryDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.model.Game;
-import com.projetopoo.jam.model.Jam;
-import com.projetopoo.jam.model.Subscribe;
-import com.projetopoo.jam.model.User;
+import com.projetopoo.jam.model.*;
 
 import com.projetopoo.jam.repository.*;
 import com.projetopoo.jam.util.ImageUtil;
@@ -23,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -50,6 +49,9 @@ public class GameService {
     @Autowired
     private VoteRepository voteRepository;
 
+    @Autowired
+    private GameProducerService gameProducerService;
+
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/upload/game/";
 
     @Transactional
@@ -69,12 +71,19 @@ public class GameService {
                 }
                 else{
                     String uuid = UUID.randomUUID().toString();
-                    game.setGamePhoto(ImageUtil.createImage(gameResquestDTO.getGamePhoto(), UPLOAD_DIRECTORY + uuid + "/img", "/upload/game/" + uuid + "/img/"));
-                    game.setGameFile(ImageUtil.createImage(gameResquestDTO.getGameFile(), UPLOAD_DIRECTORY + uuid + "/file", "/upload/game/" + uuid + "/file/"));
-                    //Descompactar
+                    game.setGamePhoto(ImageUtil.createImage(gameResquestDTO.getGamePhoto(), UPLOAD_DIRECTORY + "img/" + uuid, "/upload/game/img/" + uuid + "/"));
+
+                    uuid = UUID.randomUUID().toString();
+                    game.setGameFile(ImageUtil.createImage(gameResquestDTO.getGameFile(), UPLOAD_DIRECTORY + "file/" + uuid, "/upload/game/file/" + uuid + "/"));
+
+                    uuid = UUID.randomUUID().toString();
+                    game.setGameToken(uuid);
+
                     game = gameRepository.save(game);
                     gameSubscribe.setSubscribeGame(game);
                     subscribeRepository.save(gameSubscribe);
+
+                    gameProducerService.scheduleGameStatusUpdate(game.getGameId(), uuid);
                 }
             }
             else {
@@ -140,49 +149,64 @@ public class GameService {
 
     @Transactional
     public void updateGame(GameResquestDTO gameRequestDTO, String identifier) throws IOException {
-        List<String> validationErrors = new ArrayList<>();
+        //Game game = modelMapper.map(gameRequestDTO, Game.class);
+        User user = userRepository.findByIdentifier(identifier);
+        Optional<Jam> jam = jamRepository.findByJamId(gameRequestDTO.getJamId());
 
-        Game game = modelMapper.map(gameRequestDTO, Game.class);
+        if(jam.isPresent()) {
+            Optional<Subscribe> subscribe = subscribeRepository.findBySubscribeUserAndSubscribeJam(user, jam.get());
+            if (subscribe.isPresent()) {
+                Game existingGame = subscribe.get().getSubscribeGame();
+                if (existingGame != null) {
+                    if (gameRequestDTO.getGamePhoto() != null && !gameRequestDTO.getGamePhoto().isEmpty()) {
+                        String oldPhotoPath = existingGame.getGamePhoto();
 
-        Optional<Game> optionalGame = gameRepository.findByGameId(game.getGameId());
+                        String uuid = UUID.randomUUID().toString();
+                        String directoryCover = UPLOAD_DIRECTORY + "img/" + uuid;
+                        existingGame.setGamePhoto(ImageUtil.createImage(gameRequestDTO.getGamePhoto(), directoryCover, "/upload/game/img/" + uuid + "/"));
 
-        if (optionalGame.isPresent()) {
-            Game existingGame = optionalGame.get();
+                        ImageUtil.deleteImage(oldPhotoPath);
+                        gameRequestDTO.setGamePhoto(null);
+                    }
 
-            User user = userRepository.findByIdentifier(identifier);
+                    if (gameRequestDTO.getGameFile() != null && !gameRequestDTO.getGameFile().isEmpty()) {
+                        String oldPhotoPath = existingGame.getGameFile();
 
-            if(subscribeRepository.existsBySubscribeGameAndSubscribeUser(optionalGame.get(),user)) {
-                if (gameRequestDTO.getGamePhoto() != null && !gameRequestDTO.getGamePhoto().isEmpty()) {
-                    String oldPhotoPath = existingGame.getGamePhoto();
+                        String uuid = UUID.randomUUID().toString();
+                        String directoryCover = UPLOAD_DIRECTORY + "file/" + uuid;
+                        existingGame.setGameFile(ImageUtil.createImage(gameRequestDTO.getGameFile(), directoryCover, "/upload/game/file/" + uuid + "/"));
+
+                        ImageUtil.deleteImage(oldPhotoPath);
+                        ImageUtil.deleteDirectory(oldPhotoPath);
+
+                        gameRequestDTO.setGameFile(null);
+                    }
+
+                    gameRequestDTO.setJamId(null);
+                    modelMapper.map(gameRequestDTO, existingGame);
 
                     String uuid = UUID.randomUUID().toString();
-                    String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/img";
-                    existingGame.setGamePhoto(ImageUtil.createImage(gameRequestDTO.getGamePhoto(), directoryCover, "/upload/game/" + uuid + "/img/"));
+                    existingGame.setGameToken(uuid);
 
-                    ImageUtil.deleteImage(oldPhotoPath);
-                    gameRequestDTO.setGamePhoto(null);
+                    gameRepository.save(existingGame);
+
+                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            gameProducerService.scheduleGameStatusUpdate(existingGame.getGameId(), uuid);
+                        }
+                    });
+
+
+                } else {
+                    throw new EntityNotFoundException("Game não encontrada.");
                 }
-
-                if (gameRequestDTO.getGameFile() != null && !gameRequestDTO.getGameFile().isEmpty()) {
-                    String oldPhotoPath = existingGame.getGameFile();
-
-                    String uuid = UUID.randomUUID().toString();
-                    String directoryCover = UPLOAD_DIRECTORY + "/"  + uuid + "/file";
-                        existingGame.setGameFile(ImageUtil.createImage(gameRequestDTO.getGameFile(), directoryCover, "/upload/game/" + uuid + "/file/"));
-
-                    ImageUtil.deleteImage(oldPhotoPath);
-                    gameRequestDTO.setGameFile(null);
-                }
-
-                modelMapper.map(gameRequestDTO, existingGame);
-                gameRepository.save(existingGame);
-
-
             } else {
-                throw new AccessDeniedException("Usuário não autorizado a alterar a Game.");
+                throw new EntityNotFoundException("Inscrição não encontrada.");
             }
+
         } else {
-            throw new EntityNotFoundException("Game com o ID " + game.getGameId() + " não encontrada.");
+            throw new EntityNotFoundException("Jam com o ID " + gameRequestDTO.getJamId() + " não encontrada.");
         }
     }
 

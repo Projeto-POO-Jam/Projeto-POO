@@ -16,6 +16,7 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByGameId(long gameId);
+    //Optional<Game> findByGame(long jamId); // CORRIGIR ISSO
 
     @Query("SELECT g " +
             "FROM " +

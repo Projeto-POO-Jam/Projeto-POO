@@ -1,13 +1,16 @@
 package com.projetopoo.jam.util;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.UUID;
 
 public class ImageUtil {
@@ -60,7 +63,25 @@ public class ImageUtil {
             Files.deleteIfExists(physicalPath);
         } catch (IOException e) {
             System.err.println("Erro ao deletar a imagem: " + relativePath);
-            e.printStackTrace();
+        }
+    }
+
+    public static void deleteDirectory(String filePath) {
+        String relativePath = extractRelativePath(filePath);
+
+        if (relativePath == null || relativePath.isBlank()) {
+            return;
+        }
+
+        try {
+            Path physicalPathToFile = Paths.get("src/main/resources/static" + relativePath);
+            File directoryToDelete = physicalPathToFile.getParent().toFile();
+
+            FileUtils.deleteDirectory(directoryToDelete);
+        } catch (IOException e) {
+            System.err.println("Erro ao deletar o diretório para o caminho: " + filePath);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Diretório não encontrado para exclusão (já pode ter sido removido): " + filePath);
         }
     }
 }
