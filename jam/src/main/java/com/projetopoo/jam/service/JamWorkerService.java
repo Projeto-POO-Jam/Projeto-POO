@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,6 +27,8 @@ public class JamWorkerService {
     private SseNotificationService sseNotificationService;
     @Autowired
     private SubscribeRepository subscribeRepository;
+    @Autowired
+    private JamProducerService rabbitMQProducerService;
 
 
     @Transactional
@@ -33,6 +37,7 @@ public class JamWorkerService {
         Long jamId = ((Number) messageBody.get("jamId")).longValue();
         String statusStr = (String) messageBody.get("newJamStatus");
         String jamToken = (String) messageBody.get("jamToken");
+        Boolean jamReschedule = (Boolean) messageBody.get("jamReschedule");
         JamStatus newJamStatus = JamStatus.valueOf(statusStr);
 
         Optional<Jam> optionalJam = jamRepository.findById(jamId);
@@ -40,6 +45,19 @@ public class JamWorkerService {
         if (optionalJam.isPresent()) {
             Jam jam = optionalJam.get();
             if(jam.getJamToken().equals(jamToken)) {
+                LocalDateTime now = LocalDateTime.now();
+                if(jamReschedule) {
+                    if((newJamStatus == JamStatus.ACTIVE) && (jam.getJamStartDate().isAfter(now))){
+                        long startDelay = Duration.between(now, jam.getJamStartDate()).toMillis();
+                        rabbitMQProducerService.scheduleJamStatusUpdate(jamId, startDelay, newJamStatus.name(), jamToken);
+                        return;
+                    } else if ((newJamStatus == JamStatus.FINISHED) && (jam.getJamEndDate().isAfter(now))) {
+                        long startDelay = Duration.between(now, jam.getJamEndDate()).toMillis();
+                        rabbitMQProducerService.scheduleJamStatusUpdate(jamId, startDelay, newJamStatus.name(), jamToken);
+                        return;
+                    }
+                }
+
                 jam.setJamStatus(newJamStatus);
                 jamRepository.save(jam);
 

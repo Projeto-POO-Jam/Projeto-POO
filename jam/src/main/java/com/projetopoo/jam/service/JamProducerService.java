@@ -14,10 +14,13 @@ public class JamProducerService {
     private RabbitTemplate rabbitTemplate;
 
     public void scheduleJamStatusUpdate(Long jamId, long delayInMilliseconds, String newJamStatus, String jamToken) {
+        long maxDelay = Integer.MAX_VALUE;
+        //long maxDelay = 60000;
         Map<String, Object> messageBody = Map.of(
                 "jamId", jamId,
                 "newJamStatus", newJamStatus,
-                "jamToken", jamToken
+                "jamToken", jamToken,
+                "jamReschedule", (delayInMilliseconds > maxDelay)
         );
 
         rabbitTemplate.convertAndSend(
@@ -25,7 +28,7 @@ public class JamProducerService {
                 JamStatusRabbitMQConfig.ROUTING_KEY,
                 messageBody,
                 message -> {
-                    message.getMessageProperties().setHeader("x-delay", delayInMilliseconds);
+                    message.getMessageProperties().setHeader("x-delay", Math.min(delayInMilliseconds, maxDelay));
                     return message;
                 }
         );
