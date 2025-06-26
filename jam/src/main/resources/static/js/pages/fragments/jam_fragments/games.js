@@ -89,7 +89,9 @@ function loadGames() {
             }
 
             if (games.length === 0 && currentGameOffset === 0) {
-                gamesContainer.html('<p>Nenhum jogo foi enviado para esta Jam ainda.</p>');
+                gamesContainer.html(`
+                    <p>Nenhum jogo foi enviado para esta Jam ainda.</p>
+                `);
                 return;
             }
 
@@ -104,7 +106,6 @@ function loadGames() {
             updateLoadMoreButton();
         })
         .fail(err => {
-            console.error('Erro ao buscar os jogos da Jam:', err);
             showError('Não foi possível carregar a lista de jogos.');
             gamesContainer.html('<p class="error-message">Ocorreu um erro ao carregar os jogos.</p>');
         })

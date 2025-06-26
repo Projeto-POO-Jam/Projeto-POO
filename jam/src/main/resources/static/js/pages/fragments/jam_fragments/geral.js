@@ -7,8 +7,8 @@ function updateSubscriptionUI(isSubscribed) {
 
     if (isSubscribed) {
         actionContainer.html(`
-            <button id="post-game-btn" class="join-btn">Postar Jogo</button>
-            <button id="toggle-subscription-btn" class="leave-jam-link">Sair da Jam</button>
+            <button id="post-game-btn" class="join-btn bg-jam-color">Postar Jogo</button>
+            <a id="toggle-subscription-btn" class="leave-jam-link">Sair da Jam</a>
         `);
     } else {
         actionContainer.html('<button id="toggle-subscription-btn" class="join-btn">Participar da Jam</button>');
@@ -58,17 +58,43 @@ export function init(data, jamId) {
         //Monta o template
         $('#jam-duration-container').html(`
             <div class="card-duration-view-jam-id duration-card">
-                <p class="range-text">Inscrições de ${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}</p>
                 <div class="participants-jam">
-                    <h1>${data.jamTotalSubscribers}</h1>
-                    <p>Participantes</p>
-                </div>
-                <div class="container-card-duration-view-jam-id">
-                    <div class="countdown-text">
-                        <span id="cd-prefix">Inicia em</span><span id="cd-timer">--:--:--:--</span>
+                    <div class="info-participants-jam">
+                        <h1>${data.jamTotalSubscribers}</h1>
+                        <p>Participantes</p>
                     </div>
-                    <div id="jam-action-container"></div>
                 </div>
+                
+                <div class="info-duration-card">
+                    <p class="range-text">Inscrições - ${start.toLocaleDateString('pt-BR')} até ${end.toLocaleDateString('pt-BR')}</p>
+                    <div class="container-card-duration-view-jam-id">
+                        <div class="countdown-text">
+                            <span id="cd-prefix">Inicia em</span>
+                        </div>
+
+                        <div id="cd-timer" class="countdown-container">
+                            <div class="countdown-item">
+                                <span id="cd-days" class="countdown-value">--</span>
+                                <span class="countdown-label">Dias</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="cd-hours" class="countdown-value">--</span>
+                                <span class="countdown-label">Horas</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="cd-minutes" class="countdown-value">--</span>
+                                <span class="countdown-label">Minutos</span>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="cd-seconds" class="countdown-value">--</span>
+                                <span class="countdown-label">Segundos</span>
+                            </div>
+                        </div>
+                        
+                        <div id="jam-action-container"></div>
+                    </div>
+                </div>
+               
             </div>
         `);
 
@@ -83,26 +109,55 @@ export function init(data, jamId) {
                 .done(response => {
                     updateSubscriptionUI(response.subscribed);
                 })
-                .fail(() => actionContainer.html('<p class="error-message">Erro ao verificar inscrição.</p>'));
+                .fail(() => {
+                    showError('Erro ao verificar o status da sua inscrição.');
+                });
         }
 
         $('#jam-duration-container').on('click', '#toggle-subscription-btn', function() {
             const btn = $(this);
-            const wasSubscribed = btn.text().includes('Sair da Jam');
+            const isLeaving = btn.text().includes('Sair da Jam');
 
-            btn.prop('disabled', true).text('Processando...');
-
-            toggleSubscription(jamId)
-                .done(() => {
-                    checkSubscriptionStatus(jamId)
-                        .done(response => {
-                            updateSubscriptionUI(response.subscribed);
-                        })
-                        .fail(() => actionContainer.html('<p class="error-message">Erro ao atualizar status.</p>'));
-                })
-                .fail(() => {
-                    updateSubscriptionUI(wasSubscribed);
+            if (isLeaving) {
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    text: "Você realmente deseja sair desta Jam? isso irar apagar o poste do seu Game! Você pode se inscrever novamente depois.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#e75050',
+                    cancelButtonColor: '#5865f2',
+                    confirmButtonText: 'Sim, quero sair!',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        title: 'swal-custom-title',
+                        htmlContainer: 'swal-custom-html-container'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        btn.prop('disabled', true).text('Processando...');
+                        toggleSubscription(jamId)
+                            .done(() => {
+                                updateSubscriptionUI(false);
+                            })
+                            .fail(() => {
+                                showError('Ocorreu um erro ao tentar sair da Jam. Tente novamente.');
+                                updateSubscriptionUI(true);
+                            });
+                    }
                 });
+            } else {
+                // Lógica original para se inscrever
+                btn.prop('disabled', true).text('Processando...');
+                toggleSubscription(jamId)
+                    .done(() => {
+                        updateSubscriptionUI(true);
+                    })
+                    .fail(() => {
+                        showError('Ocorreu um erro ao tentar se inscrever na Jam. Tente novamente.');
+                        updateSubscriptionUI(false);
+                    });
+            }
         });
 
         timer = setInterval(() => updateCountdown(data, start, end, timer), 1000);
@@ -124,53 +179,52 @@ export function init(data, jamId) {
     }
 }
 
+const pad = (num) => String(num).padStart(2, '0');
 
 //A função oara atualizar a duração
 function updateCountdown(data, start, end, timer) {
+    const actionContainer = $('#jam-action-container');
+
     //Verifica primeiro o status vindo do servidor via SSE
     if (data.jamStatus === 'FINISHED') {
         $('#cd-prefix').text('Encerrado');
-        $('#cd-timer').text('00:00:00:00');
-        $('#jam-action-container').empty();
+        $('#cd-days, #cd-hours, #cd-minutes, #cd-seconds').text('00');
+        actionContainer.empty(); // Limpa os botões
         clearInterval(timer);
         return;
     }
 
     const now = new Date();
     let diff = start - now;
-    let period = 'registration';
 
-    if (diff <= 0) { //Se a data de início já passou
-        if (now < end) {
+
+    if (diff > 0) { //am ainda não começou
+        $('#cd-prefix').text('Inicia em');
+        actionContainer.hide(); //Esconde os botões até a Jam começar
+
+    } else { //Jam está rolando ou acabou
+        actionContainer.show();
+
+        if (now < end) { //Jam está rolando
             diff = end - now; //Calcula o tempo restante até o fim
-            period = 'running';
-        } else {
-            period = 'ended';
+            $('#cd-prefix').text('Encerra em');
+        } else { // Jam terminou
+            $('#cd-prefix').text('Encerrado');
+            $('#cd-days, #cd-hours, #cd-minutes, #cd-seconds').text('00');
+            actionContainer.empty();
+            clearInterval(timer);
+            return;
         }
     }
 
-    //A verificação abaixo ainda é útil para o carregamento inicial da página,
-    if (period === 'ended') {
-        $('#cd-prefix').text('Encerrado');
-        $('#cd-timer').text('00:00:00:00');
-        $('#jam-action-container').empty();
-        clearInterval(timer);
-        return;
-    }
-
-    const joinBtn = $('#toggle-subscription-btn');
-    if (period === 'running' && joinBtn.text().includes('Participar')) {
-        joinBtn.prop('disabled', true).text('Inscrições encerradas');
-    }
-
+    //O resto da função continua igual, calculando e exibindo o tempo.
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    const pad = (num) => String(num).padStart(2, '0');
-    const formattedTime = `${pad(days)}:${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-
-    $('#cd-prefix').text(period === 'running' ? 'Encerra em' : 'Inicia em');
-    $('#cd-timer').text(formattedTime);
+    $('#cd-days').text(pad(days));
+    $('#cd-hours').text(pad(hours));
+    $('#cd-minutes').text(pad(minutes));
+    $('#cd-seconds').text(pad(seconds));
 }

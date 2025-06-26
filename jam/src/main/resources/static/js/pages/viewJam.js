@@ -7,7 +7,7 @@ import { init as initGeral } from './fragments/jam_fragments/geral.js';
 import { init as initRank } from './fragments/jam_fragments/rank.js';
 import { init as initGames } from './fragments/jam_fragments/games.js';
 
-$(function() {
+$(async function() {
     //Lógica abas do menu
     $('.options-jam-card button').on('click', function(e) {
         e.preventDefault();
@@ -64,11 +64,17 @@ $(function() {
 
             if (data.jamTextColor) {
                 dynamicStyles.push(`main { color: ${data.jamTextColor}; }`);
+                dynamicStyles.push(`.options-jam-card button { color: ${data.jamTextColor}; }`);
             }
 
             if (data.jamLinkColor) {
                 dynamicStyles.push(`main a { color: ${data.jamLinkColor}; }`);
-                dynamicStyles.push(`main a:hover { filter: brightness(0.8); }`);
+                dynamicStyles.push(`
+                  .bg-jam-color {
+                    background-color: ${data.jamLinkColor} !important;
+                    color: #FFFFFF !important;
+                  }
+                `);
             }
 
             if (dynamicStyles.length > 0) {
@@ -102,9 +108,21 @@ $(function() {
             // Preenche os campos estáticos da página
             bindDataFields(data, root);
 
+            const rankButton = $('button[data-tab="rank"]');
+            const rankTabContent = $('#tab-rank');
+            const jamEndDate = new Date(data.jamEndDate);
+            const now = new Date();
+
+            //Verifica se a Jam já terminou
+            if (jamEndDate < now) {
+                initRank(data, jamId);
+            } else {
+                rankButton.prop('disabled', true);
+                rankButton.addClass('disabled');
+            }
+
             //Inicializar Aba
             initGeral(data, jamId);
-            initRank(data, jamId);
             initGames(data, jamId);
 
         })
