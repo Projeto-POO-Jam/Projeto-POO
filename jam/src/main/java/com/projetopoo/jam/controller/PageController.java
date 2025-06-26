@@ -33,6 +33,8 @@ public class PageController {
         return "pages/viewGame";
     }
 
+    @GetMapping("/404")
+    public String error() {return "pages/404";}
 
     @GetMapping("/login")
     public String login() {
