@@ -28,6 +28,9 @@ public class Game {
     @Column(length = Integer.MAX_VALUE)
     private String gameContent;
 
+    @Column
+    private String gameToken;
+
     @OneToMany(mappedBy = "voteGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vote> gameVotes;
 
@@ -95,5 +98,13 @@ public class Game {
 
     public void setGameComment(List<Comment> gameComment) {
         this.gameComment = gameComment;
+    }
+
+    public String getGameToken() {
+        return gameToken;
+    }
+
+    public void setGameToken(String gameToken) {
+        this.gameToken = gameToken;
     }
 }
