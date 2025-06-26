@@ -81,10 +81,16 @@ public class CommentService {
     }
 
     @Transactional
-    public List<CommentResponseDTO> findCommentsList(Long gameId) {
+    public List<CommentResponseDTO> findCommentsList(Long gameId, String identifier) {
         List<Comment> comments = commentRepository.findByCommentGame_GameId(gameId);
+        User user = userRepository.findByIdentifier(identifier);
         return comments.stream()
-                .map(comment -> modelMapper.map(comment, CommentResponseDTO.class))
+                .map(comment -> {
+                    boolean currentUser = user.getUserId().equals(comment.getCommentUser().getUserId());
+                    CommentResponseDTO commentResponseDTO = modelMapper.map(comment, CommentResponseDTO.class);
+                    commentResponseDTO.getCommentUser().setUserCurrent(currentUser);
+                    return commentResponseDTO;
+                })
                 .collect(Collectors.toList());
     }
 
