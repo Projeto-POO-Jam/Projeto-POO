@@ -94,10 +94,11 @@
 
 .actor-view-game{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     cursor: pointer;
     margin-bottom: 0.5rem;
+    width: 100%;
 }
 
 .actor-view-game h1{
@@ -238,4 +239,23 @@
 
 .not-comments{
     margin-top: 1rem;
+}
+
+.button-edit-game {
+    display: flex;
+    align-items: center;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button-edit-game:hover {
+    background-color: #555;
+}
+
+.infor-user-actor-view-game{
+    display: flex;
+    align-items: center;
 }

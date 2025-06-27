@@ -38,6 +38,11 @@ public class PageController {
         return "pages/game/updateGame";
     }
 
+    @GetMapping("/updateJam/{id}")
+    public String updateJam(@PathVariable Long id) {
+        return "pages/jam/updateJam";
+    }
+
     @GetMapping("/404")
     public String error() {
         return "pages/404";

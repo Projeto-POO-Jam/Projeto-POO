@@ -66,8 +66,17 @@ $(function() {
 
     //Função para renderizar um comentário
     function renderComment(comment) {
+        let deleteButtonHtml = '';
+        if (comment.commentUser && comment.commentUser.userCurrent) {
+            deleteButtonHtml = `
+                <div class="delete-comments">
+                    <span class="material-symbols-outlined">delete</span>
+                </div>
+            `;
+        }
+
         const commentHtml = `
-            <div class="comment-card"  class="comment-card" data-comment-id="${comment.commentId}">
+            <div class="comment-card" data-comment-id="${comment.commentId}">
                 <div class="container-user-comment">
                      <img
                         src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
@@ -78,13 +87,10 @@ $(function() {
                     />
                     <div class="comment-content">
                         <p class="comment-username">${comment.commentUser.userName}</p>
-                        <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p> 
+                        <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p>
                     </div>
                 </div>
-                <div class="delete-comments">
-                    <span class="material-symbols-outlined">delete</span>
-                </div>
-            </div>
+                ${deleteButtonHtml} </div>
         `;
         return $(commentHtml);
     }
@@ -118,9 +124,16 @@ $(function() {
             //Preenche os dados do game
             bindDataFields(gameData, root);
 
+            //Lógica para exibir o botão de editar o game
+            if (gameData.userResponseDTO && gameData.userResponseDTO.userCurrent) {
+                const editButton = $('#edit-game-btn');
+                editButton.attr('href', `/updateJam/${gameId}`);
+                editButton.show();
+            }
+
             $('.options-view-game button').on('click', function() {
-                if (gameData.UrlDoGame) {
-                    window.open(gameData.UrlDoGame, '_blank');
+                if (gameData.gameFile) {
+                    window.open(gameData.gameFile, '_blank');
                 } else {
                     showError('A URL do game não está disponível.');
                 }
@@ -161,7 +174,6 @@ $(function() {
             } else {
                 commentsContainer.html('<p class="not-comments">Ainda não há comentários. Seja o primeiro a comentar!</p>');
             }
-
         })
         .fail(err => {
             console.error('Uma ou mais chamadas iniciais falharam:', err);

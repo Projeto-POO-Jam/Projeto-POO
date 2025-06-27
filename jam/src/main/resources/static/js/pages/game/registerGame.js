@@ -1,4 +1,4 @@
-import { initializeGameForm } from '../../common/gameFormManager.js';
+import { initializeGameForm } from './gameForm.js';
 
 $(function() {
 
