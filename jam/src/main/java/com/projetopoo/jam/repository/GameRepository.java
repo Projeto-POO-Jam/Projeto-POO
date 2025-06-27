@@ -1,9 +1,6 @@
 package com.projetopoo.jam.repository;
 
 import com.projetopoo.jam.model.Game;
-import com.projetopoo.jam.model.Jam;
-import com.projetopoo.jam.model.Subscribe;
-import com.projetopoo.jam.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByGameId(long gameId);
-    //Optional<Game> findByGame(long jamId); // CORRIGIR ISSO
 
     @Query("SELECT g " +
             "FROM " +

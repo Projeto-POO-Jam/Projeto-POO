@@ -1,13 +1,8 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.jam.JamSseDTO;
-import com.projetopoo.jam.dto.subscribe.SubscribeSseDTO;
-import com.projetopoo.jam.dto.subscribe.SubscribeTotalResponseDTO;
-import com.projetopoo.jam.dto.vote.VoteTotalResponseDTO;
 import com.projetopoo.jam.service.SseNotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,6 +1,5 @@
 package com.projetopoo.jam.dto.game;
 
-import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 
 public class GameResponseDTO {

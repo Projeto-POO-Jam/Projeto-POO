@@ -1,6 +1,5 @@
 package com.projetopoo.jam.dto.comment;
 
-import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 
 import java.time.LocalDateTime;

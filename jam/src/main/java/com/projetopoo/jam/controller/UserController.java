@@ -1,7 +1,7 @@
 package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.dto.user.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserRequestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.service.UserService;
 import com.projetopoo.jam.exception.UserValidationException;
@@ -79,9 +79,9 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> createUser(UserResquestDTO userResquestDTO) {
+    public ResponseEntity<?> createUser(UserRequestDTO userRequestDTO) {
         try {
-            userService.createUser(userResquestDTO);
+            userService.createUser(userRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (UserValidationException e) {
             Map<String, Object> errorResponse = new HashMap<>();
@@ -105,9 +105,9 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> updateUser(UserResquestDTO userResquestDTO, Principal principal) {
+    public ResponseEntity<?> updateUser(UserRequestDTO userRequestDTO, Principal principal) {
         try{
-            userService.updateUser(userResquestDTO, principal.getName());
+            userService.updateUser(userRequestDTO, principal.getName());
             return ResponseEntity.ok().build();
         } catch (UserValidationException e) {
             Map<String, Object> errorResponse = new HashMap<>();

@@ -1,6 +1,5 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.*;
 import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.JamRepository;
@@ -11,7 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import com.projetopoo.jam.util.ImageUtil;
+import com.projetopoo.jam.util.FileUtil;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,13 +55,13 @@ public class JamService {
 
         String uuid = UUID.randomUUID().toString();
         String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/cover";
-        jam.setJamCover(ImageUtil.createImage(jamRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
+        jam.setJamCover(FileUtil.createFile(jamRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
 
         String directoryWallpaper = UPLOAD_DIRECTORY + "/" + uuid + "/wallpaper";
-        jam.setJamWallpaper(ImageUtil.createImage(jamRequestDTO.getJamWallpaper(), directoryWallpaper, "/upload/jam/" + uuid + "/wallpaper/"));
+        jam.setJamWallpaper(FileUtil.createFile(jamRequestDTO.getJamWallpaper(), directoryWallpaper, "/upload/jam/" + uuid + "/wallpaper/"));
 
         String directoryBanner = UPLOAD_DIRECTORY + "/" + uuid + "/banner";
-        jam.setJamBanner(ImageUtil.createImage(jamRequestDTO.getJamBanner(), directoryBanner, "/upload/jam/" + uuid + "/banner/"));
+        jam.setJamBanner(FileUtil.createFile(jamRequestDTO.getJamBanner(), directoryBanner, "/upload/jam/" + uuid + "/banner/"));
 
         jam.setJamToken(UUID.randomUUID().toString());
 
@@ -92,9 +91,9 @@ public class JamService {
 
                     String uuid = UUID.randomUUID().toString();
                     String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/cover";
-                    existingJam.setJamCover(ImageUtil.createImage(jamRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
+                    existingJam.setJamCover(FileUtil.createFile(jamRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
 
-                    ImageUtil.deleteImage(oldPhotoPath);
+                    FileUtil.deleteFile(oldPhotoPath);
                     jamRequestDTO.setJamCover(null);
                 }
 
@@ -103,9 +102,9 @@ public class JamService {
 
                     String uuid = UUID.randomUUID().toString();
                     String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/wallpaper";
-                    existingJam.setJamWallpaper(ImageUtil.createImage(jamRequestDTO.getJamWallpaper(), directoryCover, "/upload/jam/" + uuid + "/wallpaper/"));
+                    existingJam.setJamWallpaper(FileUtil.createFile(jamRequestDTO.getJamWallpaper(), directoryCover, "/upload/jam/" + uuid + "/wallpaper/"));
 
-                    ImageUtil.deleteImage(oldPhotoPath);
+                    FileUtil.deleteFile(oldPhotoPath);
                     jamRequestDTO.setJamWallpaper(null);
                 }
 
@@ -114,9 +113,9 @@ public class JamService {
 
                     String uuid = UUID.randomUUID().toString();
                     String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/banner";
-                    existingJam.setJamBanner(ImageUtil.createImage(jamRequestDTO.getJamBanner(), directoryCover, "/upload/jam/" + uuid + "/banner/"));
+                    existingJam.setJamBanner(FileUtil.createFile(jamRequestDTO.getJamBanner(), directoryCover, "/upload/jam/" + uuid + "/banner/"));
 
-                    ImageUtil.deleteImage(oldPhotoPath);
+                    FileUtil.deleteFile(oldPhotoPath);
                     jamRequestDTO.setJamBanner(null);
                 }
 

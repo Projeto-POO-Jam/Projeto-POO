@@ -1,11 +1,8 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.JamPaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.JamRequestDTO;
 import com.projetopoo.jam.dto.jam.JamResponse;
-import com.projetopoo.jam.dto.jam.JamSummaryDTO;
-import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.service.JamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/jams")
@@ -191,8 +186,6 @@ public class JamController {
             @RequestParam(defaultValue = "20") int limit) {
         try {
             JamPaginatedResponseDTO response = jamService.findMyJamListByUserId(userId, offset, limit);
-            //List<JamSummaryDTO> jans = new ArrayList<JamSummaryDTO>();
-            //JamPaginatedResponseDTO response = new JamPaginatedResponseDTO(jans,11);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

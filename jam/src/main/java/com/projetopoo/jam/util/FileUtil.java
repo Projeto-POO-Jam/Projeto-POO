@@ -10,31 +10,30 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.UUID;
 
-public class ImageUtil {
-    public static String createImage(MultipartFile image, String path, String url) throws IOException {
-        String imagePath = "";
-        if (image != null && !image.isEmpty()) {
+public class FileUtil {
+    public static String createFile(MultipartFile file, String path, String url) throws IOException {
+        String filePath = "";
+        if (file != null && !file.isEmpty()) {
             Path uploadPath = Paths.get(path);
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            String originalFilename = image.getOriginalFilename();
+            String originalFilename = file.getOriginalFilename();
             assert originalFilename != null;
 
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String uniqueFileName = UUID.randomUUID() + extension;
 
-            Files.copy(image.getInputStream(), uploadPath.resolve(uniqueFileName));
+            Files.copy(file.getInputStream(), uploadPath.resolve(uniqueFileName));
 
-            imagePath = "http://localhost:8080" + url + uniqueFileName;
+            filePath = "http://localhost:8080" + url + uniqueFileName;
         }
 
-        return imagePath;
+        return filePath;
     }
 
     public static String extractRelativePath(String fullUrl) {
@@ -51,8 +50,8 @@ public class ImageUtil {
         }
     }
 
-    public static void deleteImage(String imagePath) {
-        String relativePath = extractRelativePath(imagePath);
+    public static void deleteFile(String FilePath) {
+        String relativePath = extractRelativePath(FilePath);
 
         if (relativePath == null || relativePath.isBlank()) {
             return;

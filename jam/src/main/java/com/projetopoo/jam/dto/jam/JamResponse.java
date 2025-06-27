@@ -1,6 +1,5 @@
 package com.projetopoo.jam.dto.jam;
 
-import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.model.JamStatus;
 

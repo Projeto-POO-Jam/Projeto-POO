@@ -2,9 +2,9 @@ package com.projetopoo.jam.dto.game;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class GameResquestDTO {
+public class GameUpdateRequestDTO {
 
-    private Long jamId;
+    private Long gameId;
     private String gameTitle;
     private String gameDescription;
     private String gameContent;
@@ -12,7 +12,7 @@ public class GameResquestDTO {
     private MultipartFile gameFile;
 
 
-    public GameResquestDTO() {
+    public GameUpdateRequestDTO() {
 
     }
 
@@ -24,9 +24,13 @@ public class GameResquestDTO {
         this.gameContent = gameContent;
     }
 
-    public Long getJamId() { return jamId; }
+    public Long getGameId() {
+        return gameId;
+    }
 
-    public void setJamId(Long jamId) { this.jamId = jamId; }
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
 
     public String getGameTitle() { return gameTitle; }
 

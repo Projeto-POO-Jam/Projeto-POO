@@ -1,12 +1,12 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.dto.user.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserRequestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
-import com.projetopoo.jam.util.ImageUtil;
+import com.projetopoo.jam.util.FileUtil;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -34,10 +34,10 @@ public class UserService {
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/upload/user";
 
     @Transactional
-    public void createUser(UserResquestDTO userResquestDTO) throws IOException {
+    public void createUser(UserRequestDTO userRequestDTO) throws IOException {
         List<String> validationErrors = new ArrayList<>();
 
-        User user = modelMapper.map(userResquestDTO, User.class);
+        User user = modelMapper.map(userRequestDTO, User.class);
 
         if (userRepository.findByUserName(user.getUserName()).isPresent()) {
             validationErrors.add("USERNAME_EXISTS");
@@ -51,15 +51,15 @@ public class UserService {
             throw new UserValidationException(validationErrors);
         }
 
-        user.setUserPhoto(ImageUtil.createImage(userResquestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
-        user.setUserBanner(ImageUtil.createImage(userResquestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
+        user.setUserPhoto(FileUtil.createFile(userRequestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
+        user.setUserBanner(FileUtil.createFile(userRequestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
         userRepository.save(user);
     }
 
     @Transactional
-    public void updateUser(UserResquestDTO user, String identifier) throws IOException {
+    public void updateUser(UserRequestDTO user, String identifier) throws IOException {
         List<String> validationErrors = new ArrayList<>();
 
         User existingUser = userRepository.findByIdentifier(identifier);
@@ -88,20 +88,20 @@ public class UserService {
         if (user.getUserPhoto() != null && !user.getUserPhoto().isEmpty()) {
             String oldPhotoPath = existingUser.getUserPhoto();
 
-            String newPhotoPath = ImageUtil.createImage(user.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/");
+            String newPhotoPath = FileUtil.createFile(user.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/");
             existingUser.setUserPhoto(newPhotoPath);
 
-            ImageUtil.deleteImage(oldPhotoPath);
+            FileUtil.deleteFile(oldPhotoPath);
             user.setUserPhoto(null);
         }
 
         if (user.getUserBanner() != null && !user.getUserBanner().isEmpty()) {
             String oldBannerPath = existingUser.getUserBanner();
 
-            String newBannerPath = ImageUtil.createImage(user.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/");
+            String newBannerPath = FileUtil.createFile(user.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/");
             existingUser.setUserBanner(newBannerPath);
 
-            ImageUtil.deleteImage(oldBannerPath);
+            FileUtil.deleteFile(oldBannerPath);
             user.setUserBanner(null);
         }
 

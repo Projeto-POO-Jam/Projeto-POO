@@ -1,7 +1,5 @@
 package com.projetopoo.jam.dto.user;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class UserResponseDTO {
     private Long userId;
     private String userName;

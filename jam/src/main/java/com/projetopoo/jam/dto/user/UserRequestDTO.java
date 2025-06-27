@@ -1,9 +1,8 @@
 package com.projetopoo.jam.dto.user;
 
-import jakarta.persistence.Column;
 import org.springframework.web.multipart.MultipartFile;
 
-public class UserResquestDTO {
+public class UserRequestDTO {
     private String userName;
     private String userEmail;
     private String userPassword;
@@ -14,7 +13,7 @@ public class UserResquestDTO {
     private String userFacebook;
     private String userInstagram;
 
-    public UserResquestDTO() {
+    public UserRequestDTO() {
 
     }
 

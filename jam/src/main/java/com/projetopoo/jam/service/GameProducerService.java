@@ -1,7 +1,6 @@
 package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.config.rabbitmq.GameExtractRabbitMQConfig;
-import com.projetopoo.jam.config.rabbitmq.JamStatusRabbitMQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
