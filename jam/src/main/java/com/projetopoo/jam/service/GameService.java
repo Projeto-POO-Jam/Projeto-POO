@@ -209,4 +209,17 @@ public class GameService {
             throw new EntityNotFoundException("Game com o ID " + gameUpdateResquestDTO.getGameId() + " não encontrada.");
         }
     }
+
+
+    @Transactional
+    public GamePaginatedResponseDTO findGameListByUserIdVote(Long userId, int offset, int limit){
+
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+
+        Page<Game> gamePage = gameRepository.findByUserIdOrderByGameId(userId, pageable);
+
+        return addGameTotal(gamePage);
+    }
+
 }

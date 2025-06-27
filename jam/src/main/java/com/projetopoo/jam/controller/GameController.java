@@ -155,4 +155,28 @@ public class GameController {
         }
     }
 
+    @GetMapping("/user/vote")
+    @Operation(
+            summary = "Lista todos os jogos de um usuário votou",
+            description = "Retorna uma lista paginada de todos os jogos que ele votou de um usuário em ordem do banco de dados.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Jogos listados com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GamePaginatedResponseDTO.class)))
+    })
+    public ResponseEntity<?> findGameListByUserIdVote(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            GamePaginatedResponseDTO response = gameService.findGameListByUserIdVote(userId, offset, limit);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
