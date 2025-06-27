@@ -46,7 +46,7 @@ function populateRankCard(newCard, game, rank) {
 }
 
 //Função principal que busca os jogos e monta o ranking.
-function loadRank(jamId) {
+async function loadRank(jamId) {
     const rankContainer = $('#rank-list-container');
     const limit = 3;
     const offset = 0;
@@ -54,30 +54,28 @@ function loadRank(jamId) {
     rankContainer.empty();
     applySkeleton(rankContainer);
 
-    fetchJamGames(jamId, offset, limit)
-        .done(response => {
-            const { games } = response;
-            rankContainer.empty();
+    try {
+        const { games } = await fetchJamGames(jamId, offset, limit);
+        rankContainer.empty();
 
-            if (games.length === 0) {
-                rankContainer.html('<p>Ainda não há jogos suficientes para formar um ranking.</p>');
-                return;
-            }
+        if (games.length === 0) {
+            rankContainer.html('<p>Ainda não há jogos suficientes para formar um ranking.</p>');
+            return;
+        }
 
-            games.forEach((game, index) => {
-                const rank = index + 1;
-                const newCard = createRankCardTemplate(rank);
-                populateRankCard(newCard, game, rank);
-                rankContainer.append(newCard);
-            });
-        })
-        .fail(err => {
-            showError('Não foi possível carregar o ranking.');
-            rankContainer.html('<p class="error-message">Ocorreu um erro ao carregar o ranking.</p>');
-        })
-        .always(() => {
-            removeSkeleton(rankContainer);
+        games.forEach((game, index) => {
+            const rank = index + 1;
+            const newCard = createRankCardTemplate(rank);
+            populateRankCard(newCard, game, rank);
+            rankContainer.append(newCard);
         });
+    }catch (err){
+        showError('Não foi possível carregar o ranking.');
+        rankContainer.html('<p class="error-message">Ocorreu um erro ao carregar o ranking.</p>');
+    }finally {
+        removeSkeleton(rankContainer);
+    }
+
 }
 
 //Função de inicialização
