@@ -50,7 +50,8 @@
                             icon='person',
                             placeholder='E-mail/Username',
                             labelText=null,
-                            inputClass=null
+                            inputClass=null,
+                            dataField='username'
                         )}"></div>
 
                         <div th:replace="~{fragments/formComponents.html :: formInput(
@@ -60,7 +61,8 @@
                             icon='lock',
                             placeholder='Senha',
                             labelText=null,
-                            inputClass=null
+                            inputClass=null,
+                            dataField='password'
                         )}"></div>
 
                         <button id="submitButton" type="submit" class="submit-button">

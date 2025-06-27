@@ -4,7 +4,6 @@ import { bindDataFields } from "../../common/bindDataFields.js";
 import { showError } from '../../common/notifications.js';
 import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
 
-//A função principal agora é 'async' para podermos usar 'await'
 $(async function() {
     const pathParts = window.location.pathname.split('/');
     const gameId = pathParts[pathParts.length - 1];
@@ -21,8 +20,9 @@ $(async function() {
     const pondInstances = initializeGameForm({
         mode: 'edit',
         method: 'PUT',
-        apiUrl: `/api/games/${gameId}`,
-        redirectUrl: `/viewGame/${gameId}`
+        apiUrl: `api/games`,
+        redirectUrl: `/viewGame/${gameId}`,
+        entityId: gameId
     });
 
     try {
