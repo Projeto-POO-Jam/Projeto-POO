@@ -53,9 +53,8 @@ function updateLoadMoreButton() {
         $('#games-list-container').after(btnLoadMore);
     }
 }
-
 //Função principal para buscar e renderizar os jogos.
-function loadGames() {
+async function loadGames() {
     if (isLoading) return;
     isLoading = true;
 
@@ -70,49 +69,43 @@ function loadGames() {
         for (let i = 0; i < 3; i++) {
             gamesContainer.append(createGameCardTemplate());
         }
-
         applySkeleton(gamesContainer);
 
     } else {
         loadMoreButton.text('Carregando...').prop('disabled', true);
     }
 
-    //Busca na API
-    fetchJamGames(currentJamId, currentGameOffset, limitPerPage)
-        .done(response => {
-            const { games, total } = response;
-            totalGames = total;
+    try {
+        //Busca na API
+        const { games, total } = await fetchJamGames(currentJamId, currentGameOffset, limitPerPage);
 
-            //Se for a primeira carga, limpa os skeletons antes de adicionar os cards reais.
-            if (currentGameOffset === 0) {
-                gamesContainer.empty();
-            }
+        totalGames = total;
 
-            if (games.length === 0 && currentGameOffset === 0) {
-                gamesContainer.html(`
-                    <p>Nenhum jogo foi enviado para esta Jam ainda.</p>
-                `);
-                return;
-            }
+        if (currentGameOffset === 0) {
+            gamesContainer.empty();
+        }
 
-            //Para cada jogo retornado, cria um card e o popula com os dados.
-            games.forEach(game => {
-                const newCard = createGameCardTemplate();
-                populateCard(newCard, game);
-                gamesContainer.append(newCard);
-            });
+        if (games.length === 0 && currentGameOffset === 0) {
+            gamesContainer.html(`<p>Nenhum jogo foi enviado para esta Jam ainda.</p>`);
+            return;
+        }
 
-            currentGameOffset += games.length;
-            updateLoadMoreButton();
-        })
-        .fail(err => {
-            showError('Não foi possível carregar a lista de jogos.');
-            gamesContainer.html('<p class="error-message">Ocorreu um erro ao carregar os jogos.</p>');
-        })
-        .always(() => {
-            isLoading = false;
-            $('#load-more-games-btn').text('Carregar mais').prop('disabled', false);
+        games.forEach(game => {
+            const newCard = createGameCardTemplate();
+            populateCard(newCard, game);
+            gamesContainer.append(newCard);
         });
+
+        currentGameOffset += games.length;
+
+        updateLoadMoreButton();
+
+    } catch (err) {
+        showError('Não foi possível carregar a lista de jogos.');
+        gamesContainer.html('<p class="error-message">Ocorreu um erro ao carregar os jogos.</p>');
+    } finally {
+        isLoading = false;
+    }
 }
 
 //Função de inicialização
