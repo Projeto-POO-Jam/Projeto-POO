@@ -64,3 +64,15 @@ export function fetchJamGames(jamId, offset = 0, limit = 20) {
         .then(({ data }) => data);
 }
 
+
+/**
+ * Busca o dados para preencher form updateJam.
+ * @param {string|number} jamId - O ID da Jam.
+ * @returns {Promise<object>} - Uma promessa que resolve os dados da jam.
+ */
+export function fetchDadoFormUpdate(jamId) {
+    return apiRequest('GET', `api/jams/${jamId}`)
+        .then(({ data }) => data);
+}
+
+
