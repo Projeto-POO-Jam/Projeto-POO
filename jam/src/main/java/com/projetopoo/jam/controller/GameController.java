@@ -116,8 +116,31 @@ public class GameController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/list/complete")
+    @Operation(
+            summary = "Lista todos os jogos que existem",
+            description = "Retorna uma lista paginada de todos os jogos que existem em ordem do total de votos.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Jogos listados com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = GamePaginatedResponseDTO.class)))
+    })
+    public ResponseEntity<?> findGameCompleteList(
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        try {
+            GamePaginatedResponseDTO response = gameService.findGameCompleteList(offset, limit);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
   
-      @PutMapping(consumes = { "multipart/form-data" })
+    @PutMapping(consumes = { "multipart/form-data" })
     public ResponseEntity<?> updateGame(GameResquestDTO gameRequestDTO, Principal principal) {
         try {
             gameService.updateGame(gameRequestDTO, principal.getName());

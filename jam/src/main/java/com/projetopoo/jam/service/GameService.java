@@ -138,6 +138,17 @@ public class GameService {
         return addGameTotal(gamePage);
     }
 
+    @Transactional
+    public GamePaginatedResponseDTO findGameCompleteList(int offset, int limit){
+
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+
+        Page<Game> gamePage = gameRepository.findAllByOrderByVotes(pageable);
+
+        return addGameTotal(gamePage);
+    }
+
     private GamePaginatedResponseDTO addGameTotal(Page<Game> gamePage) {
         List<GameSummaryDTO> gameSummaryDTOList = gamePage.getContent().stream()
                 .map(game -> {
