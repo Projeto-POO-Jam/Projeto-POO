@@ -36,4 +36,11 @@ public interface GameRepository extends JpaRepository<Game, Long> {
                 "SIZE(g.gameVotes) DESC")
     Page<Game> findByUserIdOrderByVotes(@Param("userId") Long userId, Pageable pageable);
 
+    @Query("SELECT g " +
+            "FROM " +
+                "Game g " +
+            "ORDER BY " +
+                "SIZE(g.gameVotes) DESC")
+    Page<Game> findAllByOrderByVotes(Pageable pageable);
+
 }
