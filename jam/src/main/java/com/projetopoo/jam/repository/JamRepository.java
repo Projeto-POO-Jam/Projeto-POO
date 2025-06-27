@@ -42,4 +42,16 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
             "ORDER BY " +
                 "j.jamId DESC")
     Page<Jam> findByUserIdOrderByJamId(@Param("userId") Long userId, Pageable pageable);
+
+    //  "SIZE(j.jamSubscribes) DESC")
+
+    @Query("SELECT j " +
+            "FROM " +
+                "Jam j " +
+            "WHERE " +
+                "j.jamUser.userId = :userId " +
+            "ORDER BY " +
+                "SIZE(j.jamSubscribes) DESC")
+    Page<Jam> findByUserIdOrderByJamSubscribes(@Param("userId") Long userId, Pageable pageable);
+
 }
