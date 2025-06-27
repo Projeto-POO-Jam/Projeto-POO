@@ -1,6 +1,7 @@
 package com.projetopoo.jam.dto.comment;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +9,7 @@ public class CommentResponseDTO {
     private Long commentId;
     private String commentText;
     private LocalDateTime commentDate;
-    private UserResponseDTO commentUser;
+    private UserWithCurrentResponseDTO commentUser;
 
     public CommentResponseDTO() {
 
@@ -38,11 +39,11 @@ public class CommentResponseDTO {
         this.commentDate = commentDate;
     }
 
-    public UserResponseDTO getCommentUser() {
+    public UserWithCurrentResponseDTO getCommentUser() {
         return commentUser;
     }
 
-    public void setCommentUser(UserResponseDTO commentUser) {
+    public void setCommentUser(UserWithCurrentResponseDTO commentUser) {
         this.commentUser = commentUser;
     }
 }

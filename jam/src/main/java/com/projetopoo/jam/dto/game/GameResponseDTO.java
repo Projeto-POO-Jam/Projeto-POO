@@ -1,6 +1,7 @@
 package com.projetopoo.jam.dto.game;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 
 public class GameResponseDTO {
 
@@ -9,7 +10,7 @@ public class GameResponseDTO {
     private String gameContent;
     private String gamePhoto;
     private String gameFile;
-    private UserResponseDTO userResponseDTO;
+    private UserWithCurrentResponseDTO userResponseDTO;
 
     public GameResponseDTO() {
 
@@ -23,11 +24,11 @@ public class GameResponseDTO {
         this.gameContent = gameContent;
     }
 
-    public UserResponseDTO getUserResponseDTO() {
+    public UserWithCurrentResponseDTO getUserResponseDTO() {
         return userResponseDTO;
     }
 
-    public void setUserResponseDTO(UserResponseDTO userResponseDTO) {
+    public void setUserResponseDTO(UserWithCurrentResponseDTO userResponseDTO) {
         this.userResponseDTO = userResponseDTO;
     }
 

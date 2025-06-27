@@ -38,6 +38,11 @@ public class PageController {
         return "pages/game/updateGame";
     }
 
+    @GetMapping("/404")
+    public String error() {
+        return "pages/404";
+    }
+
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
