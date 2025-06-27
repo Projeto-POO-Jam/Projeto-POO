@@ -129,4 +129,26 @@ public class UserService {
         }
     }
 
+
+    @Transactional
+    public void updatePassword(UserResquestDTO user, String identifier) throws IOException {
+        List<String> validationErrors = new ArrayList<>();
+
+        User existingUser = userRepository.findByIdentifier(identifier);
+
+        if (user.getUserPassword() != null)
+        {
+            //System.out.println("SENHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + user.getOdlPassword());
+            //if (existingUser.getUserPassword().equals(user.getOdlPassword()))
+            //{
+                user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+            //}
+           //else {
+           //     throw new IllegalArgumentException("Senha incorreta");
+           // }
+        }
+
+        modelMapper.map(user, existingUser);
+        userRepository.save(existingUser);
+    }
 }

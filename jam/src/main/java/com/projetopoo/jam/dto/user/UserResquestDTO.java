@@ -13,6 +13,7 @@ public class UserResquestDTO {
     private String userLinkedIn;
     private String userFacebook;
     private String userInstagram;
+    private String odlPassword;
 
     public UserResquestDTO() {
 
@@ -88,5 +89,13 @@ public class UserResquestDTO {
 
     public void setUserInstagram(String userInstagram) {
         this.userInstagram = userInstagram;
+    }
+
+    public String getOdlPassword() {
+        return odlPassword;
+    }
+
+    public void setOdlPassword(String odlPassword) {
+        this.odlPassword = odlPassword;
     }
 }

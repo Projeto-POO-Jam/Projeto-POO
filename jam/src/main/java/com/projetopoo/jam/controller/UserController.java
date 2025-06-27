@@ -119,4 +119,33 @@ public class UserController {
         }
     }
 
+
+
+    @PutMapping("/changePassword")
+    @Operation(
+            summary = "Atualiza a senha do usuario",
+            description = "Ele poderá alterar a senha atual para uma nova")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Falha na validação (senha atual incorreta)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
+            @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
+    })
+    public ResponseEntity<?> updatePassword(UserResquestDTO userResquestDTO, Principal principal)
+    {
+        try{
+            userService.updatePassword(userResquestDTO, principal.getName());
+            return ResponseEntity.ok().build();
+        } catch (UserValidationException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Validation failed");
+            errorResponse.put("errors", e.getErrors());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
