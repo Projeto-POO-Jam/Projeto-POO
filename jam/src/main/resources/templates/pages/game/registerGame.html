@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/head :: Head('Página Inicial')}"></div>
+</head>
+<body>
+    <div th:replace="fragments/menu :: siteMenu"></div>
+    <main>
+        <section class="container-register-game">
+            <div class="card-game">
+                <form class="form-game" id="gameForm" method="post" enctype="multipart/form-data" novalidate>
+                    <div class="title-auth">
+                        <h1>Crie sua Jam</h1>
+                        <p>Preencha os campos abaixo para criar sua Jam</p>
+                    </div>
+
+                    <div th:replace="~{fragments/formFieldsGame :: fields}"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script th:src="@{/js/common/theme.js}"></script>
+    <script type="module" th:src="@{/js/pages/game/registerGame.js}"></script>
+</body>
+</html>

@@ -8,35 +8,37 @@
     <main>
         <section class="container-register-game">
             <div class="card-game">
-                <form class="form-game" id="createGameForm" action="" method="post" enctype="multipart/form-data" novalidate>
+                <form class="form-game" id="gameForm" method="post" enctype="multipart/form-data" novalidate>
                     <div class="title-auth">
-                        <h1>Crie sua Jam</h1>
-                        <p>Preencha os campos abaixo para criar sua Jam</p>
+                        <h1>Editar Jogo</h1>
+                        <p>Altere os campos abaixo para atualizar o jogo</p>
                     </div>
 
-                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                    <div th:replace="~{fragments/formComponents :: formInput(
                         id='gameTitle',
                         name='gameTitle',
                         type='text',
                         icon=null,
                         placeholder=null,
                         labelText='Titulo do Jogo',
-                        inputClass=null
+                        inputClass=null,
+                        dataField='gameTitle'
                     )}"></div>
 
-                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                    <div th:replace="~{fragments/formComponents :: formInput(
                         id='gameDescription',
                         name='gameDescription',
                         type='text',
                         icon=null,
                         placeholder=null,
                         labelText='Descrição',
-                        inputClass=null
+                        inputClass=null,
+                        dataField='gameDescription'
                     )}"></div>
 
                     <div class="form-group form-group-jam">
-                        <label for="gameContent">Conteúdo da Jam (HTML livre)</label>
-                        <textarea id="gameContent" name="gameContent"></textarea>
+                        <label for="gameContent" class="label-input-padrao">Conteúdo da Jam (HTML livre)</label>
+                        <textarea id="gameContent" name="gameContent" data-field="gameContent"></textarea>
                     </div>
 
                     <div class="form-group form-group-jam">
@@ -51,11 +53,7 @@
                         <p id="gameFileError" class="error-message"></p>
                     </div>
 
-                    <button
-                        id="submitButton"
-                        type="submit"
-                        class="submit-button"
-                    >
+                    <button id="submitButton" type="submit" class="submit-button">
                         Postar Game
                     </button>
                 </form>
@@ -64,6 +62,6 @@
     </main>
 
     <script th:src="@{/js/common/theme.js}"></script>
-    <script type="module" th:src="@{/js/pages/registerGame.js}"></script>
+    <script type="module" th:src="@{/js/pages/game/updateGame.js}"></script>
 </body>
 </html>

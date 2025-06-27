@@ -12,7 +12,7 @@ function createRankCardTemplate(rank) {
                 <div class="game-card-title" data-field="gameTitle"></div>
             </a>
             <div class="podio-rank${rank} bg-jam-color">
-                </div>
+            </div>
         </div>
     `;
     return $(cardHtml);

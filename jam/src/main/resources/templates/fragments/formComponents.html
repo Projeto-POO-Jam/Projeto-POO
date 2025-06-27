@@ -2,30 +2,29 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<div th:fragment="formInput(id, name, type, icon, placeholder, labelText, inputClass)"
-     class="form-group">
+    <div th:fragment="formInput(id, name, type, icon, placeholder, labelText, inputClass, dataField)" class="form-group">
+        <label
+            th:if="${labelText}"
+            th:for="${id}"
+            class="label-input-padrao"
+            th:text="${labelText}">
+        </label>
 
-    <label
-        th:if="${labelText}"
-        th:for="${id}"
-        class="label-input-padrao"
-        th:text="${labelText}">
-    </label>
+        <div class="info-input-padrao">
+            <span th:if="${icon}" class="material-symbols-outlined" th:text="${icon}"></span>
 
-    <div class="info-input-padrao">
-        <span th:if="${icon}" class="material-symbols-outlined" th:text="${icon}"></span>
+            <input
+                th:id="${id}"
+                th:name="${name}"
+                th:type="${type}"
+                th:placeholder="${placeholder}"
+                class="input-padrao"
+                th:classappend="${param.error != null ? 'error' : ''} + ' ' + ${inputClass}"
+                th:attr="data-field=${dataField}" />
 
-        <input
-            th:id="${id}"
-            th:name="${name}"
-            th:type="${type}"
-            th:placeholder="${placeholder}"
-            class="input-padrao"  th:classappend="${param.error != null ? 'error' : ''} + ' ' + ${inputClass}" />
-
+        </div>
+        <p th:id="${id + 'Error'}" class="error-message"></p>
     </div>
-
-    <p th:id="${id + 'Error'}" class="error-message"></p>
-</div>
 
 </body>
 </html>

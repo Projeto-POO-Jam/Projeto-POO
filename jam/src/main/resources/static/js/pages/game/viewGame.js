@@ -1,9 +1,9 @@
-import { fetchGame, isLike, toggleVote, fetchTotalVotes } from '../services/gameService.js';
-import { fetchCurrentUser } from '../services/userService.js';
-import { fetchComments, postComment, deleteComment } from '../services/commentService.js';
-import { bindDataFields } from '../common/bindDataFields.js';
-import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
-import { showError } from '../common/notifications.js';
+import { fetchGame, isLike, toggleVote, fetchTotalVotes } from '../../services/gameService.js';
+import { fetchCurrentUser } from '../../services/userService.js';
+import { fetchComments, postComment, deleteComment } from '../../services/commentService.js';
+import { bindDataFields } from '../../common/bindDataFields.js';
+import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
+import { showError } from '../../common/notifications.js';
 
 $(function() {
     //Pega id na URL

@@ -16,25 +16,32 @@ public class PageController {
     }
 
     @GetMapping("/registerJam")
-    public String registerJam() {return "pages/registerJam";}
+    public String registerJam() {return "pages/jam/registerJam";}
 
     @GetMapping("/jams/{id}")
     public String viewJam(@PathVariable Long id) {
-        return "pages/viewJam";
+        return "pages/jam/viewJam";
     }
 
     @GetMapping("/jams/registerGame/{id}")
     public String registerGame(@PathVariable Long id) {
-        return "pages/registerGame";
+        return "pages/game/registerGame";
     }
 
     @GetMapping("/viewGame/{id}")
     public String viewGame(@PathVariable Long id) {
-        return "pages/viewGame";
+        return "pages/game/viewGame";
+    }
+
+    @GetMapping("/updateGame/{id}")
+    public String updateGame(@PathVariable Long id) {
+        return "pages/game/updateGame";
     }
 
     @GetMapping("/404")
-    public String error() {return "pages/404";}
+    public String error() {
+        return "pages/404";
+    }
 
     @GetMapping("/login")
     public String login() {
