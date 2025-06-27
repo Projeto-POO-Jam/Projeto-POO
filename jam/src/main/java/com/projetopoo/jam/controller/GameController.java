@@ -154,10 +154,10 @@ public class GameController {
         }
     }
 
-    @GetMapping("/vote")
+    @GetMapping("/user/vote")
     @Operation(
-            summary = "Lista todos os jogos de um usuário",
-            description = "Retorna uma lista paginada de todos os jogos de um usuário em ordem do total de votos.")
+            summary = "Lista todos os jogos de um usuário votou",
+            description = "Retorna uma lista paginada de todos os jogos que ele votou de um usuário em ordem do banco de dados.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
