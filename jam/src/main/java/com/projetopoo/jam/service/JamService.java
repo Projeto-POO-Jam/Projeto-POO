@@ -161,7 +161,7 @@ public class JamService {
     }
 
     @Transactional
-    public JamResponse findJam(Long jamId) {
+    public JamResponse findJam(Long jamId, String identifier) {
 
         Optional<Jam> optionalJam = jamRepository.findByJamId(jamId);
         if (optionalJam.isEmpty()) {
@@ -169,6 +169,9 @@ public class JamService {
         }
         JamResponse jamResponse = modelMapper.map(optionalJam.get(), JamResponse.class);
         jamResponse.setJamTotalSubscribers(subscribeRepository.countBySubscribeJam_JamId(jamResponse.getJamId()));
+        User user = userRepository.findByIdentifier(identifier);
+        jamResponse.getJamUser().setUserCurrent(user.getUserId().equals(jamResponse.getJamUser().getUserId()));
+
         return jamResponse;
     }
 

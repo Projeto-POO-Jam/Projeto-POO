@@ -60,9 +60,9 @@ public class GameController {
                             schema = @Schema(implementation = GameResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Jogo não encontrado", content = @Content)
     })
-    public ResponseEntity<?> findGame(@PathVariable Long gameId) {
+    public ResponseEntity<?> findGame(@PathVariable Long gameId, Principal principal) {
         try {
-            GameResponseDTO gameResponse = gameService.findGame(gameId);
+            GameResponseDTO gameResponse = gameService.findGame(gameId, principal.getName());
             return ResponseEntity.ok(gameResponse);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

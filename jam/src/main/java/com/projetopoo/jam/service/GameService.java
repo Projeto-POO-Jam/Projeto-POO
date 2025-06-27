@@ -5,6 +5,7 @@ import com.projetopoo.jam.dto.game.GameResponseDTO;
 import com.projetopoo.jam.dto.game.GameResquestDTO;
 import com.projetopoo.jam.dto.game.GameSummaryDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.model.*;
 
 import com.projetopoo.jam.repository.*;
@@ -96,7 +97,7 @@ public class GameService {
     }
 
     @Transactional
-    public GameResponseDTO findGame(Long gameId) {
+    public GameResponseDTO findGame(Long gameId, String identifier) {
         Optional<Game> optionalGame = gameRepository.findByGameId(gameId);
         if (optionalGame.isEmpty()) {
             throw new EntityNotFoundException("Game com o ID " + gameId + " não encontrado.");
@@ -108,8 +109,10 @@ public class GameService {
             throw new EntityNotFoundException("Incrição com o GameID " + gameId + " não encontrado.");
         }
 
-        UserResponseDTO userResponseDTO = modelMapper.map(subcribe.get().getSubscribeUser(), UserResponseDTO.class);
-        gameResponse.setUserResponseDTO(userResponseDTO);
+        UserWithCurrentResponseDTO userWithCurrentResponseDTO = modelMapper.map(subcribe.get().getSubscribeUser(), UserWithCurrentResponseDTO.class);
+        User user = userRepository.findByIdentifier(identifier);
+        userWithCurrentResponseDTO.setUserCurrent(user.getUserId().equals(userWithCurrentResponseDTO.getUserId()));
+        gameResponse.setUserResponseDTO(userWithCurrentResponseDTO);
         return gameResponse;
     }
 
