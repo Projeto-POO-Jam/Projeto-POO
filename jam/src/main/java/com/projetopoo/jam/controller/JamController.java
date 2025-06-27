@@ -61,9 +61,9 @@ public class JamController {
                             schema = @Schema(implementation = JamResponse.class))),
             @ApiResponse(responseCode = "400", description = "Jam não encontrada", content = @Content)
     })
-    public ResponseEntity<?> findJam(@PathVariable Long jamId) {
+    public ResponseEntity<?> findJam(@PathVariable Long jamId, Principal principal) {
         try {
-            JamResponse jamResponse = jamService.findJam(jamId);
+            JamResponse jamResponse = jamService.findJam(jamId, principal.getName());
             return ResponseEntity.ok(jamResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

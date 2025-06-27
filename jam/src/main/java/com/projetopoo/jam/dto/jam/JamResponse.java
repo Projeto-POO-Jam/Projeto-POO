@@ -1,6 +1,7 @@
 package com.projetopoo.jam.dto.jam;
 
 import com.projetopoo.jam.dto.user.UserResponseDTO;
+import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.model.JamStatus;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class JamResponse {
     private String jamTextColor;
     private String jamLinkColor;
     private Long jamTotalSubscribers;
-    private UserResponseDTO jamUser;
+    private UserWithCurrentResponseDTO jamUser;
 
     public Long getJamId() {
         return jamId;
@@ -111,11 +112,11 @@ public class JamResponse {
         this.jamTotalSubscribers = jamTotalSubscribers;
     }
 
-    public UserResponseDTO getJamUser() {
+    public UserWithCurrentResponseDTO getJamUser() {
         return jamUser;
     }
 
-    public void setJamUser(UserResponseDTO jamUser) {
+    public void setJamUser(UserWithCurrentResponseDTO jamUser) {
         this.jamUser = jamUser;
     }
 
