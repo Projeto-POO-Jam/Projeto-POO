@@ -2,7 +2,9 @@ export function registerFilePondPlugins() {
     FilePond.registerPlugin(
         FilePondPluginFileValidateType,
         FilePondPluginImageExifOrientation,
-        FilePondPluginImagePreview
+        FilePondPluginImagePreview,
+
+        FilePondPluginFilePoster
     );
 }
 

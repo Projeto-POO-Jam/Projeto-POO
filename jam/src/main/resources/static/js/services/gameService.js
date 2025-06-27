@@ -40,3 +40,14 @@ export function fetchTotalVotes(gameId) {
     return apiRequest('GET', `api/votes/total/${gameId}`)
         .then(({ data }) => data);
 }
+
+/**
+ * Busca o dados para preencher form updateGame.
+ * @param {string|number} gameId - O ID do game.
+ * @returns {Promise<object>} - Uma promessa que resolve os dados do jogo.
+ */
+export function fetchDadoFormUpdate(gameId) {
+    return apiRequest('GET', `api/games/${gameId}`)
+        .then(({ data }) => data);
+}
+

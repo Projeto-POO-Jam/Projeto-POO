@@ -33,6 +33,10 @@ public class PageController {
         return "pages/game/viewGame";
     }
 
+    @GetMapping("/updateGame/{id}")
+    public String updateGame(@PathVariable Long id) {
+        return "pages/game/updateGame";
+    }
 
     @GetMapping("/login")
     public String login() {

@@ -22,16 +22,18 @@ export function initializeGameForm(config) {
 
     const pondInstances = {};
 
-    //Inicializa a instância da FOTO com suas opções específicas
+    // Inicializa a instância da foto, adicionando a propriedade 'server'
     pondInstances.gamePhoto = createFilePondInstance('#gamePhoto', {
         labelIdle: `Arraste a <strong>imagem de capa</strong> ou <span class="filepond--label-action">Procure</span>`,
+        server: {}
     });
 
     //Inicializa a instância do arquivo do jogo com suas opções específicas
     pondInstances.gameFile = createFilePondInstance('#gameFile', {
         labelIdle: `Arraste o <strong>arquivo do jogo (.rar)</strong> ou <span class="filepond--label-action">Procure</span>`,
         stylePanelAspectRatio: '0.1',
-        acceptedFileTypes: null
+        acceptedFileTypes: null,
+        server: {}
     });
 
     if (pondInstances.gameFile) {
@@ -53,10 +55,6 @@ export function initializeGameForm(config) {
             }
         });
     }
-
-    //Configura a Validação
-    const form = $('#gameForm');
-    const submitButton = $('#submitButton');
 
     const validationRules = {
         gameTitle: [
@@ -103,6 +101,9 @@ export function initializeGameForm(config) {
     setupValidation(validationRules);
 
     //Envio do Formulário
+    const form = $('#gameForm');
+    const submitButton = $('#submitButton');
+
     form.on('submit', async (e) => {
         e.preventDefault();
         if (!isFormValid(validationRules)) {
@@ -111,10 +112,27 @@ export function initializeGameForm(config) {
         }
 
         submitButton.prop('disabled', true).text('Enviando...');
-        const formData = new FormData(form[0]); //Pega todos os campos do form de uma vez
 
-        if (config.entityId) {
+        const formData = new FormData();
+
+        //Adiciona os dados de configuração
+        if (config.mode === 'create' && config.entityId) {
             formData.append('jamId', config.entityId);
+        }
+
+        formData.append('gameTitle', $('#gameTitle').val());
+        formData.append('gameDescription', $('#gameDescription').val());
+        formData.append('gameContent', $('#gameContent').summernote('code'));
+
+
+        const photoPond = pondInstances.gamePhoto;
+        if (photoPond && photoPond.getFiles().length > 0 && photoPond.getFile().origin === 1) {
+            formData.append('gamePhoto', photoPond.getFile().file);
+        }
+
+        const filePond = pondInstances.gameFile;
+        if (filePond && filePond.getFiles().length > 0 && filePond.getFile().origin === 1) {
+            formData.append('gameFile', filePond.getFile().file);
         }
 
         try {
@@ -127,6 +145,5 @@ export function initializeGameForm(config) {
         }
     });
 
-    //Retorna as instâncias do pond para que a página de edição possa usá-las
     return pondInstances;
 }

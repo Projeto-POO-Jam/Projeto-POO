@@ -10,7 +10,7 @@ $(function() {
     initializeGameForm({
         mode: 'create',
         method: 'POST',
-        apiUrl: '/api/games',
+        apiUrl: 'api/games',
         entityId: jamId,
         redirectUrl: `/jams/${jamId}`
     });
