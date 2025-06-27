@@ -18,6 +18,7 @@ $(function() {
     const commentInput = $('#comment-user-input');
     const sendCommentBtn = $('#send-comment-btn');
     const userCommentIcon = $('.post-comment .icone-actor-comments');
+    let activeUser = null;
 
     applySkeleton(root);
 
@@ -37,6 +38,11 @@ $(function() {
     const commentsUpdateEventName = `comments-update-${gameId}`;
     stream.addEventListener(commentsUpdateEventName, (e) =>{
         const newComment = JSON.parse(e.data);
+
+        //Verifique se o novo comentário é do usuário ativo
+        if (activeUser && newComment.commentUser && newComment.commentUser.userId === activeUser.userId) {
+            newComment.commentUser.userCurrent = true;
+        }
 
         if(commentsContainer.find('p.not-comments').length > 0){
             commentsContainer.empty();
@@ -120,6 +126,7 @@ $(function() {
         fetchComments(gameId)
     )
         .done((gameData, likeStatus, voteCount, currentUser, comments) => {
+            activeUser = currentUser;
 
             //Preenche os dados do game
             bindDataFields(gameData, root);
