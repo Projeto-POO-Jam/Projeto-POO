@@ -30,7 +30,7 @@ function populateCard(card, game) {
     if (game.gamePhoto) {
         image.attr('src', game.gamePhoto);
     } else {
-        image.attr('src', '../../../../img/imgCardGamePadrao.jpg');
+        image.attr('src', '../../../../img/imgCardGamePadrao.png');
     }
 
     card.attr('href', `/viewGame/${game.gameId}`);

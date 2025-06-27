@@ -10,11 +10,52 @@
             <div class="card-game">
                 <form class="form-game" id="gameForm" method="post" enctype="multipart/form-data" novalidate>
                     <div class="title-auth">
-                        <h1>Crie sua Jam</h1>
-                        <p>Preencha os campos abaixo para criar sua Jam</p>
+                        <h1>Crie seu Jogo</h1>
+                        <p>Preencha os campos abaixo para criar seu Jogo</p>
                     </div>
 
-                    <div th:replace="~{fragments/formFieldsGame :: fields}"></div>
+                    <div th:replace="~{fragments/formComponents :: formInput(
+                        id='gameTitle',
+                        name='gameTitle',
+                        type='text',
+                        icon=null,
+                        placeholder=null,
+                        labelText='Titulo do Jogo',
+                        inputClass=null,
+                        dataField='gameTitle'
+                    )}"></div>
+
+                    <div th:replace="~{fragments/formComponents :: formInput(
+                        id='gameDescription',
+                        name='gameDescription',
+                        type='text',
+                        icon=null,
+                        placeholder=null,
+                        labelText='Descrição',
+                        inputClass=null,
+                        dataField='gameDescription'
+                    )}"></div>
+
+                    <div class="form-group form-group-jam">
+                        <label for="gameContent" class="label-input-padrao">Conteúdo da Jam (HTML livre)</label>
+                        <textarea id="gameContent" name="gameContent" data-field="gameContent"></textarea>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label class="label-input-padrao">Imagem Capa</label>
+                        <input type="file" class="filepond" name="gamePhoto" id="gamePhoto"/>
+                        <p id="gamePhotoError" class="error-message img-form-group-game"></p>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label class="label-input-padrao">Enviar Game</label>
+                        <input type="file" class="filepond" name="gameFile" id="gameFile"/>
+                        <p id="gameFileError" class="error-message"></p>
+                    </div>
+
+                    <button id="submitButton" type="submit" class="submit-button">
+                        Postar Game
+                    </button>
                 </form>
             </div>
         </section>

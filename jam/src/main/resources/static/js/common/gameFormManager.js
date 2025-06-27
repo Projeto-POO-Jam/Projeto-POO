@@ -84,9 +84,9 @@ export function initializeGameForm(config) {
                         return true;
                     }
 
-                    return file.file.name.toLowerCase().endsWith('.rar');
+                    return file.file.name.toLowerCase().endsWith('.zip');
                 },
-                message: 'O tipo de arquivo é inválido. Apenas .rar é permitido.'
+                message: 'O tipo de arquivo é inválido. Apenas .zip é permitido.'
             }
         ]
     };
@@ -118,12 +118,13 @@ export function initializeGameForm(config) {
         //Adiciona os dados de configuração
         if (config.mode === 'create' && config.entityId) {
             formData.append('jamId', config.entityId);
+        } else if (config.mode === 'edit' && config.entityId) {
+            formData.append('gameId', config.entityId);
         }
 
         formData.append('gameTitle', $('#gameTitle').val());
         formData.append('gameDescription', $('#gameDescription').val());
         formData.append('gameContent', $('#gameContent').summernote('code'));
-
 
         const photoPond = pondInstances.gamePhoto;
         if (photoPond && photoPond.getFiles().length > 0 && photoPond.getFile().origin === 1) {

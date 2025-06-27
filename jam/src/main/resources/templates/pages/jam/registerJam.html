@@ -22,7 +22,8 @@
                             icon=null,
                             placeholder=null,
                             labelText='Nome da Jam',
-                            inputClass=null
+                            inputClass=null,
+                            dataField=null
                         )}"></div>
 
                     <div th:replace="~{fragments/formComponents.html :: formInput(
@@ -32,7 +33,8 @@
                             icon=null,
                             placeholder=null,
                             labelText='Descrição da Jam',
-                            inputClass=null
+                            inputClass=null,
+                            dataField=null
                         )}"></div>
 
                     <div class="grup-inputs">
@@ -43,7 +45,8 @@
                            icon=null,
                            placeholder=null,
                            labelText='Data início',
-                           inputClass='calendario-custom'
+                           inputClass='calendario-custom',
+                           dataField=null
                         )}"></div>
 
                         <div th:replace="~{fragments/formComponents.html :: formInput(
@@ -53,7 +56,8 @@
                             icon=null,
                             placeholder=null,
                             labelText='Data final',
-                            inputClass='calendario-custom'
+                            inputClass='calendario-custom',
+                            dataField=null
                         )}"></div>
                     </div>
 
