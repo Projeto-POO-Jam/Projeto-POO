@@ -3,6 +3,7 @@ package com.projetopoo.jam.controller;
 import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.game.GameResponseDTO;
 import com.projetopoo.jam.dto.game.GameResquestDTO;
+import com.projetopoo.jam.dto.game.GameUpdateResquestDTO;
 import com.projetopoo.jam.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -141,11 +142,11 @@ public class GameController {
     }
   
     @PutMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<?> updateGame(GameResquestDTO gameRequestDTO, Principal principal) {
+    public ResponseEntity<?> updateGame(GameUpdateResquestDTO gameUpdateResquestDTO, Principal principal) {
         try {
-            gameService.updateGame(gameRequestDTO, principal.getName());
+            gameService.updateGame(gameUpdateResquestDTO, principal.getName());
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException | IOException e) {
+        } catch (IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());

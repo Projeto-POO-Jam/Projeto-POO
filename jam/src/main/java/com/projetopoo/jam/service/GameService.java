@@ -1,9 +1,6 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
-import com.projetopoo.jam.dto.game.GameResponseDTO;
-import com.projetopoo.jam.dto.game.GameResquestDTO;
-import com.projetopoo.jam.dto.game.GameSummaryDTO;
+import com.projetopoo.jam.dto.game.*;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.model.*;
@@ -71,10 +68,9 @@ public class GameService {
                     throw new IllegalArgumentException("Jogo já cadastrado ");
                 }
                 else{
-                    String uuid = UUID.randomUUID().toString();
-                    game.setGamePhoto(ImageUtil.createImage(gameResquestDTO.getGamePhoto(), UPLOAD_DIRECTORY + "img/" + uuid, "/upload/game/img/" + uuid + "/"));
+                    game.setGamePhoto(ImageUtil.createImage(gameResquestDTO.getGamePhoto(), UPLOAD_DIRECTORY + "img/", "/upload/game/img/"));
 
-                    uuid = UUID.randomUUID().toString();
+                    String uuid = UUID.randomUUID().toString();
                     game.setGameFile(ImageUtil.createImage(gameResquestDTO.getGameFile(), UPLOAD_DIRECTORY + "file/" + uuid, "/upload/game/file/" + uuid + "/"));
 
                     uuid = UUID.randomUUID().toString();
@@ -162,67 +158,58 @@ public class GameService {
     }
 
     @Transactional
-    public void updateGame(GameResquestDTO gameRequestDTO, String identifier) throws IOException {
-        //Game game = modelMapper.map(gameRequestDTO, Game.class);
+    public void updateGame(GameUpdateResquestDTO gameUpdateResquestDTO, String identifier) throws IOException {
         User user = userRepository.findByIdentifier(identifier);
-        Optional<Jam> jam = jamRepository.findByJamId(gameRequestDTO.getJamId());
 
-        if(jam.isPresent()) {
-            Optional<Subscribe> subscribe = subscribeRepository.findBySubscribeUserAndSubscribeJam(user, jam.get());
-            if (subscribe.isPresent()) {
-                Game existingGame = subscribe.get().getSubscribeGame();
-                if (existingGame != null) {
-                    if (gameRequestDTO.getGamePhoto() != null && !gameRequestDTO.getGamePhoto().isEmpty()) {
-                        String oldPhotoPath = existingGame.getGamePhoto();
+        Optional<Game> optionalGame = gameRepository.findByGameId(gameUpdateResquestDTO.getGameId());
+        if(optionalGame.isPresent()){
+            Game existingGame = optionalGame.get();
+            if(user.getUserId().equals(existingGame.getGameSubscribe().getSubscribeUser().getUserId())) {
+                if (gameUpdateResquestDTO.getGamePhoto() != null && !gameUpdateResquestDTO.getGamePhoto().isEmpty()) {
+                    String oldPhotoPath = existingGame.getGamePhoto();
 
-                        String uuid = UUID.randomUUID().toString();
-                        String directoryCover = UPLOAD_DIRECTORY + "img/" + uuid;
-                        existingGame.setGamePhoto(ImageUtil.createImage(gameRequestDTO.getGamePhoto(), directoryCover, "/upload/game/img/" + uuid + "/"));
+                    String directoryCover = UPLOAD_DIRECTORY + "img/";
+                    existingGame.setGamePhoto(ImageUtil.createImage(gameUpdateResquestDTO.getGamePhoto(), directoryCover, "/upload/game/img/"));
 
-                        ImageUtil.deleteImage(oldPhotoPath);
-                        gameRequestDTO.setGamePhoto(null);
-                    }
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    gameUpdateResquestDTO.setGamePhoto(null);
+                }
 
-                    if (gameRequestDTO.getGameFile() != null && !gameRequestDTO.getGameFile().isEmpty()) {
-                        String oldPhotoPath = existingGame.getGameFile();
-
-                        String uuid = UUID.randomUUID().toString();
-                        String directoryCover = UPLOAD_DIRECTORY + "file/" + uuid;
-                        existingGame.setGameFile(ImageUtil.createImage(gameRequestDTO.getGameFile(), directoryCover, "/upload/game/file/" + uuid + "/"));
-
-                        ImageUtil.deleteImage(oldPhotoPath);
-                        ImageUtil.deleteDirectory(oldPhotoPath);
-
-                        gameRequestDTO.setGameFile(null);
-                    }
-
-                    gameRequestDTO.setJamId(null);
-                    modelMapper.map(gameRequestDTO, existingGame);
+                if (gameUpdateResquestDTO.getGameFile() != null && !gameUpdateResquestDTO.getGameFile().isEmpty()) {
+                    String oldPhotoPath = existingGame.getGameFile();
 
                     String uuid = UUID.randomUUID().toString();
-                    existingGame.setGameToken(uuid);
+                    String directoryCover = UPLOAD_DIRECTORY + "file/" + uuid;
+                    existingGame.setGameFile(ImageUtil.createImage(gameUpdateResquestDTO.getGameFile(), directoryCover, "/upload/game/file/" + uuid + "/"));
 
-                    gameRepository.save(existingGame);
+                    ImageUtil.deleteImage(oldPhotoPath);
+                    ImageUtil.deleteDirectory(oldPhotoPath);
 
-                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                        @Override
-                        public void afterCommit() {
-                            gameProducerService.scheduleGameStatusUpdate(existingGame.getGameId(), uuid);
-                        }
-                    });
-
-
-                } else {
-                    throw new EntityNotFoundException("Game não encontrada.");
+                    gameUpdateResquestDTO.setGameFile(null);
                 }
+                modelMapper.map(gameUpdateResquestDTO, existingGame);
+
+                String uuid = UUID.randomUUID().toString();
+                existingGame.setGameToken(uuid);
+
+                gameRepository.save(existingGame);
+
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        gameProducerService.scheduleGameStatusUpdate(existingGame.getGameId(), uuid);
+                    }
+                });
             } else {
-                throw new EntityNotFoundException("Inscrição não encontrada.");
+                throw new AccessDeniedException("O usuário não tem permissão para editar esse jogo");
             }
 
+
         } else {
-            throw new EntityNotFoundException("Jam com o ID " + gameRequestDTO.getJamId() + " não encontrada.");
+            throw new EntityNotFoundException("Game com o ID " + gameUpdateResquestDTO.getGameId() + " não encontrada.");
         }
     }
+
 
     @Transactional
     public GamePaginatedResponseDTO findGameListByUserIdVote(Long userId, int offset, int limit){
@@ -234,4 +221,5 @@ public class GameService {
 
         return addGameTotal(gamePage);
     }
+
 }
