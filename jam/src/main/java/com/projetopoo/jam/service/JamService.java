@@ -244,4 +244,16 @@ public class JamService {
 
         return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
     }
+
+    @Transactional
+    public JamPaginatedResponseDTO findMyJamListByUserId(Long userId, int offset, int limit){
+        int pageNumber = offset / limit;
+
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamId"));
+
+        Page<Jam> jamPage = jamRepository.findByUserIdOrderByJamSubscribes(userId,pageable);
+
+        return getJamPaginatedResponseDTO(jamPage);
+    }
+
 }
