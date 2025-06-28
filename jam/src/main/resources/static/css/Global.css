@@ -14,7 +14,7 @@
 
     .dark {
         --text: var(--white);
-        --blue: #5865f2;
+        --blue: #4854ca;
         --grey: #3b3b3b;
         --background-menu: var(--grey);
         --background: var(--black);

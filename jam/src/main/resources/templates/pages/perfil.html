@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: Head('Perfil do Usuário')}"></head>
+<body>
+    <div th:replace="~{fragments/menu :: siteMenu}"></div>
+
+    <main class="container-perfil">
+        <section class="details-user-perfil">
+            <div class="edit-button" style="display: none;">
+                <span class="material-symbols-outlined">edit</span>
+            </div>
+            <div class="info-perfil">
+                <div id="img-user-perfil">
+                    <img
+                        data-field="userPhoto"
+                        data-default="/img/icone-padrao.png"
+                        alt="Foto do usuário"
+                        class="skeleton"
+                    />
+                </div>
+
+                <div class="details-perfil">
+                    <h1 data-field="userName" class="skeleton"></h1>
+                    <div class="links-perfil">
+                        <a id="linkedin-link" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                        <a id="github-link" target="_blank"><i class="fa-brands fa-github"></i></a>
+                        <a id="instagram-link" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                        <a id="facebook-link" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="details-account-perfil">
+            <div class="menu-perfil">
+                <button data-tab="inicio" class="active">Inicio</button>
+                <button data-tab="games">Games</button>
+                <button data-tab="jams-criadas">Jams Criadas</button>
+                <button data-tab="jams-inscritas">Jams Inscritas</button>
+                <button data-tab="jogos-curtidos">Jogos Curtidos</button>
+            </div>
+
+            <div class="infos-perfil">
+                <div id="tab-content-perfil">
+                    <div id="tab-inicio" class="tab-pane-perfil active">
+                        <div th:replace="~{fragments/perfil/inicio :: conteudoInicio}"></div>
+                    </div>
+                    <div id="tab-games" class="tab-pane-perfil" style="display: none;">
+                        <div th:replace="~{fragments/perfil/games :: conteudoGames}"></div>
+                    </div>
+                    <div id="tab-jams-criadas" class="tab-pane-perfil" style="display: none;">
+                        <div th:replace="~{fragments/perfil/jamsCriadas :: conteudoJamsCriadas}"></div>
+                    </div>
+                    <div id="tab-jams-inscritas" class="tab-pane-perfil" style="display: none;">
+                        <div th:replace="~{fragments/perfil/jamsInscritas :: conteudoJamsInscritas}"></div>
+                    </div>
+                    <div id="tab-jogos-curtidos" class="tab-pane-perfil" style="display: none;">
+                        <div th:replace="~{fragments/perfil/jogosCurtidos :: conteudoJogosCurtidos}"></div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <div th:replace="~{fragments/perfil/modalEdit :: modal-edit-perfil}"></div>
+
+    <script th:src="@{/js/common/theme.js}"></script>
+    <script type="module" th:src="@{/js/pages/perfil/perfil.js}"></script>
+</body>
+</html>

@@ -30,7 +30,7 @@ $(async function() {
     const root = '.container-register-jam';
 
     if (!jamId) {
-        showError("ID da Jam não encontrado na URL!");
+        window.location.href = '/404';
         return;
     }
 
@@ -109,7 +109,7 @@ $(async function() {
 
     } catch (error) {
         console.error("Erro no processo de edição da Jam:", error);
-        showError("Falha ao carregar os dados da Jam para edição.");
+        window.location.href = '/404';
     } finally {
         removeSkeleton(root);
     }

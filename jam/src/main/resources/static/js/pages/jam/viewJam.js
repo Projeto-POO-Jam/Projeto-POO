@@ -119,13 +119,14 @@ $(async function() {
             rankButton.prop('disabled', true);
             rankButton.addClass('disabled');
         }
+
         //Inicializar Aba
         initGeral(data, jamId);
         initGames(data, jamId);
 
     }catch (err){
         console.error('Erro ao carregar Jam:', err);
-        showError('Não foi possível carregar esta Jam.');
+        window.location.href = '/404';
     }finally {
         setTimeout(() => {
             removeSkeleton(root);

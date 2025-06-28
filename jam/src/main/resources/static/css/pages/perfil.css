@@ -1,0 +1,350 @@
+main .details-user-perfil {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/img/background-white.png");
+}
+
+html.dark main .details-user-perfil {
+    background-image: url("/img/background-dark.png");
+}
+
+.details-user-perfil{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 50vh;
+}
+
+.edit-button {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+}
+
+.edit-button span{
+    padding: 9px;
+    border-radius: 1rem;
+    font-size: 30px;
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+}
+
+.edit-button span:hover {
+    transition: 0.3s;
+    background-color: rgba(85, 85, 85, 0.5);
+}
+
+#img-user-perfil {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+    overflow: hidden;
+}
+
+#img-user-perfil img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    object-fit: cover;
+    user-select: none;
+}
+
+#img-user-perfil img.skeleton {
+    background-color: #555;
+}
+
+#img-user-perfil img.skeleton::after {
+    border-radius: 100%;
+}
+
+.info-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.links-perfil {
+    display: flex;
+    gap: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.links-perfil a i {
+    color: var(--text);
+    font-size: 2rem;
+    text-decoration: none;
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.links-perfil a i:hover{
+    transition: 0.3s;
+    color: var(--blue);
+}
+
+.details-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* modal */
+.modal-container::-webkit-scrollbar {
+    width: 12px;
+}
+
+.modal-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+    background-color: var(--background);
+    border-radius: 1rem;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.modal-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--background) transparent;
+}
+
+.container-modal-edit-perfil{
+    width: 60%;
+    height: 100%;
+    background-color: var(--background-card);
+    border-radius: 1rem;
+}
+
+.grup2, .grup1{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.grup2{
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.title-foto-perfil{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.title-foto-perfil h1{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.aling-modal{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.button-change-password button{
+    padding: 13px;
+    font-size: 16px;
+    margin-top: 1rem;
+    width: 12rem;
+    background-color: var(--blue);
+    cursor: pointer;
+    user-select: none;
+    border-radius: 0.5rem;
+    border: none;
+    color: var(--white);
+}
+
+.button-change-password button:hover{
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.grup1:after,
+.grup2:after{
+    content: '';
+    margin-top: 2rem;
+    height: 2px;
+    width: 100%;
+    background-color: var(--blue);
+}
+
+.input-and-icons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background: var(--background-card);
+    padding: 2rem;
+    border-radius: 0.7rem;
+    width: 60%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--grey);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+
+.title-foto {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.input-and-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.input-and-icons i {
+    font-size: 1.8rem;
+    color: var(--blue);
+}
+
+.input-and-icons .form-group {
+    width: 100%;
+}
+
+.form-group-perfil{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title-foto-perfil-grup2 h1{
+    font-size: 18px;
+    font-weight: 400;
+}
+
+
+.details-account-perfil{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.menu-perfil{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid var(--background-card);
+}
+
+.menu-perfil button{
+    background-color: transparent;
+    border: none;
+    margin: 1rem 2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.menu-perfil button.active,
+.menu-perfil button:hover {
+    opacity: 1;
+}
+
+.menu-perfil button.active::after {
+    transform: scaleX(1);
+}
+
+#tab-content-perfil {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    align-self: flex-start;
+    margin: 1rem;
+    width: 75%;
+}
+
+.tab-pane {
+    width: 100%;
+}
+
+.aba-perfil-unic,
+.tab-pane-perfil{
+    width: 100%;
+}
+
+.details-list-inicio,
+.tab-pane-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+
+.list-cards-perfil{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: stretch;
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.title-game-perfil{
+    color: var(--text);
+}
+
+.infos-perfil{
+    display: flex  ;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
