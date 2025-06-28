@@ -11,22 +11,25 @@ export function fetchUserData(userId) {
 }
 
 /**
- * Busca os jogos criados por um usuário.
+ * Busca os jogos criados por um usuário com paginação.
  * @param {string|number} userId - O ID do usuário.
+ * @param {number} limit - A quantidade de itens por página.
+ * @param {number} offset - O deslocamento para a paginação.
  * @returns {Promise<object>}
  */
-export function fetchUserCreatedGames(userId, limit = 4) {
-    return apiRequest('GET', `api/games/user?userId=${userId}&offset=0&limit=${limit}`)
+export function fetchUserCreatedGames(userId, limit = 4, offset = 0) { // Adiciona o offset
+    return apiRequest('GET', `api/games/user?userId=${userId}&offset=${offset}&limit=${limit}`)
         .then(({ data }) => data);
 }
-
 /**
- * Busca as Jams criadas por um usuário.
+ * Busca as Jams criadas por um usuário com paginação.
  * @param {string|number} userId - O ID do usuário.
+ * @param {number} limit - A quantidade de itens por página.
+ * @param {number} offset - O deslocamento para a paginação.
  * @returns {Promise<object>}
  */
-export function fetchUserCreatedJams(userId, limit = 4) {
-    return apiRequest('GET', `api/jams/createUser?userId=${userId}&offset=0&limit=${limit}`)
+export function fetchUserCreatedJams(userId, limit = 4, offset = 0) {
+    return apiRequest('GET', `api/jams/createUser?userId=${userId}&offset=${offset}&limit=${limit}`)
         .then(({ data }) => data);
 }
 
@@ -45,9 +48,11 @@ export function fetchUserRegisteredJams(userId, limit = 4, offset = 0) {
 /**
  * Busca os jogos que um usuário curtiu.
  * @param {string|number} userId - O ID do usuário.
+ * @param {number} limit - A quantidade de itens por página.
+ * @param {number} offset - O deslocamento para a paginação.
  * @returns {Promise<object>}
  */
-export function fetchUserLikedGames(userId, limit = 4) {
+export function fetchUserLikedGames(userId, limit = 4, offset = 0) {
     return apiRequest('GET', `api/games/user/vote?userId=${userId}&offset=0&limit=${limit}`)
         .then(({ data }) => data);
 }
