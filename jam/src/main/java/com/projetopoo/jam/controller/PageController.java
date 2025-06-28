@@ -49,7 +49,7 @@ public class PageController {
     }
 
     @GetMapping("/perfil/{id}")
-    public String perfil(@PathVariable Long id) {
+    public String viewPerfil(@PathVariable Long id) {
         return "pages/perfil";
     }
 

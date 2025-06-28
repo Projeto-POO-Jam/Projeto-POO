@@ -10,18 +10,19 @@ html.dark main.container-perfil {
 }
 
 .details-user-perfil{
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
-    height: 100%;
+    min-height: 50vh;
 }
 
-.edit-button{
-    width: 100%;
-    display: flex;
-    justify-content: end;
-    align-items: end;
+.edit-button {
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
 }
 
 .edit-button span{
@@ -29,21 +30,37 @@ html.dark main.container-perfil {
     border-radius: 1rem;
     font-size: 30px;
     color: var(--text);
-    margin: 1rem;
     cursor: pointer;
     user-select: none;
 }
 
-.edit-button span:hover{
+.edit-button span:hover {
     transition: 0.3s;
-    background-color: #555;
+    background-color: rgba(85, 85, 85, 0.5);
 }
 
-#img-user-perfil img{
+#img-user-perfil {
     width: 10rem;
     height: 10rem;
     border-radius: 100%;
+    overflow: hidden;
+}
+
+#img-user-perfil img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    object-fit: cover;
     user-select: none;
+}
+
+#img-user-perfil img.skeleton {
+    background-color: #555;
+}
+
+#img-user-perfil img.skeleton::after {
+    border-radius: 100%;
 }
 
 .info-perfil{
@@ -80,4 +97,171 @@ html.dark main.container-perfil {
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
+}
+
+/* modal */
+.modal-container::-webkit-scrollbar {
+    width: 12px;
+}
+
+.modal-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+    background-color: var(--background);
+    border-radius: 1rem;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+.modal-container {
+    scrollbar-width: thin;
+    scrollbar-color: var(--background) transparent;
+}
+
+.container-modal-edit-perfil{
+    width: 60%;
+    height: 100%;
+    background-color: var(--background-card);
+    border-radius: 1rem;
+}
+
+.grup2, .grup1{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.grup2{
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.title-foto-perfil{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.title-foto-perfil h1{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.aling-modal{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.button-change-password button{
+    padding: 13px;
+    font-size: 16px;
+    margin-top: 1rem;
+    width: 12rem;
+    background-color: var(--blue);
+    cursor: pointer;
+    user-select: none;
+    border-radius: 0.5rem;
+    border: none;
+    color: var(--white);
+}
+
+.button-change-password button:hover{
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.grup1:after,
+.grup2:after{
+    content: '';
+    margin-top: 2rem;
+    height: 2px;
+    width: 100%;
+    background-color: var(--blue);
+}
+
+.input-and-icons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background: var(--background-card);
+    padding: 2rem;
+    border-radius: 0.7rem;
+    width: 60%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--grey);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+
+.title-foto {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.input-and-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.input-and-icons i {
+    font-size: 1.8rem;
+    color: var(--blue);
+}
+
+.input-and-icons .form-group {
+    width: 100%;
+}
+
+.form-group-perfil{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title-foto-perfil-grup2 h1{
+    font-size: 18px;
+    font-weight: 400;
 }
