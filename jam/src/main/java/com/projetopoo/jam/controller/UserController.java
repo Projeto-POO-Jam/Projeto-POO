@@ -65,7 +65,7 @@ public class UserController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Usuário não encontrado", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
     public ResponseEntity<?> findUserId(@NotNull() @PathVariable Long userId, Principal principal) {
         UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
@@ -78,11 +78,8 @@ public class UserController {
             description = "Cria um novo usuário no sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
-            @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
+            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> createUser(UserInsertRequestDTO userInsertRequestDTO) throws IOException {
         userService.createUser(userInsertRequestDTO);
@@ -95,11 +92,7 @@ public class UserController {
             description = "Atualiza os detalhes de uma Jam. Apenas o proprio usuário pode editá-lo. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário alterado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
-            @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
+            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)", content = @Content)
     })
     public ResponseEntity<?> updateUser(UserRequestDTO userRequestDTO, Principal principal) throws IOException {
         userService.updateUser(userRequestDTO, principal.getName());
@@ -112,7 +105,8 @@ public class UserController {
             description = "Ele poderá alterar a senha atual para uma nova")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Senha invalida", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Senha incorreta", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> updatePassword(@Valid UserPasswordRequestDTO userPasswordRequestDTO, Principal principal) {
         userService.updatePassword(userPasswordRequestDTO, principal.getName());

@@ -50,7 +50,7 @@ public class JamController {
             description = "Registra uma nova Jam na plataforma. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Jam criada com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida ou erro no upload da imagem", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> createJam(JamRequestDTO jamRequestDTO, Principal principal) throws IOException {
         jamService.createJam(jamRequestDTO, principal.getName());
@@ -68,7 +68,7 @@ public class JamController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = JamResponse.class))),
-            @ApiResponse(responseCode = "400", description = "Jam não encontrada", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
     })
     public ResponseEntity<?> findJam(@NotNull() @PathVariable Long jamId, Principal principal) {
         JamResponse jamResponse = jamService.findJam(jamId, principal.getName());
@@ -85,8 +85,7 @@ public class JamController {
                     description = "Jams do mês listadas com sucesso",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = JamPaginatedResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
+                            schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> listJams(
             @NotNull() @Parameter(example = "03-2025") @RequestParam String month,
@@ -106,8 +105,7 @@ public class JamController {
                     description = "Jams com maior numero de inscritos listadas com sucesso",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = JamPaginatedResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
+                            schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> bannerJams(@RequestParam(defaultValue = "6") int limit) {
         JamPaginatedResponseDTO response = jamService.findJamsBanner(limit);
@@ -125,9 +123,9 @@ public class JamController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = JamUpdateRequestDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
             @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor da Jam.", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> updateJam(@Valid JamUpdateRequestDTO jamUpdateRequestDTO, Principal principal) throws IOException {
         jamService.updateJam(jamUpdateRequestDTO, principal.getName());

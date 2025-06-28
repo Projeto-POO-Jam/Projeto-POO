@@ -4,6 +4,7 @@ import com.projetopoo.jam.dto.game.GamePaginatedResponseDTO;
 import com.projetopoo.jam.dto.game.GameResponseDTO;
 import com.projetopoo.jam.dto.game.GameRequestDTO;
 import com.projetopoo.jam.dto.game.GameUpdateRequestDTO;
+import com.projetopoo.jam.dto.jam.JamUpdateRequestDTO;
 import com.projetopoo.jam.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,7 +50,7 @@ public class GameController {
             description = "Cria um novo jogo vinculada a uma Jam. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Jogo criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida ou erro no upload de arquivos", content = @Content)
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> createGame(@Valid GameRequestDTO gameRequestDTO, Principal principal) throws IOException {
         gameService.createGame(gameRequestDTO, principal.getName());
@@ -132,8 +133,22 @@ public class GameController {
         GamePaginatedResponseDTO response = gameService.findGameCompleteList(offset, limit);
         return ResponseEntity.ok(response);
     }
-  
+
     @PutMapping(consumes = { "multipart/form-data" })
+    @Operation(
+            summary = "Atualiza um jogo existente",
+            description = "Atualiza os detalhes de um jogo. Apenas o criador do jogo pode editá-lo. Requer autenticação.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Jam atualizada com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = JamUpdateRequestDTO.class))),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor do jogo.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
+    })
     public ResponseEntity<?> updateGame(@Valid GameUpdateRequestDTO gameUpdateRequestDTO, Principal principal) throws IOException {
         gameService.updateGame(gameUpdateRequestDTO, principal.getName());
         return ResponseEntity.status(HttpStatus.OK).build();
