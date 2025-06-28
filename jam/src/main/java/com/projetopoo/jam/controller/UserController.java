@@ -4,7 +4,6 @@ import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserRequestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.service.UserService;
-import com.projetopoo.jam.exception.UserValidationException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,16 +11,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Classe para controlar os endpoints relacionados com usuários
@@ -31,6 +29,7 @@ import java.util.Map;
 @Tag(
         name = "User",
         description = "Endpoints relacionados aos usuários.")
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -69,13 +68,9 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Usuário não encontrado", content = @Content)
     })
-    public ResponseEntity<?> findUserId(@PathVariable Long userId, Principal principal) {
-        try {
-            UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
-            return ResponseEntity.ok(user);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> findUserId(@NotNull() @PathVariable Long userId, Principal principal) {
+        UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(consumes = { "multipart/form-data" })
@@ -90,18 +85,9 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> createUser(UserRequestDTO userRequestDTO) {
-        try {
-            userService.createUser(userRequestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> createUser(UserRequestDTO userRequestDTO) throws IOException {
+        userService.createUser(userRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(consumes = { "multipart/form-data" })
@@ -116,18 +102,9 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> updateUser(UserRequestDTO userRequestDTO, Principal principal) {
-        try{
-            userService.updateUser(userRequestDTO, principal.getName());
-            return ResponseEntity.ok().build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> updateUser(UserRequestDTO userRequestDTO, Principal principal) throws IOException {
+        userService.updateUser(userRequestDTO, principal.getName());
+        return ResponseEntity.ok().build();
     }
 
 }

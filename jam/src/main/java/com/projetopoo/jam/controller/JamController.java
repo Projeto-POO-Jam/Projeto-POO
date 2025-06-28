@@ -3,6 +3,7 @@ package com.projetopoo.jam.controller;
 import com.projetopoo.jam.dto.jam.JamPaginatedResponseDTO;
 import com.projetopoo.jam.dto.jam.JamRequestDTO;
 import com.projetopoo.jam.dto.jam.JamResponse;
+import com.projetopoo.jam.dto.jam.JamUpdateRequestDTO;
 import com.projetopoo.jam.service.JamService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,10 +13,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,6 +33,7 @@ import java.security.Principal;
 @Tag(
         name = "Jams",
         description = "Endpoints relacionados as Jams")
+@Validated
 public class JamController {
     private final JamService jamService;
 
@@ -49,13 +54,9 @@ public class JamController {
             @ApiResponse(responseCode = "201", description = "Jam criada com sucesso", content = @Content),
             @ApiResponse(responseCode = "400", description = "Requisição inválida ou erro no upload da imagem", content = @Content),
     })
-    public ResponseEntity<?> createJam(JamRequestDTO jamRequestDTO, Principal principal) {
-        try {
-            jamService.createJam(jamRequestDTO, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException | IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> createJam(JamRequestDTO jamRequestDTO, Principal principal) throws IOException {
+        jamService.createJam(jamRequestDTO, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{jamId}")
@@ -71,13 +72,9 @@ public class JamController {
                             schema = @Schema(implementation = JamResponse.class))),
             @ApiResponse(responseCode = "400", description = "Jam não encontrada", content = @Content)
     })
-    public ResponseEntity<?> findJam(@PathVariable Long jamId, Principal principal) {
-        try {
-            JamResponse jamResponse = jamService.findJam(jamId, principal.getName());
-            return ResponseEntity.ok(jamResponse);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> findJam(@NotNull() @PathVariable Long jamId, Principal principal) {
+        JamResponse jamResponse = jamService.findJam(jamId, principal.getName());
+        return ResponseEntity.ok(jamResponse);
     }
 
     @GetMapping("/list")
@@ -94,15 +91,11 @@ public class JamController {
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
     })
     public ResponseEntity<?> listJams(
-            @Parameter(example = "03-2025") @RequestParam String month,
+            @NotNull() @Parameter(example = "03-2025") @RequestParam String month,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            JamPaginatedResponseDTO response = jamService.findJamsList(month, offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        JamPaginatedResponseDTO response = jamService.findJamsList(month, offset, limit);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/banner")
@@ -119,12 +112,8 @@ public class JamController {
             @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
     })
     public ResponseEntity<?> bannerJams(@RequestParam(defaultValue = "6") int limit) {
-        try {
-            JamPaginatedResponseDTO response = jamService.findJamsBanner(limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        JamPaginatedResponseDTO response = jamService.findJamsBanner(limit);
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping(consumes = { "multipart/form-data" })
@@ -137,22 +126,14 @@ public class JamController {
                     description = "Jam atualizada com sucesso",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = JamRequestDTO.class))),
+                            schema = @Schema(implementation = JamUpdateRequestDTO.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos", content = @Content),
             @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor da Jam.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
     })
-    public ResponseEntity<?> updateJam(JamRequestDTO jamRequestDTO, Principal principal) {
-        try {
-            jamService.updateJam(jamRequestDTO, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException | IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> updateJam(@Valid JamUpdateRequestDTO jamUpdateRequestDTO, Principal principal) throws IOException {
+        jamService.updateJam(jamUpdateRequestDTO, principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/user")
@@ -168,15 +149,11 @@ public class JamController {
                             schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> findGameListByUserId(
-            @RequestParam Long userId,
+            @NotNull() @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            JamPaginatedResponseDTO response = jamService.findJamListByUserId(userId, offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        JamPaginatedResponseDTO response = jamService.findJamListByUserId(userId, offset, limit);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/createUser")
@@ -192,14 +169,10 @@ public class JamController {
                             schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> findJamListByUserId(
-            @RequestParam Long userId,
+            @NotNull() @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            JamPaginatedResponseDTO response = jamService.findMyJamListByUserId(userId, offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        JamPaginatedResponseDTO response = jamService.findMyJamListByUserId(userId, offset, limit);
+        return ResponseEntity.ok(response);
     }
 }

@@ -111,15 +111,15 @@ public class JamService {
 
     /**
      * Função para atualizar as informações sobre uma jam
-     * @param jamRequestDTO Novas informações sobre a jam
+     * @param jamUpdateRequestDTO Novas informações sobre a jam
      * @param identifier Identificador do usuário
      * @throws IOException Pode gerar exceção no caso de erro ao salvar alguma imagem
      */
     @Transactional
-    public void updateJam(JamRequestDTO jamRequestDTO, String identifier) throws IOException {
+    public void updateJam(JamUpdateRequestDTO jamUpdateRequestDTO, String identifier) throws IOException {
 
         // Verifica se a jam existe
-        Optional<Jam> optionalJam = jamRepository.findByJamId(jamRequestDTO.getJamId());
+        Optional<Jam> optionalJam = jamRepository.findByJamId(jamUpdateRequestDTO.getJamId());
         if (optionalJam.isPresent()) {
             Jam existingJam = optionalJam.get();
 
@@ -130,54 +130,54 @@ public class JamService {
             if(user.equals(existingJam.getJamUser())) {
 
                 //Verifica se as imagens mudaram e atualiza elas caso necessário
-                if (jamRequestDTO.getJamCover() != null && !jamRequestDTO.getJamCover().isEmpty()) {
+                if (jamUpdateRequestDTO.getJamCover() != null && !jamUpdateRequestDTO.getJamCover().isEmpty()) {
                     String oldPhotoPath = existingJam.getJamCover();
 
                     String uuid = UUID.randomUUID().toString();
                     String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/cover";
-                    existingJam.setJamCover(FileUtil.createFile(jamRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
+                    existingJam.setJamCover(FileUtil.createFile(jamUpdateRequestDTO.getJamCover(), directoryCover, "/upload/jam/" + uuid + "/cover/"));
 
                     FileUtil.deleteFile(oldPhotoPath);
-                    jamRequestDTO.setJamCover(null);
+                    jamUpdateRequestDTO.setJamCover(null);
                 }
 
-                if (jamRequestDTO.getJamWallpaper() != null && !jamRequestDTO.getJamWallpaper().isEmpty()) {
+                if (jamUpdateRequestDTO.getJamWallpaper() != null && !jamUpdateRequestDTO.getJamWallpaper().isEmpty()) {
                     String oldPhotoPath = existingJam.getJamWallpaper();
 
                     String uuid = UUID.randomUUID().toString();
                     String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/wallpaper";
-                    existingJam.setJamWallpaper(FileUtil.createFile(jamRequestDTO.getJamWallpaper(), directoryCover, "/upload/jam/" + uuid + "/wallpaper/"));
+                    existingJam.setJamWallpaper(FileUtil.createFile(jamUpdateRequestDTO.getJamWallpaper(), directoryCover, "/upload/jam/" + uuid + "/wallpaper/"));
 
                     FileUtil.deleteFile(oldPhotoPath);
-                    jamRequestDTO.setJamWallpaper(null);
+                    jamUpdateRequestDTO.setJamWallpaper(null);
                 }
 
-                if (jamRequestDTO.getJamBanner() != null && !jamRequestDTO.getJamBanner().isEmpty()) {
+                if (jamUpdateRequestDTO.getJamBanner() != null && !jamUpdateRequestDTO.getJamBanner().isEmpty()) {
                     String oldPhotoPath = existingJam.getJamBanner();
 
                     String uuid = UUID.randomUUID().toString();
                     String directoryCover = UPLOAD_DIRECTORY + "/" + uuid + "/banner";
-                    existingJam.setJamBanner(FileUtil.createFile(jamRequestDTO.getJamBanner(), directoryCover, "/upload/jam/" + uuid + "/banner/"));
+                    existingJam.setJamBanner(FileUtil.createFile(jamUpdateRequestDTO.getJamBanner(), directoryCover, "/upload/jam/" + uuid + "/banner/"));
 
                     FileUtil.deleteFile(oldPhotoPath);
-                    jamRequestDTO.setJamBanner(null);
+                    jamUpdateRequestDTO.setJamBanner(null);
                 }
 
-                // Verifica se houve atualização na data e hora  de inicio e fim e se é necessário mudar o status atual
+                // Verifica se houve atualização na data e hora de início e fim e se é necessário mudar o status atual
                 boolean updateDate = false;
                 LocalDateTime now = LocalDateTime.now();
 
-                if(jamRequestDTO.getJamStartDate() != null && !jamRequestDTO.getJamStartDate().isEqual(existingJam.getJamStartDate())) {
+                if(jamUpdateRequestDTO.getJamStartDate() != null && !jamUpdateRequestDTO.getJamStartDate().isEqual(existingJam.getJamStartDate())) {
                     updateDate = true;
-                    if(jamRequestDTO.getJamStartDate().isAfter(now)){
+                    if(jamUpdateRequestDTO.getJamStartDate().isAfter(now)){
                         existingJam.setJamStatus(JamStatus.SCHEDULED);
                     }
                 }
 
-                if(jamRequestDTO.getJamEndDate() != null && !jamRequestDTO.getJamEndDate().isEqual(existingJam.getJamEndDate())) {
+                if(jamUpdateRequestDTO.getJamEndDate() != null && !jamUpdateRequestDTO.getJamEndDate().isEqual(existingJam.getJamEndDate())) {
                     updateDate = true;
-                    if(jamRequestDTO.getJamEndDate().isAfter(now)){
-                        if(jamRequestDTO.getJamStartDate().isBefore(now)){
+                    if(jamUpdateRequestDTO.getJamEndDate().isAfter(now)){
+                        if(jamUpdateRequestDTO.getJamStartDate().isBefore(now)){
                             existingJam.setJamStatus(JamStatus.ACTIVE);
                         } else {
                             existingJam.setJamStatus(JamStatus.SCHEDULED);
@@ -192,7 +192,7 @@ public class JamService {
                 }
 
                 // Passa as informações recebidas para o formato de Jam
-                modelMapper.map(jamRequestDTO, existingJam);
+                modelMapper.map(jamUpdateRequestDTO, existingJam);
                 jamRepository.save(existingJam);
 
                 // Se for atualizada alguma data, reagenda as mudanças de status da jam
@@ -203,7 +203,7 @@ public class JamService {
                 throw new AccessDeniedException("Usuário não autorizado a alterar a jam.");
             }
         } else {
-            throw new EntityNotFoundException("Jam com o ID " + jamRequestDTO.getJamId() + " não encontrada.");
+            throw new EntityNotFoundException("Jam com o ID " + jamUpdateRequestDTO.getJamId() + " não encontrada.");
         }
     }
 

@@ -80,8 +80,10 @@ public class UserService {
         user.setUserPhoto(FileUtil.createFile(userRequestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
         user.setUserBanner(FileUtil.createFile(userRequestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
 
-        // Criptografa a senha
-        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+        // Criptografa a senha se ela não for nula
+        if (user.getUserPassword() != null) {
+            user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+        }
 
         // Salva o novo usuário
         userRepository.save(user);

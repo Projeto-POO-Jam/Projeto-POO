@@ -13,9 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -28,6 +31,7 @@ import java.security.Principal;
 @Tag(
         name = "Votes",
         description = "Endpoints relacionados aos votos em Jogos")
+@Validated
 public class VoteController {
     private final VoteService voteService;
 
@@ -51,13 +55,9 @@ public class VoteController {
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content)
     })
-    public ResponseEntity<?> findVote(@PathVariable Long gameId, Principal principal) {
-        try {
-            VoteResponseDTO voteResponseDTO = voteService.findVote(gameId, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(voteResponseDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> findVote(@NotNull() @PathVariable Long gameId, Principal principal) {
+        VoteResponseDTO voteResponseDTO = voteService.findVote(gameId, principal.getName());
+        return ResponseEntity.ok(voteResponseDTO);
     }
 
     @PostMapping
@@ -72,13 +72,9 @@ public class VoteController {
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content)
     })
-    public ResponseEntity<?> toggleVote(@RequestBody VoteRequestDTO voteRequest, Principal principal) {
-        try {
-            VoteResponseDTO voteResponseDTO = voteService.toggleVote(voteRequest, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(voteResponseDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> toggleVote(@Valid @RequestBody VoteRequestDTO voteRequest, Principal principal) {
+        VoteResponseDTO voteResponseDTO = voteService.toggleVote(voteRequest, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(voteResponseDTO);
     }
 
     @GetMapping("/total/{gameId}")
@@ -91,7 +87,7 @@ public class VoteController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = SubscribeTotalResponseDTO.class)))
     })
-    public ResponseEntity<VoteTotalResponseDTO> totalVotes(@PathVariable Long gameId) {
+    public ResponseEntity<VoteTotalResponseDTO> totalVotes(@NotNull() @PathVariable Long gameId) {
         VoteTotalResponseDTO voteTotalResponseDTO = voteService.totalVotes(gameId);
         return ResponseEntity.ok(voteTotalResponseDTO);
     }

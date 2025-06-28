@@ -3,6 +3,7 @@ package com.projetopoo.jam.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,12 +22,15 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final CustomAuthenticationSuccessHandler successHandler;
+    private final CustomAuthenticationFailureHandler failureHandler;
 
     @Autowired
-    private CustomAuthenticationSuccessHandler successHandler;
-
-    @Autowired
-    private CustomAuthenticationFailureHandler failureHandler;
+    public SecurityConfig(CustomAuthenticationSuccessHandler successHandler,
+                          CustomAuthenticationFailureHandler failureHandler) {
+        this.successHandler = successHandler;
+        this.failureHandler = failureHandler;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,8 +55,10 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
+                    .requestMatchers( // Rotas do tipo post que podem ser acessadas sem estar logado
+                            HttpMethod.POST, "/api/users"
+                    ).permitAll()
                     .requestMatchers( // Rotas que podem ser acessadas sem estar logado
-                            "/api/users",
                             "/login",
                             "/signup",
                             "/perform_login",
@@ -78,6 +84,7 @@ public class SecurityConfig {
             .logout(logout -> logout
                     .logoutUrl("/perform_logout")
                     .logoutSuccessUrl("/login?logout")
+                    .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
                     .permitAll()
             );

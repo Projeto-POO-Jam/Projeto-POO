@@ -11,9 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -26,6 +29,7 @@ import java.security.Principal;
 @Tag(
         name = "Subscriptions",
         description = "Endpoints relacionados as inscrições em Jams")
+@Validated
 public class SubscribeController {
     private final SubscribeService subscribeService;
 
@@ -50,13 +54,9 @@ public class SubscribeController {
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
     })
-    public ResponseEntity<?> toggleSubscribe(@RequestBody SubscribeRequestDTO subscribeRequestDTO, Principal principal) {
-        try {
-            SubscribeResponseDTO subscribeResponseDTO = subscribeService.toggleSubscribe(subscribeRequestDTO, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(subscribeResponseDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> toggleSubscribe(@Valid @RequestBody SubscribeRequestDTO subscribeRequestDTO, Principal principal) {
+        SubscribeResponseDTO subscribeResponseDTO = subscribeService.toggleSubscribe(subscribeRequestDTO, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(subscribeResponseDTO);
     }
 
     @GetMapping("/total/{jamId}")
@@ -69,7 +69,7 @@ public class SubscribeController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = SubscribeTotalResponseDTO.class)))
     })
-    public ResponseEntity<SubscribeTotalResponseDTO> totalSubscribe(@PathVariable Long jamId) {
+    public ResponseEntity<SubscribeTotalResponseDTO> totalSubscribe(@NotNull() @PathVariable Long jamId) {
         SubscribeTotalResponseDTO subscribeTotalResponseDTO = subscribeService.totalSubscribes(jamId);
         return ResponseEntity.ok(subscribeTotalResponseDTO);
     }
@@ -85,12 +85,8 @@ public class SubscribeController {
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
     })
-    public ResponseEntity<?> findSubscribe(@PathVariable Long jamId, Principal principal) {
-        try {
-            SubscribeResponseDTO subscribeResponseDTO = subscribeService.findSubscribe(jamId, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).body(subscribeResponseDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> findSubscribe(@NotNull() @PathVariable Long jamId, Principal principal) {
+        SubscribeResponseDTO subscribeResponseDTO = subscribeService.findSubscribe(jamId, principal.getName());
+        return ResponseEntity.ok(subscribeResponseDTO);
     }
 }

@@ -1,13 +1,18 @@
 package com.projetopoo.jam.dto.game;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Classe para receber requisições dos jogos do frontend
  */
 public class GameRequestDTO {
+    @NotNull()
     private Long jamId;
+
+    @NotNull()
     private String gameTitle;
+
     private String gameDescription;
     private String gameContent;
     private MultipartFile gamePhoto;

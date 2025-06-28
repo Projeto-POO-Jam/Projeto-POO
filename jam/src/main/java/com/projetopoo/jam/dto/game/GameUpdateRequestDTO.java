@@ -1,11 +1,13 @@
 package com.projetopoo.jam.dto.game;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Classe para receber requisições dos jogos do frontend se tiver for para atualizar os dados do jogo
+ * Classe para receber requisições do frontend se for para atualizar os dados do jogo
  */
 public class GameUpdateRequestDTO {
+    @NotNull()
     private Long gameId;
     private String gameTitle;
     private String gameDescription;

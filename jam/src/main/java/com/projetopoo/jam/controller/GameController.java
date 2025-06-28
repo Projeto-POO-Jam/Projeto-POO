@@ -12,10 +12,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -29,6 +32,7 @@ import java.security.Principal;
 @Tag(
         name = "Games",
         description = "Endpoints relacionados aos jogos")
+@Validated
 public class GameController {
     private final GameService gameService;
 
@@ -49,13 +53,9 @@ public class GameController {
             @ApiResponse(responseCode = "201", description = "Jogo criado com sucesso", content = @Content),
             @ApiResponse(responseCode = "400", description = "Requisição inválida ou erro no upload de arquivos", content = @Content)
     })
-    public ResponseEntity<?> createGame(GameRequestDTO gameRequestDTO, Principal principal) {
-        try {
-            gameService.createGame(gameRequestDTO, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException | EntityNotFoundException | IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> createGame(@Valid GameRequestDTO gameRequestDTO, Principal principal) throws IOException {
+        gameService.createGame(gameRequestDTO, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/{gameId}")
@@ -71,13 +71,9 @@ public class GameController {
                             schema = @Schema(implementation = GameResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Jogo não encontrado", content = @Content)
     })
-    public ResponseEntity<?> findGame(@PathVariable Long gameId, Principal principal) {
-        try {
-            GameResponseDTO gameResponse = gameService.findGame(gameId, principal.getName());
-            return ResponseEntity.ok(gameResponse);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> findGame(@NotNull() @PathVariable Long gameId, Principal principal) {
+        GameResponseDTO gameResponse = gameService.findGame(gameId, principal.getName());
+        return ResponseEntity.ok(gameResponse);
     }
 
     @GetMapping("/list")
@@ -93,15 +89,11 @@ public class GameController {
                             schema = @Schema(implementation = GamePaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> listGames(
-            @RequestParam Long jamId,
+            @NotNull() @RequestParam Long jamId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            GamePaginatedResponseDTO response = gameService.findGameList(jamId, offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        GamePaginatedResponseDTO response = gameService.findGameList(jamId, offset, limit);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user")
@@ -117,15 +109,11 @@ public class GameController {
                             schema = @Schema(implementation = GamePaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> findGameListByUserId(
-            @RequestParam Long userId,
+            @NotNull()  @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            GamePaginatedResponseDTO response = gameService.findGameListByUserId(userId, offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        GamePaginatedResponseDTO response = gameService.findGameListByUserId(userId, offset, limit);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/list/complete")
@@ -143,26 +131,14 @@ public class GameController {
     public ResponseEntity<?> findGameCompleteList(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            GamePaginatedResponseDTO response = gameService.findGameCompleteList(offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        GamePaginatedResponseDTO response = gameService.findGameCompleteList(offset, limit);
+        return ResponseEntity.ok(response);
     }
   
     @PutMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity<?> updateGame(GameUpdateRequestDTO gameUpdateRequestDTO, Principal principal) {
-        try {
-            gameService.updateGame(gameUpdateRequestDTO, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<?> updateGame(@Valid GameUpdateRequestDTO gameUpdateRequestDTO, Principal principal) throws IOException {
+        gameService.updateGame(gameUpdateRequestDTO, principal.getName());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/user/vote")
@@ -178,15 +154,11 @@ public class GameController {
                             schema = @Schema(implementation = GamePaginatedResponseDTO.class)))
     })
     public ResponseEntity<?> findGameListByUserIdVote(
-            @RequestParam Long userId,
+            @NotNull()  @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
-        try {
-            GamePaginatedResponseDTO response = gameService.findGameListByUserIdVote(userId, offset, limit);
-            return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        GamePaginatedResponseDTO response = gameService.findGameListByUserIdVote(userId, offset, limit);
+        return ResponseEntity.ok(response);
     }
 
 }

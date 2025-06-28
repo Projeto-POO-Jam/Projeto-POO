@@ -37,7 +37,7 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
                 "YEAR(j.jamStartDate) = :year " +
                 "AND MONTH(j.jamStartDate) = :month " +
             "ORDER BY " +
-                "J.jamStartDate")
+                "j.jamStartDate")
     Page<Jam> findByYearAndMonth(@Param("year") int year, @Param("month") int month, Pageable pageable);
 
     /**
