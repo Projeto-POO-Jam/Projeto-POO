@@ -18,6 +18,8 @@ $(async function() {
     const $mainProfileImg = $('#img-user-perfil img');
     let userData = null;
 
+    const initializedTabs = new Set();
+
     //Lógica para alternar abas
     $('.menu-perfil button').on('click', function(e) {
         e.preventDefault();
@@ -44,21 +46,24 @@ $(async function() {
         $('.menu-perfil button').removeClass('active');
         button.addClass('active');
 
-        if (tabId === 'games') {
-            initGames(userId);
-        }
-        if (tabId === 'jams-criadas') {
-            initJC(userId);
-        }
-        if (tabId === 'jams-inscritas') {
-            initJR(userId);
-        }
-        if (tabId === 'jogos-curtidos') {
-            initLG(userId);
-        }
 
+        if (!initializedTabs.has(tabId)) {
+            if (tabId === 'games') {
+                initGames(userId);
+            }
+            if (tabId === 'jams-criadas') {
+                initJC(userId);
+            }
+            if (tabId === 'jams-inscritas') {
+                initJR(userId);
+            }
+            if (tabId === 'jogos-curtidos') {
+                initLG(userId);
+            }
+
+            initializedTabs.add(tabId);
+        }
     });
-
 
     applySkeleton(root);
 
@@ -111,7 +116,9 @@ $(async function() {
                 initEditPerfilModal(userData);
             });
         }
+
         initInicio(userData);
+        initializedTabs.add('inicio');
 
     } catch (error) {
         console.error('Erro ao buscar dados do usuário:', error);
