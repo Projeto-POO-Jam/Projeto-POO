@@ -29,7 +29,6 @@ async function loadGames() {
     const buttonContainer = $('#load-more-games-liked-container');
     buttonContainer.find('button').text('Carregando...').prop('disabled', true);
 
-
     try {
         const gamesData = await fetchUserLikedGames(currentUserId, PAGE_LIMIT, currentPage * PAGE_LIMIT);
         const games = gamesData.games;
