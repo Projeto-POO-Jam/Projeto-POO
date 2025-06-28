@@ -369,4 +369,20 @@ public class JamService {
         return new JamPaginatedResponseDTO(jamSummaryDTOList, jamPage.getTotalElements());
     }
 
+    /**
+     * Função para buscar jams pelo título com paginação.
+     * @param searchText O texto para buscar no título da Jam.
+     * @param offset O deslocamento para a busca.
+     * @param limit O limite de itens a serem retornados.
+     * @return Uma lista paginada com informações das jams encontradas.
+     */
+    @Transactional(readOnly = true)
+    public JamPaginatedResponseDTO searchJamsByTitle(String searchText, int offset, int limit) {
+        int pageNumber = offset / limit;
+        Pageable pageable = PageRequest.of(pageNumber, limit);
+
+        Page<Jam> jamPage = jamRepository.findByJamTitleContainingIgnoreCase(searchText, pageable);
+
+        return getJamPaginatedResponseDTO(jamPage);
+    }
 }

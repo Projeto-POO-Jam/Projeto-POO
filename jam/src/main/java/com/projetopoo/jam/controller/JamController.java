@@ -171,4 +171,24 @@ public class JamController {
         JamPaginatedResponseDTO response = jamService.findMyJamListByUserId(userId, offset, limit);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/search")
+    @Operation(
+            summary = "Busca Jams por título",
+            description = "Retorna uma lista paginada de Jams cujo título contém o texto de busca.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Jams encontradas com sucesso",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
+    })
+    public ResponseEntity<?> searchJams(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "20") int limit) {
+        JamPaginatedResponseDTO response = jamService.searchJamsByTitle(query, offset, limit);
+        return ResponseEntity.ok(response);
+    }
 }

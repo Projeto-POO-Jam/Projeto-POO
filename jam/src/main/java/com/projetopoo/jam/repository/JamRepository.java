@@ -87,4 +87,16 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
                 "SIZE(j.jamSubscribes) DESC")
     Page<Jam> findByUserIdOrderByJamSubscribes(@Param("userId") Long userId, Pageable pageable);
 
+    /**
+     * Função que busca uma lista paginada de jams, com base em um texto de busca no título.
+     * @param searchText Texto para buscar no título da jam
+     * @param pageable Informações sobre como deve ser feita a paginação
+     * @return Lista paginada contendo diversas jams que correspondem à busca.
+     */
+    @Query("SELECT j " +
+            "FROM Jam j " +
+            "WHERE lower(j.jamTitle) " +
+            "LIKE lower(concat('%', :searchText, '%'))")
+    Page<Jam> findByJamTitleContainingIgnoreCase(@Param("searchText") String searchText, Pageable pageable);
+
 }
