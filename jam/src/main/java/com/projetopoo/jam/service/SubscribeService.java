@@ -4,7 +4,6 @@ import com.projetopoo.jam.dto.subscribe.SubscribeRequestDTO;
 import com.projetopoo.jam.dto.subscribe.SubscribeResponseDTO;
 import com.projetopoo.jam.dto.subscribe.SubscribeSseDTO;
 import com.projetopoo.jam.dto.subscribe.SubscribeTotalResponseDTO;
-import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.*;
 import com.projetopoo.jam.repository.*;
 import jakarta.persistence.EntityNotFoundException;

@@ -8,7 +8,6 @@ import com.projetopoo.jam.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import com.projetopoo.jam.util.FileUtil;
 import jakarta.persistence.EntityNotFoundException;

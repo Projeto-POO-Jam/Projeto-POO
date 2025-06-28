@@ -1,6 +1,5 @@
 package com.projetopoo.jam.dto.jam;
 
-import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;

@@ -1,4 +1,3 @@
-// Crie este novo arquivo em: com/projetopoo/jam/exception/GlobalExceptionHandler.java
 package com.projetopoo.jam.exception;
 
 import com.projetopoo.jam.dto.error.ErrorResponseDTO;
