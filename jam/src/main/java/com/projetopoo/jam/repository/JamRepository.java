@@ -19,7 +19,7 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
     /**
      * Função que busca uma jam pelo jamId
      * @param jamId Id do jogo que está sendo usado na consulta
-     * @return Se existir alguma correspondência, retorna uma jam com todas as informações sobre ela
+     * @return Jam com todas as informações sobre ela
      */
     Optional<Jam> findByJamId(long jamId);
 
@@ -28,21 +28,23 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
      * @param year Ano que está sendo usada na consulta
      * @param month Mês que está sendo usada na consulta
      * @param pageable Informações sobre como deve ser feita a paginação
-     * @return Uma página contendo diversas jams que correspondem a busca.
+     * @return Lista paginada contendo diversas jams que correspondem a busca.
      */
     @Query("SELECT j " +
             "FROM " +
                 "Jam j " +
             "WHERE " +
                 "YEAR(j.jamStartDate) = :year " +
-                "AND MONTH(j.jamStartDate) = :month")
+                "AND MONTH(j.jamStartDate) = :month " +
+            "ORDER BY " +
+                "J.jamStartDate")
     Page<Jam> findByYearAndMonth(@Param("year") int year, @Param("month") int month, Pageable pageable);
 
     /**
      * Função que busca uma lista paginada de jams, com base no status
      * @param statuses Lista com os possíveis status que serão buscados
      * @param pageable Informações sobre como deve ser feita a paginação
-     * @return Uma página contendo diversas jams que correspondem a busca em ordem do número de inscritos.
+     * @return Lista paginada contendo diversas jams que correspondem a busca em ordem do número de inscritos.
      */
     @Query("SELECT j " +
             "FROM " +
@@ -57,7 +59,7 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
      * Função que busca uma lista paginada de jams, com todas as jams em que um dado usuário se inscreveu, com base no userId
      * @param userId Id do usuário que está sendo usada na consulta
      * @param pageable Informações sobre como deve ser feita a paginação
-     * @return Uma página contendo diversas jams que correspondem a busca em ordem do jamId.
+     * @return Lista paginada contendo diversas jams que correspondem a busca em ordem do jamId.
      */
     @Query("SELECT j " +
             "FROM " +
@@ -74,7 +76,7 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
      * Função que busca uma lista paginada de jams, com todas as jams criadas por um dado usuário, com base no userId
      * @param userId Ano que está sendo usada na consulta
      * @param pageable Informações sobre como deve ser feita a paginação
-     * @return Uma página contendo diversas jams que correspondem a busca em ordem do número de inscrições.
+     * @return Lista paginada contendo diversas jams que correspondem a busca em ordem do número de inscrições.
      */
     @Query("SELECT j " +
             "FROM " +

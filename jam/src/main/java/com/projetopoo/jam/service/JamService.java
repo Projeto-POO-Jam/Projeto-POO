@@ -264,7 +264,7 @@ public class JamService {
 
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jams
         Page<Jam> jamPage = jamRepository.findByYearAndMonth(year, month, pageable);
@@ -282,7 +282,7 @@ public class JamService {
     public JamPaginatedResponseDTO findJamsBanner(int limit) {
         // Define qual é a pagina de interesse
         int pageNumber = 0;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamStartDate"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Verifica se a jam existe
         List<JamStatus> statuses = Arrays.asList(JamStatus.ACTIVE, JamStatus.SCHEDULED);
@@ -302,7 +302,7 @@ public class JamService {
     public JamPaginatedResponseDTO findJamListByUserId(Long userId, int offset, int limit){
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamId"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jams
         Page<Jam> jamPage = jamRepository.findByUserIdOrderByJamId(userId,pageable);
@@ -321,7 +321,7 @@ public class JamService {
     public JamPaginatedResponseDTO findMyJamListByUserId(Long userId, int offset, int limit){
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "jamId"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jams
         Page<Jam> jamPage = jamRepository.findByUserIdOrderByJamSubscribes(userId,pageable);

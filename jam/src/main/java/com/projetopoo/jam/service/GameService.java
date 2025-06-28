@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -246,7 +245,7 @@ public class GameService {
     public GamePaginatedResponseDTO findGameList(Long jamId, int offset, int limit){
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jogos
         Page<Game> gamePage = gameRepository.findByJamIdOrderByVotes(jamId, pageable);
@@ -266,7 +265,7 @@ public class GameService {
     public GamePaginatedResponseDTO findGameListByUserId(Long userId, int offset, int limit){
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jogos
         Page<Game> gamePage = gameRepository.findByUserIdOrderByVotes(userId, pageable);
@@ -285,7 +284,7 @@ public class GameService {
     public GamePaginatedResponseDTO findGameCompleteList(int offset, int limit){
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jogos
         Page<Game> gamePage = gameRepository.findAllByOrderByVotes(pageable);
@@ -304,7 +303,7 @@ public class GameService {
     public GamePaginatedResponseDTO findGameListByUserIdVote(Long userId, int offset, int limit){
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by(Sort.Direction.ASC, "gameId"));
+        Pageable pageable = PageRequest.of(pageNumber, limit);
 
         // Busca a lista paginada de jogos
         Page<Game> gamePage = gameRepository.findByUserIdOrderByGameId(userId, pageable);
