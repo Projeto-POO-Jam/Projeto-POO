@@ -4,8 +4,8 @@ import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { fetchUserData } from "../services/perfilService.js";
 import { initEditPerfilModal } from './editPerfilModal.js';
 
-import { init as initGames } from './fragments/perfil_tabs/games.js';
 import { init as initInicio } from './fragments/perfil_tabs/inicio.js';
+import { init as initGames } from './fragments/perfil_tabs/games.js';
 import { init as initJC } from './fragments/perfil_tabs/jamsCreated.js';
 import { init as initJR } from './fragments/perfil_tabs/jamsRegistered.js';
 import { init as initLG } from './fragments/perfil_tabs/likedGames.js';

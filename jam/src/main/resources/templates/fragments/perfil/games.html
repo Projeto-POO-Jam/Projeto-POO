@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <body>
-    <div th:fragment="conteudoGames">
+    <div th:fragment="conteudoGames" class="aba-perfil-unic">
         <div class="title-aba-games">
             <h1>Games Criados</h1>
+            <p>Veja aqui todos os jogos que este usuário criou.</p>
         </div>
-        <div id="games-list-container" class="games-grid">
+        <div id="user-games-list-container" class="games-grid">
+        </div>
+        <div id="load-more-games-container" class="load-more-container">
         </div>
     </div>
 </body>

@@ -315,12 +315,19 @@ html.dark main .details-user-perfil {
     width: 100%;
 }
 
-.details-list-inicio{
+.aba-perfil-unic,
+.tab-pane-perfil{
+    width: 100%;
+}
+
+.details-list-inicio,
+.tab-pane-perfil{
     display: flex;
     flex-direction: column;
     align-items: start;
     margin-top: 2rem;
 }
+
 
 .list-cards-perfil{
     display: flex;
