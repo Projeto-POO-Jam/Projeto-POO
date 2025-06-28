@@ -1,14 +1,14 @@
-import { showSuccess, showError } from '../common/notifications.js';
-import { bindDataFields } from '../common/bindDataFields.js';
-import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
-import { fetchUserData } from "../services/perfilService.js";
-import { initEditPerfilModal } from './editPerfilModal.js';
+import { showSuccess, showError } from '../../common/notifications.js';
+import { bindDataFields } from '../../common/bindDataFields.js';
+import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
+import { fetchUserData } from "../../services/perfilService.js";
+import { initEditPerfilModal } from './commun/editPerfilModal.js';
 
-import { init as initInicio } from './fragments/perfil_tabs/inicio.js';
-import { init as initGames } from './fragments/perfil_tabs/games.js';
-import { init as initJC } from './fragments/perfil_tabs/jamsCreated.js';
-import { init as initJR } from './fragments/perfil_tabs/jamsRegistered.js';
-import { init as initLG } from './fragments/perfil_tabs/likedGames.js';
+import { init as initInicio } from '../fragments/perfil_tabs/inicio.js';
+import { init as initGames } from '../fragments/perfil_tabs/games.js';
+import { init as initJC } from '../fragments/perfil_tabs/jamsCreated.js';
+import { init as initJR } from '../fragments/perfil_tabs/jamsRegistered.js';
+import { init as initLG } from '../fragments/perfil_tabs/likedGames.js';
 
 $(async function() {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
@@ -100,8 +100,9 @@ $(async function() {
         setLinkState('#instagram-link', userData.userInstagram);
         setLinkState('#facebook-link', userData.userFacebook);
 
+        const bannerContainer = $('.details-user-perfil');
         if (userData.userBanner) {
-            $('main.container-perfil').css('background-image', `url(${userData.userBanner})`);
+            bannerContainer.css('background-image', `url(${userData.userBanner})`);
         }
 
         if (userData.userCurrent) {

@@ -1,7 +1,7 @@
 import { fetchUserRegisteredJams } from "../../../services/perfilService.js";
 import { applySkeleton, removeSkeleton } from '../../../common/skeleton.js';
 import { showError } from "../../../common/notifications.js";
-import { createJamCard } from "./card-builder.js";
+import { createJamCard } from "../../perfil/commun/card-builder.js";
 
 const PAGE_LIMIT = 10;
 let currentPage = 0;

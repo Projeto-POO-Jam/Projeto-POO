@@ -1,9 +1,9 @@
-import { apiRequest } from '../common/api.js';
-import { showSuccess, showError } from '../common/notifications.js';
-import { setupValidation, isFormValid } from '../common/validation.js';
-import { bindDataFields } from '../common/bindDataFields.js';
-import { setupImageCrop, getCroppedBlob } from '../common/imageCropUtils.js';
-import { registerFilePondPlugins, createFilePondInstance } from '../common/filepond-helper.js';
+import { apiRequest } from '../../../common/api.js';
+import { showSuccess, showError } from '../../../common/notifications.js';
+import { setupValidation, isFormValid } from '../../../common/validation.js';
+import { bindDataFields } from '../../../common/bindDataFields.js';
+import { setupImageCrop, getCroppedBlob } from '../../../common/imageCropUtils.js';
+import { registerFilePondPlugins, createFilePondInstance } from '../../../common/filepond-helper.js';
 
 let pondInstance = null;
 let initialData = null;
@@ -60,9 +60,9 @@ export async function initEditPerfilModal(userData) {
 
     //Regras de validação
     const validationRules = {
-        username: [
-            { validate: value => value.trim() !== '', message: 'Nome de usuário é obrigatório.' },
-            { validate: value => !value.includes(' '), message: 'Não pode conter espaços.' }
+        userName: [
+            { validate: value => value && value.trim() !== '', message: 'Nome de usuário é obrigatório.' },
+            { validate: value => value && !value.includes(' '), message: 'Não pode conter espaços.' }
         ],
         userEmail: [
             { validate: value => value.trim() !== '', message: 'E-mail obrigatório.' },
