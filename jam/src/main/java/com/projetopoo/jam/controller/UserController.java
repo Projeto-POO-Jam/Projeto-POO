@@ -1,5 +1,6 @@
 package com.projetopoo.jam.controller;
 
+import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserResquestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
@@ -119,31 +120,22 @@ public class UserController {
         }
     }
 
-
-
     @PutMapping("/changePassword")
     @Operation(
             summary = "Atualiza a senha do usuario",
             description = "Ele poderá alterar a senha atual para uma nova")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Falha na validação (senha atual incorreta)",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
-            @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
+            @ApiResponse(responseCode = "400", description = "Senha invalida", content = @Content)
     })
-    public ResponseEntity<?> updatePassword(UserResquestDTO userResquestDTO, Principal principal)
+    public ResponseEntity<?> updatePassword(UserPasswordRequestDTO userPasswordResquestDTO, Principal principal)
     {
-        try{
-            userService.updatePassword(userResquestDTO, principal.getName());
+        try
+        {
+            userService.updatePassword(userPasswordResquestDTO, principal.getName());
             return ResponseEntity.ok().build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
+        } catch (IllegalArgumentException | IOException e)
+        {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

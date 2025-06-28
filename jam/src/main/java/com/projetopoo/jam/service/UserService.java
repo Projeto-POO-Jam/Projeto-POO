@@ -1,5 +1,6 @@
 package com.projetopoo.jam.service;
 
+import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserResquestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
@@ -131,24 +132,21 @@ public class UserService {
 
 
     @Transactional
-    public void updatePassword(UserResquestDTO user, String identifier) throws IOException {
-        List<String> validationErrors = new ArrayList<>();
-
+    public void updatePassword(UserPasswordRequestDTO user, String identifier) throws IOException
+    {
         User existingUser = userRepository.findByIdentifier(identifier);
 
-        if (user.getUserPassword() != null)
+        if (user.getUserNewPassword() != null)
         {
-            //System.out.println("SENHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + user.getOdlPassword());
-            //if (existingUser.getUserPassword().equals(user.getOdlPassword()))
-            //{
-                user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-            //}
-           //else {
-           //     throw new IllegalArgumentException("Senha incorreta");
-           // }
+            if (!passwordEncoder.matches(user.getUserOldPassword(), existingUser.getUserPassword()))
+            {
+                throw new IllegalArgumentException("Senha incorreta");
+            }
+            existingUser.setUserPassword(passwordEncoder.encode(user.getUserNewPassword()));
         }
-
-        modelMapper.map(user, existingUser);
+        else {
+            throw new IllegalArgumentException("Senha vazia");
+        }
         userRepository.save(existingUser);
     }
 }
