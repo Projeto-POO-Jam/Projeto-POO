@@ -1,9 +1,6 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
-import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.dto.user.UserRequestDTO;
-import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
+import com.projetopoo.jam.dto.user.*;
 import com.projetopoo.jam.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,8 +84,8 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> createUser(UserRequestDTO userRequestDTO) throws IOException {
-        userService.createUser(userRequestDTO);
+    public ResponseEntity<?> createUser(UserInsertRequestDTO userInsertRequestDTO) throws IOException {
+        userService.createUser(userInsertRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -116,13 +114,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
             @ApiResponse(responseCode = "400", description = "Senha invalida", content = @Content)
     })
-    public ResponseEntity<?> updatePassword(UserPasswordRequestDTO userPasswordRequestDTO, Principal principal) {
-        try {
-            userService.updatePassword(userPasswordRequestDTO, principal.getName());
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException | IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> updatePassword(@Valid UserPasswordRequestDTO userPasswordRequestDTO, Principal principal) {
+        userService.updatePassword(userPasswordRequestDTO, principal.getName());
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -1,9 +1,6 @@
 package com.projetopoo.jam.service;
 
-import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
-import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.dto.user.UserRequestDTO;
-import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
+import com.projetopoo.jam.dto.user.*;
 import com.projetopoo.jam.exception.UserValidationException;
 import com.projetopoo.jam.model.User;
 import com.projetopoo.jam.repository.UserRepository;
@@ -49,16 +46,16 @@ public class UserService {
 
     /**
      * Função para criar um novo usuário
-     * @param userRequestDTO Informações sobre o usuário
+     * @param userInsertRequestDTO Informações sobre o usuário
      * @throws IOException Pode gerar exceção no caso de erro ao salvar alguma imagem
      */
     @Transactional
-    public void createUser(UserRequestDTO userRequestDTO) throws IOException {
+    public void createUser(UserInsertRequestDTO userInsertRequestDTO) throws IOException {
         // Cria lista de erros
         List<String> validationErrors = new ArrayList<>();
 
         // Passa as informações recebidas para o formato de User
-        User user = modelMapper.map(userRequestDTO, User.class);
+        User user = modelMapper.map(userInsertRequestDTO, User.class);
 
         // Verifica se o nome do usuário já está sendo usado
         if (userRepository.findByUserName(user.getUserName()).isPresent()) {
@@ -78,8 +75,8 @@ public class UserService {
         }
 
         // Salva imagens
-        user.setUserPhoto(FileUtil.createFile(userRequestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
-        user.setUserBanner(FileUtil.createFile(userRequestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
+        user.setUserPhoto(FileUtil.createFile(userInsertRequestDTO.getUserPhoto(), UPLOAD_DIRECTORY + "/photo", "/upload/user/photo/"));
+        user.setUserBanner(FileUtil.createFile(userInsertRequestDTO.getUserBanner(), UPLOAD_DIRECTORY + "/banner", "/upload/user/banner/"));
 
         // Criptografa a senha se ela não for nula
         if (user.getUserPassword() != null) {
@@ -192,7 +189,7 @@ public class UserService {
 
 
     @Transactional
-    public void updatePassword(UserPasswordRequestDTO user, String identifier) throws IOException {
+    public void updatePassword(UserPasswordRequestDTO user, String identifier) {
         User existingUser = userRepository.findByIdentifier(identifier);
 
         if (user.getUserNewPassword() != null) {

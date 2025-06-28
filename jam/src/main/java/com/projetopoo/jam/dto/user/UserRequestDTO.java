@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserRequestDTO {
     private String userName;
     private String userEmail;
-    private String userPassword;
     private String userGitHub;
     private String userLinkedIn;
     private String userFacebook;
@@ -30,14 +29,6 @@ public class UserRequestDTO {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
     }
 
     public String getUserGitHub() {
