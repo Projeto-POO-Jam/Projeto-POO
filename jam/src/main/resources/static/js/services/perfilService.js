@@ -10,4 +10,42 @@ export function fetchUserData(userId) {
         .then(({ data }) => data);
 }
 
+/**
+ * Busca os jogos criados por um usuário.
+ * @param {string|number} userId - O ID do usuário.
+ * @returns {Promise<object>}
+ */
+export function fetchUserCreatedGames(userId, limit = 4) {
+    return apiRequest('GET', `api/games/user?userId=${userId}&offset=0&limit=${limit}`)
+        .then(({ data }) => data);
+}
 
+/**
+ * Busca as Jams criadas por um usuário.
+ * @param {string|number} userId - O ID do usuário.
+ * @returns {Promise<object>}
+ */
+export function fetchUserCreatedJams(userId, limit = 4) {
+    return apiRequest('GET', `api/jams/createUser?userId=${userId}&offset=0&limit=${limit}`)
+        .then(({ data }) => data);
+}
+
+/**
+ * Busca as Jams em que um usuário está inscrito.
+ * @param {string|number} userId - O ID do usuário.
+ * @returns {Promise<object>}
+ */
+export function fetchUserRegisteredJams(userId, limit = 4) {
+    return apiRequest('GET', `api/jams/user?userId=${userId}&offset=0&limit=${limit}`)
+        .then(({ data }) => data);
+}
+
+/**
+ * Busca os jogos que um usuário curtiu.
+ * @param {string|number} userId - O ID do usuário.
+ * @returns {Promise<object>}
+ */
+export function fetchUserLikedGames(userId, limit = 4) {
+    return apiRequest('GET', `api/games/user/vote?userId=${userId}&offset=0&limit=${limit}`)
+        .then(({ data }) => data);
+}

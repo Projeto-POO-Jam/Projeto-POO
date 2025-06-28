@@ -1,11 +1,11 @@
-main.container-perfil {
+main .details-user-perfil {
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-image: url("/img/background-white.png");
 }
 
-html.dark main.container-perfil {
+html.dark main .details-user-perfil {
     background-image: url("/img/background-dark.png");
 }
 
@@ -68,9 +68,7 @@ html.dark main.container-perfil {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 3rem;
 }
-
 
 .links-perfil {
     display: flex;
@@ -264,4 +262,82 @@ html.dark main.container-perfil {
 .title-foto-perfil-grup2 h1{
     font-size: 18px;
     font-weight: 400;
+}
+
+
+.details-account-perfil{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.menu-perfil{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 2px solid var(--background-card);
+}
+
+.menu-perfil button{
+    background-color: transparent;
+    border: none;
+    margin: 1rem 2rem;
+    cursor: pointer;
+    opacity: 0.7;
+    color: var(--text);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.menu-perfil button.active,
+.menu-perfil button:hover {
+    opacity: 1;
+}
+
+.menu-perfil button.active::after {
+    transform: scaleX(1);
+}
+
+#tab-content-perfil {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    align-self: flex-start;
+    margin: 1rem;
+    width: 85%;
+}
+
+.tab-pane {
+    width: 100%;
+}
+
+.details-list-inicio{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 2rem;
+}
+
+.list-cards-perfil{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: stretch;
+    margin: 1.5rem 0;
+    width: 100%;
+}
+
+.title-game-perfil{
+    color: var(--text);
+}
+
+.infos-perfil{
+    display: flex  ;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }

@@ -4,12 +4,61 @@ import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 import { fetchUserData } from "../services/perfilService.js";
 import { initEditPerfilModal } from './editPerfilModal.js';
 
+import { init as initGames } from './fragments/perfil_tabs/games.js';
+import { init as initInicio } from './fragments/perfil_tabs/inicio.js';
+import { init as initJC } from './fragments/perfil_tabs/jamsCreated.js';
+import { init as initJR } from './fragments/perfil_tabs/jamsRegistered.js';
+import { init as initLG } from './fragments/perfil_tabs/likedGames.js';
+
 $(async function() {
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     const userId = pathSegments[pathSegments.length - 1];
     const root = 'main.container-perfil';
     const modal = $('#edit-perfil-modal');
     const $mainProfileImg = $('#img-user-perfil img');
+    let userData = null;
+
+    //Lógica para alternar abas
+    $('.menu-perfil button').on('click', function(e) {
+        e.preventDefault();
+
+        const button = $(this);
+        const tabId = button.data('tab');
+        const targetTab = $('#tab-' + tabId);
+
+        if (targetTab.is(':visible')) {
+            return;
+        }
+
+        //Esconde a aba ativa
+        $('.tab-pane-perfil:visible').slideUp(300, function() {
+            $(this).removeClass('active');
+        });
+
+        //Mostra a nova aba
+        targetTab.slideDown(300, function() {
+            $(this).addClass('active');
+        });
+
+        //Atualiza a classe 'active' nos botões
+        $('.menu-perfil button').removeClass('active');
+        button.addClass('active');
+
+        if (tabId === 'games') {
+            initGames(userId);
+        }
+        if (tabId === 'jams-criadas') {
+            initJC(userId);
+        }
+        if (tabId === 'jams-inscritas') {
+            initJR(userId);
+        }
+        if (tabId === 'jogos-curtidos') {
+            initLG(userId);
+        }
+
+    });
+
 
     applySkeleton(root);
 
@@ -61,6 +110,7 @@ $(async function() {
                 initEditPerfilModal(userData);
             });
         }
+        initInicio(userData);
 
     } catch (error) {
         console.error('Erro ao buscar dados do usuário:', error);
