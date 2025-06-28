@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+/**
+ * Classe model de inscrições, responsável pelo modelo de entidades do banco de dados.
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -14,17 +17,11 @@ public class User {
     @Column(unique = true, nullable = false, length = 60)
     private String userName;
 
-    @Column(nullable = false)
-    private String userPassword;
-
     @Column(unique = true, nullable = false)
     private String userEmail;
 
-    @Column
-    private String userPhoto;
-
-    @Column
-    private String userBanner;
+    @Column(nullable = false)
+    private String userPassword;
 
     @Column
     private String userGitHub;
@@ -38,30 +35,17 @@ public class User {
     @Column
     private String userInstagram;
 
+    @Column
+    private String userPhoto;
+
+    @Column
+    private String userBanner;
+
     @OneToMany(mappedBy = "voteUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Vote> userVotes;
 
     @OneToMany(mappedBy = "commentUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> userComments;
-
-    public User() {
-
-    }
-
-    public User(String userPassword, String userName, String userPhoto, String userEmail) {
-        this.userPassword = userPassword;
-        this.userName = userName;
-        this.userPhoto = userPhoto;
-        this.userEmail = userEmail;
-    }
-
-    public User(Long userId, String userPassword, String userName, String userPhoto, String userEmail) {
-        this.userId = userId;
-        this.userPassword = userPassword;
-        this.userName = userName;
-        this.userPhoto = userPhoto;
-        this.userEmail = userEmail;
-    }
 
     public Long getUserId() {
         return userId;
@@ -69,14 +53,6 @@ public class User {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
     }
 
     public String getUserName() {
@@ -87,14 +63,6 @@ public class User {
         this.userName = userName;
     }
 
-    public String getUserPhoto() {
-        return userPhoto;
-    }
-
-    public void setUserPhoto(String userPhoto) {
-        this.userPhoto = userPhoto;
-    }
-
     public String getUserEmail() {
         return userEmail;
     }
@@ -103,28 +71,12 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public List<Vote> getUserVotes() {
-        return userVotes;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setUserVotes(List<Vote> userVotes) {
-        this.userVotes = userVotes;
-    }
-
-    public List<Comment> getUserComments() {
-        return userComments;
-    }
-
-    public void setUserComments(List<Comment> userComments) {
-        this.userComments = userComments;
-    }
-
-    public String getUserBanner() {
-        return userBanner;
-    }
-
-    public void setUserBanner(String userBanner) {
-        this.userBanner = userBanner;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
     public String getUserGitHub() {
@@ -157,5 +109,37 @@ public class User {
 
     public void setUserInstagram(String userInstagram) {
         this.userInstagram = userInstagram;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
+    }
+
+    public String getUserBanner() {
+        return userBanner;
+    }
+
+    public void setUserBanner(String userBanner) {
+        this.userBanner = userBanner;
+    }
+
+    public List<Vote> getUserVotes() {
+        return userVotes;
+    }
+
+    public void setUserVotes(List<Vote> userVotes) {
+        this.userVotes = userVotes;
+    }
+
+    public List<Comment> getUserComments() {
+        return userComments;
+    }
+
+    public void setUserComments(List<Comment> userComments) {
+        this.userComments = userComments;
     }
 }

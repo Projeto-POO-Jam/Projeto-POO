@@ -1,5 +1,8 @@
 package com.projetopoo.jam.dto.comment;
 
+/**
+ * Classe para receber requisições dos comentários do frontend
+ */
 public class CommentRequestDTO {
     private String commentText;
     private Long gameId;

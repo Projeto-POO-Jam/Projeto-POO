@@ -5,6 +5,9 @@ import org.springframework.amqp.core.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe responsável por construir as filas do RabbitMQ
+ */
 public class RabbitMQComponentBuilder {
 
     public static Declarables buildDirectQueueAndBinding(String exchangeName, String queueName, String routingKey) {

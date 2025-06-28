@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Classe service do SSE
+ */
 @Service
 public class SseNotificationService {
     private final Map<String, List<SseEmitter>> topicToEmitters = new ConcurrentHashMap<>();

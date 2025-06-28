@@ -34,7 +34,7 @@ $(function() {
     });
 
     //SSE para novos comentarios
-    const commentsUpdateEventName = `comments-update-${gameId}`;
+    const commentsUpdateEventName = `comments-insert-${gameId}`;
     stream.addEventListener(commentsUpdateEventName, (e) =>{
         const newComment = JSON.parse(e.data);
 

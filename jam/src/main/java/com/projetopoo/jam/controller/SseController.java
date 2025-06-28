@@ -11,14 +11,25 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+/**
+ * Classe para controlar o endpoint de SSE
+ */
 @RestController
 @RequestMapping("/api/events")
 @Tag(
         name = "SSE Events",
         description = "Endpoints para notificações em tempo real usando Server-Sent Events (SSE).")
 public class SseController {
+    private final SseNotificationService sseNotificationService;
+
+    /**
+     * Constrói uma nova instância de SseController com suas dependências
+     * @param sseNotificationService Classe service com a lógica do SSE
+     */
     @Autowired
-    private SseNotificationService sseNotificationService;
+    public SseController(SseNotificationService sseNotificationService) {
+        this.sseNotificationService = sseNotificationService;
+    }
 
     @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(

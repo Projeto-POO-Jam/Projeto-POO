@@ -21,14 +21,25 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.Principal;
 
+/**
+ * Classe para controlar os endpoints relacionados com jams
+ */
 @RestController
 @RequestMapping("/api/jams")
 @Tag(
         name = "Jams",
         description = "Endpoints relacionados as Jams")
 public class JamController {
+    private final JamService jamService;
+
+    /**
+     * Constrói uma nova instância de JamController com suas dependências
+     * @param jamService Classe service com a lógica da Jam
+     */
     @Autowired
-    private JamService jamService;
+    public JamController(JamService jamService) {
+        this.jamService = jamService;
+    }
 
     @PostMapping(consumes = { "multipart/form-data" })
     @Operation(

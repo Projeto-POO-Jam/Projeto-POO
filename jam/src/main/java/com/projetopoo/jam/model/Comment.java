@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe model de comentário, responsável pelo modelo de entidades do banco de dados.
+ */
 @Entity
 @Table(name = "comments")
 @NamedEntityGraph(
@@ -30,10 +33,6 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", nullable = false)
     private Game commentGame;
-
-    public Comment() {
-
-    }
 
     public Long getCommentId() {
         return commentId;

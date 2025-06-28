@@ -2,6 +2,9 @@ package com.projetopoo.jam.exception;
 
 import java.util.List;
 
+/**
+ * Exceção personalizada para User
+ */
 public class UserValidationException extends RuntimeException {
     private final List<String> errors;
 

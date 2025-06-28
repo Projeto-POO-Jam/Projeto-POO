@@ -1,6 +1,5 @@
 package com.projetopoo.jam.config;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -9,6 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Classe para controlar o login.
+ */
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 

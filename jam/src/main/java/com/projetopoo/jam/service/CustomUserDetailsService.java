@@ -10,11 +10,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * Classe para customizar o login, permitindo o uso do e-mail ou do nome para fazer o login
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -23,6 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         String name;
         String password;
 
+        // Verifica se tem @ se tiver trata como e-mail se não trata como nome
         if(username.chars().filter(ch -> ch == '@').count() == 1){
             user = userRepository.findByUserEmail(username)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));

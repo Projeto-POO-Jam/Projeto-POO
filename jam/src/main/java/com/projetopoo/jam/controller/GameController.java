@@ -21,14 +21,25 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.Principal;
 
+/**
+ * Classe para controlar os endpoints relacionados com jogos
+ */
 @RestController
 @RequestMapping("/api/games")
 @Tag(
         name = "Games",
         description = "Endpoints relacionados aos jogos")
 public class GameController {
+    private final GameService gameService;
+
+    /**
+     * Constrói uma nova instância de GameController com suas dependências
+     * @param gameService Classe service com a lógica do Game
+     */
     @Autowired
-    private GameService gameService;
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
+    }
 
     @PostMapping(consumes = { "multipart/form-data" })
     @Operation(

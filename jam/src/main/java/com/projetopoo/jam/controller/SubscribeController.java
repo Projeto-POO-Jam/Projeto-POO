@@ -18,14 +18,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+/**
+ * Classe para controlar os endpoints relacionados com inscrições
+ */
 @RestController
 @RequestMapping("/api/subscribes")
 @Tag(
         name = "Subscriptions",
         description = "Endpoints relacionados as inscrições em Jams")
 public class SubscribeController {
+    private final SubscribeService subscribeService;
+
+    /**
+     * Constrói uma nova instância de SubscribeController com suas dependências
+     * @param subscribeService Classe service com a lógica do Subscribe
+     */
     @Autowired
-    private SubscribeService subscribeService;
+    public SubscribeController(SubscribeService subscribeService) {
+        this.subscribeService = subscribeService;
+    }
 
     @PostMapping
     @Operation(

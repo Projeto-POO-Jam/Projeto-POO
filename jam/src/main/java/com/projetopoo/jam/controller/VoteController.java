@@ -20,14 +20,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+/**
+ * Classe para controlar os endpoints relacionados com votos
+ */
 @RestController
 @RequestMapping("/api/votes")
 @Tag(
         name = "Votes",
         description = "Endpoints relacionados aos votos em Jogos")
 public class VoteController {
+    private final VoteService voteService;
+
+    /**
+     * Constrói uma nova instância de VoteController com suas dependências
+     * @param voteService Classe service com a lógica do Vote
+     */
     @Autowired
-    private VoteService voteService;
+    public VoteController(VoteService voteService) {
+        this.voteService = voteService;
+    }
 
     @GetMapping("/{gameId}")
     @Operation(

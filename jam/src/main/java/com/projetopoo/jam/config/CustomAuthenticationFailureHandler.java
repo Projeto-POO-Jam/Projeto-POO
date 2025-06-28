@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * Classe para controlar a falha no login.
+ */
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 

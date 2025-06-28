@@ -19,14 +19,25 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Classe para controlar os endpoints relacionados com comentários
+ */
 @RestController
 @RequestMapping("/api/comments")
 @Tag(
         name = "Comentários",
         description = "Endpoints relacionados aos comentários de jogos")
 public class CommentController {
+    private final CommentService commentService;
+
+    /**
+     * Constrói uma nova instância de CommentController com suas dependências
+     * @param commentService Classe service com a lógica do Comment
+     */
     @Autowired
-    private CommentService commentService;
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @PostMapping
     @Operation(

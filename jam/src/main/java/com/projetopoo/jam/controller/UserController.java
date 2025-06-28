@@ -23,14 +23,25 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Classe para controlar os endpoints relacionados com usuários
+ */
 @RestController
 @RequestMapping("/api/users")
 @Tag(
         name = "User",
         description = "Endpoints relacionados aos usuários.")
 public class UserController {
+    private final UserService userService;
+
+    /**
+     * Constrói uma nova instância de UserController com suas dependências
+     * @param userService Classe service com a lógica do User
+     */
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     @Operation(

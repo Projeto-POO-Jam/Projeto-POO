@@ -15,6 +15,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+/**
+ * Classe para configurar segurança da aplicação, limitando o acesso às rotas.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -48,7 +51,7 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers(
+                    .requestMatchers( // Rotas que podem ser acessadas sem estar logado
                             "/api/users",
                             "/login",
                             "/signup",

@@ -2,19 +2,16 @@ package com.projetopoo.jam.dto.game;
 
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Classe para receber requisições dos jogos do frontend
+ */
 public class GameRequestDTO {
-
     private Long jamId;
     private String gameTitle;
     private String gameDescription;
     private String gameContent;
     private MultipartFile gamePhoto;
     private MultipartFile gameFile;
-
-
-    public GameRequestDTO() {
-
-    }
 
     public String getGameContent() {
         return gameContent;
@@ -24,23 +21,43 @@ public class GameRequestDTO {
         this.gameContent = gameContent;
     }
 
-    public Long getJamId() { return jamId; }
+    public Long getJamId() {
+        return jamId;
+    }
 
-    public void setJamId(Long jamId) { this.jamId = jamId; }
+    public void setJamId(Long jamId) {
+        this.jamId = jamId;
+    }
 
-    public String getGameTitle() { return gameTitle; }
+    public String getGameTitle() {
+        return gameTitle;
+    }
 
-    public void setGameTitle(String gameTitle) { this.gameTitle = gameTitle; }
+    public void setGameTitle(String gameTitle) {
+        this.gameTitle = gameTitle;
+    }
 
-    public String getGameDescription() { return gameDescription; }
+    public String getGameDescription() {
+        return gameDescription;
+    }
 
-    public void setGameDescription(String gameDescription) { this.gameDescription = gameDescription; }
+    public void setGameDescription(String gameDescription) {
+        this.gameDescription = gameDescription;
+    }
 
-    public MultipartFile getGamePhoto() { return gamePhoto; }
+    public MultipartFile getGamePhoto() {
+        return gamePhoto;
+    }
 
-    public void setGamePhoto(MultipartFile gamePhoto) { this.gamePhoto = gamePhoto; }
+    public void setGamePhoto(MultipartFile gamePhoto) {
+        this.gamePhoto = gamePhoto;
+    }
 
-    public MultipartFile getGameFile() { return gameFile; }
+    public MultipartFile getGameFile() {
+        return gameFile;
+    }
 
-    public void setGameFile(MultipartFile gameFile) { this.gameFile = gameFile; }
+    public void setGameFile(MultipartFile gameFile) {
+        this.gameFile = gameFile;
+    }
 }

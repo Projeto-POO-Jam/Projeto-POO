@@ -1,5 +1,8 @@
 package com.projetopoo.jam.dto.subscribe;
 
+/**
+ * Classe para receber requisições das inscrições do frontend
+ */
 public class SubscribeRequestDTO {
     private Long subscribeJamId;
 
