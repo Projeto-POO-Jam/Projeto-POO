@@ -1,5 +1,6 @@
 package com.projetopoo.jam.controller;
 
+import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserResquestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
@@ -115,6 +116,26 @@ public class UserController {
             errorResponse.put("errors", e.getErrors());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
         } catch (IOException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/changePassword")
+    @Operation(
+            summary = "Atualiza a senha do usuario",
+            description = "Ele poderá alterar a senha atual para uma nova")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Senha invalida", content = @Content)
+    })
+    public ResponseEntity<?> updatePassword(UserPasswordRequestDTO userPasswordResquestDTO, Principal principal)
+    {
+        try
+        {
+            userService.updatePassword(userPasswordResquestDTO, principal.getName());
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException | IOException e)
+        {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

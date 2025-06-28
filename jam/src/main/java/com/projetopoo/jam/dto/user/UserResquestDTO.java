@@ -89,4 +89,6 @@ public class UserResquestDTO {
     public void setUserInstagram(String userInstagram) {
         this.userInstagram = userInstagram;
     }
+
+
 }
