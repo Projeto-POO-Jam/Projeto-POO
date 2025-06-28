@@ -65,10 +65,6 @@ public class UserService {
 
         User existingUser = userRepository.findByIdentifier(identifier);
 
-        if (user.getUserPassword() != null) {
-            user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-        }
-
         if (user.getUserName() != null && !user.getUserName().equals(existingUser.getUserName())) {
             if (userRepository.findByUserName(user.getUserName()).isPresent()) {
                 validationErrors.add("USERNAME_EXISTS");
