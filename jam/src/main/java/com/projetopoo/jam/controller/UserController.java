@@ -45,7 +45,8 @@ public class UserController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class)))
     })
-    public ResponseEntity<UserResponseDTO> findUser(Principal principal) {
+    public ResponseEntity<UserResponseDTO> findUser(Principal principal)
+    {
         UserResponseDTO user = userService.findUser(principal.getName());
         return ResponseEntity.ok(user);
     }
