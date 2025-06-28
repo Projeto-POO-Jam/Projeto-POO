@@ -1,0 +1,83 @@
+main.container-perfil {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("/img/background-white.png");
+}
+
+html.dark main.container-perfil {
+    background-image: url("/img/background-dark.png");
+}
+
+.details-user-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.edit-button{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+
+.edit-button span{
+    padding: 9px;
+    border-radius: 1rem;
+    font-size: 30px;
+    color: var(--text);
+    margin: 1rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.edit-button span:hover{
+    transition: 0.3s;
+    background-color: #555;
+}
+
+#img-user-perfil img{
+    width: 10rem;
+    height: 10rem;
+    border-radius: 100%;
+    user-select: none;
+}
+
+.info-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+
+.links-perfil {
+    display: flex;
+    gap: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.links-perfil a i {
+    color: var(--text);
+    font-size: 2rem;
+    text-decoration: none;
+    transition: transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.links-perfil a i:hover{
+    transition: 0.3s;
+    color: var(--blue);
+}
+
+.details-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}

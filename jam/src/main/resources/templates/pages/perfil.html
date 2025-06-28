@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: Head('Perfil do Usuário')}"></head>
+<body>
+<div th:replace="fragments/menu :: siteMenu"></div>
+
+<main class="container-perfil">
+    <section class="details-user-perfil">
+        <div class="edit-button" style="display: none;">
+            <span class="material-symbols-outlined">edit</span>
+        </div>
+        <div class="info-perfil">
+            <div id="img-user-perfil">
+                <img
+                    data-field="userPhoto"
+                    data-default="/img/icone-padrao.png"
+                    alt="Foto do usuário"
+                    class="skeleton"
+                />
+            </div>
+
+            <div class="details-perfil">
+                <h1 data-field="userName" class="skeleton"></h1>
+                <div class="links-perfil">
+                    <a id="linkedin-link" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+                    <a id="github-link" target="_blank"><i class="fa-brands fa-github"></i></a>
+                    <a id="instagram-link" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a id="facebook-link" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="details-account-perfil">
+    </section>
+
+</main>
+
+<script th:src="@{/js/common/theme.js}"></script>
+<script type="module" th:src="@{/js/pages/perfil.js}"></script>
+</body>
+</html>

@@ -48,6 +48,11 @@ public class PageController {
         return "pages/404";
     }
 
+    @GetMapping("/perfil/{id}")
+    public String perfil(@PathVariable Long id) {
+        return "pages/perfil";
+    }
+
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
