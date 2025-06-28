@@ -1,5 +1,8 @@
 package com.projetopoo.jam.dto.subscribe;
 
+/**
+ * Classe para retornar informações sobre o total de inscrições para o frontend
+ */
 public class SubscribeTotalResponseDTO {
     private Long subscribeTotal;
 

@@ -2,6 +2,9 @@ package com.projetopoo.jam.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Classe model de inscrições, responsável pelo modelo de entidades do banco de dados.
+ */
 @Entity
 @Table(name = "subscribes", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "jam_id"})
@@ -22,10 +25,6 @@ public class Subscribe {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jam_id", nullable = false)
     private Jam subscribeJam;
-
-    public Subscribe() {
-
-    }
 
     public Long getSubscribeId() {
         return subscribeId;

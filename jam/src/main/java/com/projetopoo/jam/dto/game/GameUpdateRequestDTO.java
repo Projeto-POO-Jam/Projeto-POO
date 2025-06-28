@@ -1,15 +1,27 @@
 package com.projetopoo.jam.dto.game;
 
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
+
 /**
- * Classe correlacionada a paginação para retornar informações sobre os jogos para o frontend
+ * Classe para receber requisições do frontend se for para atualizar os dados do jogo
  */
-public class GameSummaryDTO {
+public class GameUpdateRequestDTO {
+    @NotNull()
     private Long gameId;
     private String gameTitle;
     private String gameDescription;
-    private String gamePhoto;
-    private String gameFile;
-    private Long gameVoteTotal;
+    private String gameContent;
+    private MultipartFile gamePhoto;
+    private MultipartFile gameFile;
+
+    public String getGameContent() {
+        return gameContent;
+    }
+
+    public void setGameContent(String gameContent) {
+        this.gameContent = gameContent;
+    }
 
     public Long getGameId() {
         return gameId;
@@ -35,27 +47,19 @@ public class GameSummaryDTO {
         this.gameDescription = gameDescription;
     }
 
-    public String getGamePhoto() {
+    public MultipartFile getGamePhoto() {
         return gamePhoto;
     }
 
-    public void setGamePhoto(String gamePhoto) {
+    public void setGamePhoto(MultipartFile gamePhoto) {
         this.gamePhoto = gamePhoto;
     }
 
-    public String getGameFile() {
+    public MultipartFile getGameFile() {
         return gameFile;
     }
 
-    public void setGameFile(String gameFile) {
+    public void setGameFile(MultipartFile gameFile) {
         this.gameFile = gameFile;
-    }
-
-    public Long getGameVoteTotal() {
-        return gameVoteTotal;
-    }
-
-    public void setGameVoteTotal(Long gameVoteTotal) {
-        this.gameVoteTotal = gameVoteTotal;
     }
 }

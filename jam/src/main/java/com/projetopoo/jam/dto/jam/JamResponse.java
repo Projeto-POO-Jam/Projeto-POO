@@ -1,11 +1,13 @@
 package com.projetopoo.jam.dto.jam;
 
-import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.model.JamStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe para retornar informações sobre as jams para o frontend
+ */
 public class JamResponse {
     private Long jamId;
     private String jamTitle;
@@ -13,14 +15,14 @@ public class JamResponse {
     private LocalDateTime jamStartDate;
     private LocalDateTime jamEndDate;
     private String jamContent;
-    private String jamCover;
-    private String jamWallpaper;
-    private String jamBanner;
-    private JamStatus jamStatus;
     private String jamBackgroundColor;
     private String jamBackgroundCardColor;
     private String jamTextColor;
     private String jamLinkColor;
+    private String jamCover;
+    private String jamWallpaper;
+    private String jamBanner;
+    private JamStatus jamStatus;
     private Long jamTotalSubscribers;
     private UserWithCurrentResponseDTO jamUser;
 
@@ -72,6 +74,38 @@ public class JamResponse {
         this.jamContent = jamContent;
     }
 
+    public String getJamBackgroundColor() {
+        return jamBackgroundColor;
+    }
+
+    public void setJamBackgroundColor(String jamBackgroundColor) {
+        this.jamBackgroundColor = jamBackgroundColor;
+    }
+
+    public String getJamBackgroundCardColor() {
+        return jamBackgroundCardColor;
+    }
+
+    public void setJamBackgroundCardColor(String jamBackgroundCardColor) {
+        this.jamBackgroundCardColor = jamBackgroundCardColor;
+    }
+
+    public String getJamTextColor() {
+        return jamTextColor;
+    }
+
+    public void setJamTextColor(String jamTextColor) {
+        this.jamTextColor = jamTextColor;
+    }
+
+    public String getJamLinkColor() {
+        return jamLinkColor;
+    }
+
+    public void setJamLinkColor(String jamLinkColor) {
+        this.jamLinkColor = jamLinkColor;
+    }
+
     public String getJamCover() {
         return jamCover;
     }
@@ -118,37 +152,5 @@ public class JamResponse {
 
     public void setJamUser(UserWithCurrentResponseDTO jamUser) {
         this.jamUser = jamUser;
-    }
-
-    public String getJamBackgroundColor() {
-        return jamBackgroundColor;
-    }
-
-    public void setJamBackgroundColor(String jamBackgroundColor) {
-        this.jamBackgroundColor = jamBackgroundColor;
-    }
-
-    public String getJamBackgroundCardColor() {
-        return jamBackgroundCardColor;
-    }
-
-    public void setJamBackgroundCardColor(String jamBackgroundCardColor) {
-        this.jamBackgroundCardColor = jamBackgroundCardColor;
-    }
-
-    public String getJamTextColor() {
-        return jamTextColor;
-    }
-
-    public void setJamTextColor(String jamTextColor) {
-        this.jamTextColor = jamTextColor;
-    }
-
-    public String getJamLinkColor() {
-        return jamLinkColor;
-    }
-
-    public void setJamLinkColor(String jamLinkColor) {
-        this.jamLinkColor = jamLinkColor;
     }
 }

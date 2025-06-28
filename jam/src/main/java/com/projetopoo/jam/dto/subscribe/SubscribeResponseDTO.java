@@ -1,5 +1,8 @@
 package com.projetopoo.jam.dto.subscribe;
 
+/**
+ * Classe para retornar informações sobre as inscrições para o frontend
+ */
 public class SubscribeResponseDTO {
     private Boolean subscribed;
 

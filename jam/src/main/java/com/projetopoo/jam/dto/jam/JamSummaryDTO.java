@@ -4,6 +4,9 @@ import com.projetopoo.jam.model.JamStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe correlacionada a paginação para retornar informações sobre as jams para o frontend
+ */
 public class JamSummaryDTO {
     private Long jamId;
     private String jamTitle;

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-
+/**
+ * Classe model de jogo, responsável pelo modelo de entidades do banco de dados.
+ */
 @Entity
 @Table(name = "games")
 public class Game {
@@ -31,34 +33,46 @@ public class Game {
     @Column
     private String gameToken;
 
-    @OneToMany(mappedBy = "voteGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Vote> gameVotes;
-
     @OneToOne(mappedBy = "subscribeGame")
     private Subscribe gameSubscribe;
+
+    @OneToMany(mappedBy = "voteGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Vote> gameVotes;
 
     @OneToMany(mappedBy = "commentGame", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comment> gameComment;
 
-    public Game() {
-
+    public String getGameContent() {
+        return gameContent;
     }
 
-    public String getGameContent() {return gameContent;}
+    public void setGameContent(String gameContent) {
+        this.gameContent = gameContent;
+    }
 
-    public void setGameContent(String gameContent) {this.gameContent = gameContent;}
+    public String getGameDescription() {
+        return gameDescription;
+    }
 
-    public String getGameDescription() { return gameDescription; }
+    public void setGameDescription(String description) {
+        this.gameDescription = description;
+    }
 
-    public void setGameDescription(String description) { this.gameDescription = description; }
+    public String getGamePhoto() {
+        return gamePhoto;
+    }
 
-    public String getGamePhoto() { return gamePhoto; }
+    public void setGamePhoto(String gamePhoto) {
+        this.gamePhoto = gamePhoto;
+    }
 
-    public void setGamePhoto(String gamePhoto) { this.gamePhoto = gamePhoto; }
+    public String getGameFile() {
+        return gameFile;
+    }
 
-    public String getGameFile() { return gameFile;}
-
-    public void setGameFile(String gameFile) { this.gameFile = gameFile; }
+    public void setGameFile(String gameFile) {
+        this.gameFile = gameFile;
+    }
 
     public Long getGameId() {
         return gameId;

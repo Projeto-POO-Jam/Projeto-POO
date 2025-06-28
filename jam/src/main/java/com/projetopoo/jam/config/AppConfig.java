@@ -6,6 +6,9 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Classe para configurações gerais.
+ */
 @Configuration
 public class AppConfig {
 

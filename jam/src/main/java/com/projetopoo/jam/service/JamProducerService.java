@@ -7,15 +7,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * Classe responsável por agendar jams no RabbitMQ para mudar de status
+ */
 @Service
 public class JamProducerService {
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    public JamProducerService(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     public void scheduleJamStatusUpdate(Long jamId, long delayInMilliseconds, String newJamStatus, String jamToken) {
+        // Limite máximo de tempo de agendamento permitido, caso necessite de mais tempo deve ter um reagendamento
         long maxDelay = Integer.MAX_VALUE;
-        //long maxDelay = 60000;
         Map<String, Object> messageBody = Map.of(
                 "jamId", jamId,
                 "newJamStatus", newJamStatus,

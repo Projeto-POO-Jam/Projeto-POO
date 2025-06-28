@@ -2,10 +2,9 @@ package com.projetopoo.jam.controller;
 
 import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.dto.user.UserResquestDTO;
+import com.projetopoo.jam.dto.user.UserRequestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 import com.projetopoo.jam.service.UserService;
-import com.projetopoo.jam.exception.UserValidationException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,25 +12,36 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Classe para controlar os endpoints relacionados com usuários
+ */
 @RestController
 @RequestMapping("/api/users")
 @Tag(
         name = "User",
         description = "Endpoints relacionados aos usuários.")
+@Validated
 public class UserController {
+    private final UserService userService;
+
+    /**
+     * Constrói uma nova instância de UserController com suas dependências
+     * @param userService Classe service com a lógica do User
+     */
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     @Operation(
@@ -45,8 +55,7 @@ public class UserController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class)))
     })
-    public ResponseEntity<UserResponseDTO> findUser(Principal principal)
-    {
+    public ResponseEntity<UserResponseDTO> findUser(Principal principal) {
         UserResponseDTO user = userService.findUser(principal.getName());
         return ResponseEntity.ok(user);
     }
@@ -60,13 +69,9 @@ public class UserController {
                             schema = @Schema(implementation = UserResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Usuário não encontrado", content = @Content)
     })
-    public ResponseEntity<?> findUserId(@PathVariable Long userId, Principal principal) {
-        try {
-            UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
-            return ResponseEntity.ok(user);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> findUserId(@NotNull() @PathVariable Long userId, Principal principal) {
+        UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(consumes = { "multipart/form-data" })
@@ -81,18 +86,9 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> createUser(UserResquestDTO userResquestDTO) {
-        try {
-            userService.createUser(userResquestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> createUser(UserRequestDTO userRequestDTO) throws IOException {
+        userService.createUser(userRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(consumes = { "multipart/form-data" })
@@ -107,18 +103,9 @@ public class UserController {
                             schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
             @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
     })
-    public ResponseEntity<?> updateUser(UserResquestDTO userResquestDTO, Principal principal) {
-        try{
-            userService.updateUser(userResquestDTO, principal.getName());
-            return ResponseEntity.ok().build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> updateUser(UserRequestDTO userRequestDTO, Principal principal) throws IOException {
+        userService.updateUser(userRequestDTO, principal.getName());
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/changePassword")
@@ -129,14 +116,11 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
             @ApiResponse(responseCode = "400", description = "Senha invalida", content = @Content)
     })
-    public ResponseEntity<?> updatePassword(UserPasswordRequestDTO userPasswordResquestDTO, Principal principal)
-    {
-        try
-        {
-            userService.updatePassword(userPasswordResquestDTO, principal.getName());
+    public ResponseEntity<?> updatePassword(UserPasswordRequestDTO userPasswordRequestDTO, Principal principal) {
+        try {
+            userService.updatePassword(userPasswordRequestDTO, principal.getName());
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException | IOException e)
-        {
+        } catch (IllegalArgumentException | IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

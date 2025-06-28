@@ -1,7 +1,9 @@
 package com.projetopoo.jam.dto.user;
 
-public class UserPasswordRequestDTO
-{
+/**
+ * Classe para receber requisições de alterar senha do usuário do frontend
+ */
+public class UserPasswordRequestDTO {
     private String userOldPassword;
     private String userNewPassword;
 

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Classe para controlar os endpoints relacionados as paginas do frontend
+ */
 @Controller
 public class PageController {
 

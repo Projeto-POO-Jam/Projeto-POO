@@ -1,17 +1,22 @@
 package com.projetopoo.jam.dto.game;
 
-import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Classe para retornar informações sobre os jogos para o frontend
+ * Classe para receber requisições dos jogos do frontend
  */
-public class GameResponseDTO {
+public class GameRequestDTO {
+    @NotNull()
+    private Long jamId;
+
+    @NotNull()
     private String gameTitle;
+
     private String gameDescription;
     private String gameContent;
-    private String gamePhoto;
-    private String gameFile;
-    private UserWithCurrentResponseDTO userResponseDTO;
+    private MultipartFile gamePhoto;
+    private MultipartFile gameFile;
 
     public String getGameContent() {
         return gameContent;
@@ -21,12 +26,12 @@ public class GameResponseDTO {
         this.gameContent = gameContent;
     }
 
-    public UserWithCurrentResponseDTO getUserResponseDTO() {
-        return userResponseDTO;
+    public Long getJamId() {
+        return jamId;
     }
 
-    public void setUserResponseDTO(UserWithCurrentResponseDTO userResponseDTO) {
-        this.userResponseDTO = userResponseDTO;
+    public void setJamId(Long jamId) {
+        this.jamId = jamId;
     }
 
     public String getGameTitle() {
@@ -45,20 +50,19 @@ public class GameResponseDTO {
         this.gameDescription = gameDescription;
     }
 
-    public String getGamePhoto() {
+    public MultipartFile getGamePhoto() {
         return gamePhoto;
     }
 
-    public void setGamePhoto(String gamePhoto) {
+    public void setGamePhoto(MultipartFile gamePhoto) {
         this.gamePhoto = gamePhoto;
     }
 
-    public String getGameFile() {
+    public MultipartFile getGameFile() {
         return gameFile;
     }
 
-    public void setGameFile(String gameFile) {
+    public void setGameFile(MultipartFile gameFile) {
         this.gameFile = gameFile;
     }
-
 }

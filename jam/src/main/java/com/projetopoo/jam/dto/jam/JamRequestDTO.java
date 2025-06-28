@@ -4,28 +4,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe para receber requisições das jams do frontend
+ */
 public class JamRequestDTO {
-    private Long jamId;
     private String jamTitle;
     private String jamDescription;
     private LocalDateTime jamStartDate;
     private LocalDateTime jamEndDate;
     private String jamContent;
-    private MultipartFile jamCover;
-    private MultipartFile jamWallpaper;
-    private MultipartFile jamBanner;
     private String jamBackgroundColor;
     private String jamBackgroundCardColor;
     private String jamTextColor;
     private String jamLinkColor;
-
-    public Long getJamId() {
-        return jamId;
-    }
-
-    public void setJamId(Long jamId) {
-        this.jamId = jamId;
-    }
+    private MultipartFile jamCover;
+    private MultipartFile jamWallpaper;
+    private MultipartFile jamBanner;
 
     public String getJamTitle() {
         return jamTitle;
@@ -67,30 +61,6 @@ public class JamRequestDTO {
         this.jamContent = jamContent;
     }
 
-    public MultipartFile getJamCover() {
-        return jamCover;
-    }
-
-    public void setJamCover(MultipartFile jamCover) {
-        this.jamCover = jamCover;
-    }
-
-    public MultipartFile getJamWallpaper() {
-        return jamWallpaper;
-    }
-
-    public void setJamWallpaper(MultipartFile jamWallpaper) {
-        this.jamWallpaper = jamWallpaper;
-    }
-
-    public MultipartFile getJamBanner() {
-        return jamBanner;
-    }
-
-    public void setJamBanner(MultipartFile jamBanner) {
-        this.jamBanner = jamBanner;
-    }
-
     public String getJamBackgroundColor() {
         return jamBackgroundColor;
     }
@@ -121,5 +91,29 @@ public class JamRequestDTO {
 
     public void setJamLinkColor(String jamLinkColor) {
         this.jamLinkColor = jamLinkColor;
+    }
+
+    public MultipartFile getJamCover() {
+        return jamCover;
+    }
+
+    public void setJamCover(MultipartFile jamCover) {
+        this.jamCover = jamCover;
+    }
+
+    public MultipartFile getJamWallpaper() {
+        return jamWallpaper;
+    }
+
+    public void setJamWallpaper(MultipartFile jamWallpaper) {
+        this.jamWallpaper = jamWallpaper;
+    }
+
+    public MultipartFile getJamBanner() {
+        return jamBanner;
+    }
+
+    public void setJamBanner(MultipartFile jamBanner) {
+        this.jamBanner = jamBanner;
     }
 }
