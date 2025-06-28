@@ -2,10 +2,14 @@
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="conteudoJamsInscritas">
-        <div class="title-aba-JI">
-            <h1>Jams que você participou</h1>
+        <div class="title-aba-games">
+            <h1>Jams Inscritas</h1>
+            <p>Todas as Jams das quais você já participou.</p>
         </div>
-        <div id="JI-list-container" class="JI-grid">
+
+        <div id="user-jams-registered-list-container" class="cards-container">
+        </div>
+        <div id="load-more-jams-registered-container" class="load-more-container">
         </div>
     </div>
 </body>

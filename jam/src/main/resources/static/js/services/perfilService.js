@@ -31,12 +31,14 @@ export function fetchUserCreatedJams(userId, limit = 4) {
 }
 
 /**
- * Busca as Jams em que um usuário está inscrito.
+ * Busca as Jams em que um usuário está inscrito com paginação.
  * @param {string|number} userId - O ID do usuário.
+ * @param {number} limit - A quantidade de itens por página.
+ * @param {number} offset - O deslocamento para a paginação.
  * @returns {Promise<object>}
  */
-export function fetchUserRegisteredJams(userId, limit = 4) {
-    return apiRequest('GET', `api/jams/user?userId=${userId}&offset=0&limit=${limit}`)
+export function fetchUserRegisteredJams(userId, limit = 4, offset = 0) {
+    return apiRequest('GET', `api/jams/user?userId=${userId}&offset=${offset}&limit=${limit}`)
         .then(({ data }) => data);
 }
 
