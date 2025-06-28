@@ -1,5 +1,6 @@
 package com.projetopoo.jam.service;
 
+import com.projetopoo.jam.dto.user.UserPasswordRequestDTO;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserRequestDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
@@ -103,12 +104,6 @@ public class UserService {
         // Busca usuário que fez a requisição
         User existingUser = userRepository.findByIdentifier(identifier);
 
-        // Verifica se a senha vai ser alterada
-        if (user.getUserPassword() != null) {
-            // Criptografa a senha caso ela exista
-            user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-        }
-
         // Verifica se o nome do usuário já está sendo usado
         if (user.getUserName() != null && !user.getUserName().equals(existingUser.getUserName())) {
             // Adiciona erro a lista de erros
@@ -195,4 +190,19 @@ public class UserService {
         }
     }
 
+
+    @Transactional
+    public void updatePassword(UserPasswordRequestDTO user, String identifier) throws IOException {
+        User existingUser = userRepository.findByIdentifier(identifier);
+
+        if (user.getUserNewPassword() != null) {
+            if (!passwordEncoder.matches(user.getUserOldPassword(), existingUser.getUserPassword())) {
+                throw new IllegalArgumentException("Senha incorreta");
+            }
+            existingUser.setUserPassword(passwordEncoder.encode(user.getUserNewPassword()));
+        } else {
+            throw new IllegalArgumentException("Senha vazia");
+        }
+        userRepository.save(existingUser);
+    }
 }

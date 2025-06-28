@@ -1,16 +1,16 @@
-import { apiRequest } from './api.js';
-import { showSuccess, showError } from './notifications.js';
-import { setupValidation, isFormValid } from './validation.js';
-import { registerFilePondPlugins, createFilePondInstance } from './filepond-helper.js';
+import { apiRequest } from '../../common/api.js';
+import { showSuccess, showError } from '../../common/notifications.js';
+import { setupValidation, isFormValid } from '../../common/validation.js';
+import { registerFilePondPlugins, createFilePondInstance } from '../../common/filepond-helper.js';
 
 /**
  * Inicializa a lógica de um formulário de jogo (criação/edição).
  * @param {object} config - Objeto de configuração.
  * @param {string} config.mode - 'create' ou 'edit'.
  * @param {string} config.apiUrl - A URL da API para o submit.
- * @param {string} config.method - 'POST' ou 'PUT'/'PATCH'.
+ * @param {string} config.method - 'POST' ou 'PUT'.
  * @param {string} config.redirectUrl - URL para redirecionar em caso de sucesso.
- * @param {string} [config.entityId] - O ID da entidade (Jam ou Game).
+ * @param {string} [config.entityId] - O ID da entidade
  * @returns {object} Retorna as instâncias do FilePond para manipulação externa.
  */
 export function initializeGameForm(config) {
@@ -84,9 +84,9 @@ export function initializeGameForm(config) {
                         return true;
                     }
 
-                    return file.file.name.toLowerCase().endsWith('.rar');
+                    return file.file.name.toLowerCase().endsWith('.zip');
                 },
-                message: 'O tipo de arquivo é inválido. Apenas .rar é permitido.'
+                message: 'O tipo de arquivo é inválido. Apenas .zip é permitido.'
             }
         ]
     };
@@ -118,12 +118,13 @@ export function initializeGameForm(config) {
         //Adiciona os dados de configuração
         if (config.mode === 'create' && config.entityId) {
             formData.append('jamId', config.entityId);
+        } else if (config.mode === 'edit' && config.entityId) {
+            formData.append('gameId', config.entityId);
         }
 
         formData.append('gameTitle', $('#gameTitle').val());
         formData.append('gameDescription', $('#gameDescription').val());
         formData.append('gameContent', $('#gameContent').summernote('code'));
-
 
         const photoPond = pondInstances.gamePhoto;
         if (photoPond && photoPond.getFiles().length > 0 && photoPond.getFile().origin === 1) {
@@ -140,8 +141,15 @@ export function initializeGameForm(config) {
             showSuccess('Operação realizada com sucesso!');
             setTimeout(() => window.location.href = config.redirectUrl, 2000);
         } catch (err) {
-            showError('Ocorreu um erro. Tente novamente.');
-            submitButton.prop('disabled', false).text('Postar Game');
+            if (err.status === 403) {
+                showError('Você não tem permissão para editar este jogo.');
+                setTimeout(() => window.location.href = '/404', 3000);
+
+            } else {
+                showError('Ocorreu um erro ao tentar salvar as alterações.');
+                const buttonText = config.mode === 'create' ? 'Postar Game' : 'Editar Game';
+                submitButton.prop('disabled', false).text(buttonText);
+            }
         }
     });
 

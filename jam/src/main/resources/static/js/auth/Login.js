@@ -2,7 +2,7 @@ import { apiRequest } from '../common/api.js';
 import { showError } from '../common/notifications.js';
 import { setupValidation, isFormValid } from '../common/validation.js';
 
-$(function() {
+$( async function() {
     const form = $('#loginForm');
 
     //Validação
@@ -24,6 +24,7 @@ $(function() {
         const formData = new FormData(this);
         formData.set('username', $.trim($('#username').val()));
         formData.set('password', $('#password').val());
+
 
         apiRequest('POST', 'perform_login', formData, 'application/x-www-form-urlencoded')
             .then(() => {
