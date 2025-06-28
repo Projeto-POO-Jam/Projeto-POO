@@ -273,3 +273,23 @@
     display: flex;
     align-items: center;
 }
+
+body.body-centered-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+body.body-centered-content main.main-with-menu {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container-center-tela {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}

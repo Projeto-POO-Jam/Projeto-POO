@@ -48,6 +48,11 @@ public class PageController {
         return "pages/404";
     }
 
+    @GetMapping("/changePassword")
+    public String changePassword() {
+        return "pages/changePassword";
+    }
+
     @GetMapping("/perfil/{id}")
     public String viewPerfil(@PathVariable Long id) {
         return "pages/perfil";

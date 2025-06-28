@@ -126,7 +126,7 @@ $(async function() {
 
     }catch (err){
         console.error('Erro ao carregar Jam:', err);
-        showError('Não foi possível carregar esta Jam.');
+        window.location.href = '/404';
     }finally {
         setTimeout(() => {
             removeSkeleton(root);

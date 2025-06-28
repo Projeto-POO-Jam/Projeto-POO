@@ -122,7 +122,7 @@ $(async function() {
 
     } catch (error) {
         console.error('Erro ao buscar dados do usuário:', error);
-        showError('Não foi possível carregar os dados do perfil.');
+        window.location.href = '/404';
     } finally {
         removeSkeleton(root);
     }
