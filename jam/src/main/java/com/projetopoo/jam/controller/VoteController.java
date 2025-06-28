@@ -69,7 +69,8 @@ public class VoteController {
             @ApiResponse(responseCode = "200", description = "Voto alternado com sucesso",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrada", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> toggleVote(@Valid @RequestBody VoteRequestDTO voteRequest, Principal principal) {
         VoteResponseDTO voteResponseDTO = voteService.toggleVote(voteRequest, principal.getName());

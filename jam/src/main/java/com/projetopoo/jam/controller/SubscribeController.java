@@ -51,7 +51,8 @@ public class SubscribeController {
             @ApiResponse(responseCode = "200", description = "Inscrição alternada com sucesso",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SubscribeResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Jam não encontrada", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> toggleSubscribe(@Valid @RequestBody SubscribeRequestDTO subscribeRequestDTO, Principal principal) {
         SubscribeResponseDTO subscribeResponseDTO = subscribeService.toggleSubscribe(subscribeRequestDTO, principal.getName());

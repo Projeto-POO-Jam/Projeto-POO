@@ -47,7 +47,8 @@ public class CommentController {
             description = "Adiciona um comentário a um jogo. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Comentário criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
     public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO, Principal principal) {
         commentService.createComment(commentRequestDTO, principal.getName());
@@ -64,7 +65,8 @@ public class CommentController {
                     description = "Comentários listados com sucesso",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CommentResponseDTO.class)))
+                            schema = @Schema(implementation = CommentResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado", content = @Content)
     })
     public ResponseEntity<List<CommentResponseDTO>> findCommentsList(@NotNull() @PathVariable Long gameId, Principal principal) {
         List<CommentResponseDTO> comments = commentService.findCommentsList(gameId, principal.getName());
