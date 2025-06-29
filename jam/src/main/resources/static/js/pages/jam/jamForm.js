@@ -166,13 +166,6 @@ export function initializeJamForm(config) {
         }]
     };
 
-    if (config.mode === 'create') {
-        validationRules.coverImg.unshift({
-            validate: () => pondInstances.jamCover?.getFiles().length > 0,
-            message: 'A imagem de capa é obrigatória.'
-        });
-    }
-
     setupValidation(validationRules);
 
     //Lógica de Submissão do Formulário

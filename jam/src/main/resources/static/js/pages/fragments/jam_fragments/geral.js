@@ -7,7 +7,7 @@ function updateSubscriptionUI(isSubscribed) {
 
     if (isSubscribed) {
         actionContainer.html(`
-            <button id="post-game-btn" class="join-btn bg-jam-color">Postar Jogo</button>
+            <button id="post-game-btn" class="join-btn" style="display: none;">Postar Jogo</button>
             <a id="toggle-subscription-btn" class="leave-jam-link">Sair da Jam</a>
         `);
     } else {
@@ -202,14 +202,16 @@ function updateCountdown(data, start, end, timer) {
 
     if (diff > 0) { //am ainda não começou
         $('#cd-prefix').text('Inicia em');
-        actionContainer.hide(); //Esconde os botões até a Jam começar
+        $('#post-game-btn').hide();
 
     } else { //Jam está rolando ou acabou
         actionContainer.show();
 
+
         if (now < end) { //Jam está rolando
             diff = end - now; //Calcula o tempo restante até o fim
             $('#cd-prefix').text('Encerra em');
+            $('#post-game-btn').show();
         } else { // Jam terminou
             $('#cd-prefix').text('Encerrado');
             $('#cd-days, #cd-hours, #cd-minutes, #cd-seconds').text('00');

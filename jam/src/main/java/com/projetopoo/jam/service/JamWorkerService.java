@@ -27,18 +27,21 @@ public class JamWorkerService {
     private final ModelMapper modelMapper;
     private final SseNotificationService sseNotificationService;
     private final JamProducerService rabbitMQProducerService;
+    private final NotificationService notificationService;
 
     @Autowired
     public JamWorkerService(JamRepository jamRepository,
                             SubscribeRepository subscribeRepository,
                             ModelMapper modelMapper,
                             SseNotificationService sseNotificationService,
-                            JamProducerService rabbitMQProducerService) {
+                            JamProducerService rabbitMQProducerService,
+                            NotificationService notificationService) {
         this.jamRepository = jamRepository;
         this.subscribeRepository = subscribeRepository;
         this.modelMapper = modelMapper;
         this.sseNotificationService = sseNotificationService;
         this.rabbitMQProducerService = rabbitMQProducerService;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -49,7 +52,9 @@ public class JamWorkerService {
         String statusStr = (String) messageBody.get("newJamStatus");
         String jamToken = (String) messageBody.get("jamToken");
         Boolean jamReschedule = (Boolean) messageBody.get("jamReschedule");
+
         JamStatus newJamStatus = JamStatus.valueOf(statusStr);
+
 
         // Verifica se a jam existe
         Optional<Jam> optionalJam = jamRepository.findById(jamId);
@@ -79,6 +84,8 @@ public class JamWorkerService {
 
                 // Salva a jam
                 jamRepository.save(jam);
+
+                notificationService.createAndSendJamStatusNotification(jam, newJamStatus);
 
                 // Passa a jam para o formato de resposta SSE
                 JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);

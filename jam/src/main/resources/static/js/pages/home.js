@@ -10,7 +10,6 @@ async function initializeCarousel() {
     try {
         const { jams } = await fetchBannerJams(limit);
 
-        //Verifica se a API retornou alguma Jam para o banner.
         if (!jams || jams.length === 0) {
             carouselContainer.hide();
             return;
@@ -19,45 +18,42 @@ async function initializeCarousel() {
         //Itera sobre cada Jam retornada para criar um slide.
         jams.forEach(jam => {
             let slideHtml;
-
-            //Lógica para criar o slide:
-            // Se a Jam tiver um 'jamBanner'.
             if (jam.jamBanner) {
                 slideHtml = `
-                        <div>
-                            <a href="/jams/${jam.jamId}" class="carousel-slide-link">
-                                <img src="${jam.jamBanner}" alt="Banner para ${jam.jamTitle}" class="carousel-image"/>
-                            </a>
-                        </div>
-                    `;
-            }
-            //Cria um slide de "fallback" padrão.
-            else {
+                    <div>
+                        <a href="/jams/${jam.id}" class="carousel-slide-link">
+                            <img src="${jam.jamBanner}" alt="Banner para ${jam.jamTitle}" class="carousel-image"/>
+                        </a>
+                    </div>
+                `;
+            } else {
                 slideHtml = `
-                        <div>
-                            <a href="/jams/${jam.jamId}" class="carousel-slide-link">
-                                <div class="carousel-fallback">
-                                    <h1>${jam.jamTitle}</h1>
-                                </div>
-                            </a>
-                        </div>
-                    `;
+                    <div>
+                        <a href="/jams/${jam.id}" class="carousel-slide-link">
+                            <div class="carousel-fallback">
+                                <h1>${jam.jamTitle}</h1>
+                            </div>
+                        </a>
+                    </div>
+                `;
             }
             carouselContainer.append(slideHtml);
         });
 
-        //inicializa a biblioteca Slick Carousel.
-        carouselContainer.slick({
-            dots: true,
-            infinite: true,
-            speed: 500,
-            fade: true,
-            cssEase: 'linear',
-            autoplay: true,
-            autoplaySpeed: 4000
-        });
-    }
-    catch (err){
+        //Apenas inicialize o Slick se houver maus de um item.
+        if (jams.length > 1) {
+            carouselContainer.slick({
+                dots: true,
+                infinite: true,
+                speed: 500,
+                fade: true,
+                cssEase: 'linear',
+                autoplay: true,
+                autoplaySpeed: 4000
+            });
+        }
+
+    } catch (err) {
         console.error('Erro ao carregar banners da Jam:', err);
         carouselContainer.hide();
     }

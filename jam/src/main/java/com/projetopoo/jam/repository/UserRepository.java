@@ -11,7 +11,7 @@ import java.util.Optional;
  * Interface repository para classe User, responsável pelas funções relacionadas ao banco de dados
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Função que busca um usuário pelo userEmail
      * @param userEmail E-mail do usuário que está sendo usado na consulta
