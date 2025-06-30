@@ -4,11 +4,11 @@ import java.util.List;
 
 public class NotificationPaginatedResponseDTO {
     private List<NotificationSummaryDTO> notifications;
-    private long totalUnreadCount;
+    private Long total;
 
-    public NotificationPaginatedResponseDTO(List<NotificationSummaryDTO> notifications, long totalUnreadCount) {
+    public NotificationPaginatedResponseDTO(List<NotificationSummaryDTO> notifications, Long total) {
         this.notifications = notifications;
-        this.totalUnreadCount = totalUnreadCount;
+        this.total = total;
     }
 
     public List<NotificationSummaryDTO> getNotifications() {
@@ -19,11 +19,11 @@ public class NotificationPaginatedResponseDTO {
         this.notifications = notifications;
     }
 
-    public long getTotalUnreadCount() {
-        return totalUnreadCount;
+    public Long getTotal() {
+        return total;
     }
 
-    public void setTotalUnreadCount(long totalUnreadCount) {
-        this.totalUnreadCount = totalUnreadCount;
+    public void setTotal(Long total) {
+        this.total = total;
     }
 }

@@ -2,6 +2,8 @@ package com.projetopoo.jam.service;
 
 import com.projetopoo.jam.dto.notification.NotificationSummaryDTO;
 import com.projetopoo.jam.dto.notification.NotificationPaginatedResponseDTO;
+import com.projetopoo.jam.dto.notification.NotificationTotalResponseDTO;
+import com.projetopoo.jam.dto.vote.VoteTotalResponseDTO;
 import com.projetopoo.jam.model.Jam;
 import com.projetopoo.jam.model.JamStatus;
 import com.projetopoo.jam.model.Notification;
@@ -65,7 +67,7 @@ public class NotificationService {
         Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by("notificationDate").descending());
 
         // Busca a lista paginada de notificações
-        Page<Notification> notificationPage = notificationRepository.findByNotificationUserAndNotificationReadFalse(user, pageable);
+        Page<Notification> notificationPage = notificationRepository.findByNotificationUser(user, pageable);
 
         // Passa a lista paginada para o formato da resposta
         List<NotificationSummaryDTO> listNotificationSummaryDTO = notificationPage.getContent().stream()
@@ -86,6 +88,23 @@ public class NotificationService {
 
         // Atualiza o campo Read como true para todas as notificações atuais do usuário
         notificationRepository.markAllAsReadForUser(user);
+    }
+
+    /**
+     * Função para buscar o total de notificações não lidas do usuário
+     * @param identifier Identificador do usuário
+     * @return Total de inscrições na jam
+     */
+    @Transactional
+    public NotificationTotalResponseDTO totalNotifications(String identifier) {
+        NotificationTotalResponseDTO notificationTotalResponseDTO = new NotificationTotalResponseDTO();
+
+        // Busca usuário que fez a requisição
+        User user = userRepository.findByIdentifier(identifier);
+
+        // Busca total de notificações não lidas do usuário
+        notificationTotalResponseDTO.setNotificationTotal(notificationRepository.countByNotificationUserAndNotificationReadFalse(user));
+        return notificationTotalResponseDTO;
     }
 
     /**
@@ -123,4 +142,5 @@ public class NotificationService {
             sseNotificationService.sendEventToTopic("notification-update","user-notifications-" + userToNotify.getUserId(), dto);
         });
     }
+
 }
