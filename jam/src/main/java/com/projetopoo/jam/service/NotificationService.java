@@ -62,7 +62,7 @@ public class NotificationService {
 
         // Define qual é a pagina de interesse
         int pageNumber = offset / limit;
-        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by("notificationCreatedAt").descending());
+        Pageable pageable = PageRequest.of(pageNumber, limit, Sort.by("notificationDate").descending());
 
         // Busca a lista paginada de notificações
         Page<Notification> notificationPage = notificationRepository.findByNotificationUserAndNotificationReadFalse(user, pageable);
@@ -76,28 +76,16 @@ public class NotificationService {
     }
 
     /**
-     * Marca as notificações de um usuário como visualizadas
-     * @param notificationId Id da notificação visualizadas
+     * Marca as notificações do usuário logado como visualizadas
      * @param identifier Identificador do usuário
      */
     @Transactional
-    public void markAsRead(Long notificationId, String identifier) {
+    public void markAsRead(String identifier) {
         // Busca usuário que fez a requisição
         User user = userRepository.findByIdentifier(identifier);
 
-        // Busca notificações
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new EntityNotFoundException("Notificação não encontrada"));
-
-        if (!notification.getNotificationUser().getUserId().equals(user.getUserId())) {
-            throw new AccessDeniedException("Você não tem permissão para alterar esta notificação.");
-        }
-
-        // Altera o status para lido
-        notification.setNotificationRead(true);
-
-        // Salva a notificação
-        notificationRepository.save(notification);
+        // Atualiza o campo Read como true para todas as notificações atuais do usuário
+        notificationRepository.markAllAsReadForUser(user);
     }
 
     /**

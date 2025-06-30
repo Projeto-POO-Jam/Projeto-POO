@@ -53,7 +53,7 @@ public class NotificationController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/read/{id}")
+    @PutMapping("/read")
     @Operation(
             summary = "Marca notificações do usuário logado como lidas",
             description = "Atualiza o status das notificações como lidas.")
@@ -63,8 +63,8 @@ public class NotificationController {
                     description = "Notificações atualizadas com sucesso",
                     content = @Content)
     })
-    public ResponseEntity<Void> markAsRead(@PathVariable Long id, Principal principal) {
-        notificationService.markAsRead(id, principal.getName());
+    public ResponseEntity<Void> markAsRead(Principal principal) {
+        notificationService.markAsRead(principal.getName());
         return ResponseEntity.noContent().build();
     }
 }
