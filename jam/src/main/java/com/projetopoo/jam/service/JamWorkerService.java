@@ -85,7 +85,8 @@ public class JamWorkerService {
                 // Salva a jam
                 jamRepository.save(jam);
 
-                notificationService.createAndSendJamStatusNotification(jam, newJamStatus);
+                // Cria a notificação da mudança de status
+                notificationService.createJamStatusNotification(jam, newJamStatus);
 
                 // Passa a jam para o formato de resposta SSE
                 JamSseDTO jamSseDTO = modelMapper.map(jam, JamSseDTO.class);

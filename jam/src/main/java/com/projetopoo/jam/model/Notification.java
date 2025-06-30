@@ -14,37 +14,28 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User notificationUser;
-
     @Column(nullable = false)
     private String notificationMessage;
 
     @Column
     private String notificationLink;
 
-    @Column(name = "notification_is_read", nullable = false)
+    @Column(nullable = false)
     private boolean notificationRead = false;
 
-    @Column(name = "notification_created_at", nullable = false)
-    private LocalDateTime notificationCreatedAt;
+    @Column(nullable = false)
+    private LocalDateTime notificationDate;
 
-    //Getters e Setters
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User notificationUser;
+
     public Long getNotificationId() {
         return notificationId;
     }
 
     public void setNotificationId(Long notificationId) {
         this.notificationId = notificationId;
-    }
-
-    public User getNotificationUser() {
-        return notificationUser;
-    }
-
-    public void setNotificationUser(User notificationUser) {
-        this.notificationUser = notificationUser;
     }
 
     public String getNotificationMessage() {
@@ -71,11 +62,19 @@ public class Notification {
         this.notificationRead = notificationRead;
     }
 
-    public LocalDateTime getNotificationCreatedAt() {
-        return notificationCreatedAt;
+    public LocalDateTime getNotificationDate() {
+        return notificationDate;
     }
 
-    public void setNotificationCreatedAt(LocalDateTime notificationCreatedAt) {
-        this.notificationCreatedAt = notificationCreatedAt;
+    public void setNotificationDate(LocalDateTime notificationDate) {
+        this.notificationDate = notificationDate;
+    }
+
+    public User getNotificationUser() {
+        return notificationUser;
+    }
+
+    public void setNotificationUser(User notificationUser) {
+        this.notificationUser = notificationUser;
     }
 }

@@ -78,11 +78,20 @@ public class SseController {
                                 * **Descrição:** Notifica quando o total de votos em um jogo é alterado.
                                 * **Payload (`data`):** Um objeto `VoteTotalResponseDTO`.
                             * **Evento:** `comments-update-{gameId}`
-                                * **Descrição:** Notifica quando um novo comentario é feito no jogo.
+                                * **Descrição:** Notifica quando um novo comentário é feito no jogo.
                                 * **Payload (`data`):** Um objeto `CommentResponseDTO`.
                             * **Evento:** `comments-delete-{gameId}`
-                                * **Descrição:** Notifica quando um comentario é excluido no jogo.
+                                * **Descrição:** Notifica quando um comentário é excluído no jogo.
                                 * **Payload (`data`):** Um objeto `CommentResponseDTO`.
+                            
+                            ---
+                            
+                            ### Tópico: `notification-update`
+                            Eventos relacionados a atualizações em jogos.
+                            
+                            * **Evento:** `notification-insert-{notificationId}`
+                                * **Descrição:** Notifica quando uma nova notificação é criada.
+                                * **Payload (`data`):** Um objeto `NotificationSummaryDTO`.
                             """,
                     content = @Content
 
