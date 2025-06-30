@@ -2,6 +2,9 @@ package com.projetopoo.jam.dto.jam;
 
 import java.util.List;
 
+/**
+ * Classe correlacionada a paginação para retornar uma página contendo informações sobre uma lista de jams para o frontend
+ */
 public class JamPaginatedResponseDTO {
     private List<JamSummaryDTO> jams;
     private long total;

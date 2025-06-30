@@ -1,19 +1,17 @@
 package com.projetopoo.jam.dto.comment;
 
-import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe para retornar informações sobre os comentários para o frontend
+ */
 public class CommentResponseDTO {
     private Long commentId;
     private String commentText;
     private LocalDateTime commentDate;
     private UserWithCurrentResponseDTO commentUser;
-
-    public CommentResponseDTO() {
-
-    }
 
     public Long getCommentId() {
         return commentId;

@@ -4,30 +4,42 @@ import com.projetopoo.jam.dto.comment.CommentRequestDTO;
 import com.projetopoo.jam.dto.comment.CommentResponseDTO;
 import com.projetopoo.jam.service.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
 
+/**
+ * Classe para controlar os endpoints relacionados com comentários
+ */
 @RestController
 @RequestMapping("/api/comments")
 @Tag(
         name = "Comentários",
         description = "Endpoints relacionados aos comentários de jogos")
+@Validated
 public class CommentController {
+    private final CommentService commentService;
+
+    /**
+     * Constrói uma nova instância de CommentController com suas dependências
+     * @param commentService Classe service com a lógica do Comment
+     */
     @Autowired
-    private CommentService commentService;
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @PostMapping
     @Operation(
@@ -35,15 +47,12 @@ public class CommentController {
             description = "Adiciona um comentário a um jogo. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Comentário criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
-    public ResponseEntity<?> createComment(@RequestBody CommentRequestDTO commentRequestDTO, Principal principal) {
-        try {
-            commentService.createComment(commentRequestDTO, principal.getName());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequestDTO commentRequestDTO, Principal principal) {
+        commentService.createComment(commentRequestDTO, principal.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/list/{gameId}")
@@ -56,9 +65,10 @@ public class CommentController {
                     description = "Comentários listados com sucesso",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = CommentResponseDTO.class)))
+                            schema = @Schema(implementation = CommentResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Jogo não encontrado", content = @Content)
     })
-    public ResponseEntity<List<CommentResponseDTO>> findCommentsList(@PathVariable Long gameId, Principal principal) {
+    public ResponseEntity<List<CommentResponseDTO>> findCommentsList(@NotNull() @PathVariable Long gameId, Principal principal) {
         List<CommentResponseDTO> comments = commentService.findCommentsList(gameId, principal.getName());
         return ResponseEntity.ok(comments);
     }
@@ -72,15 +82,9 @@ public class CommentController {
             @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor do comentário.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Comentário não encontrado", content = @Content)
     })
-    public ResponseEntity<?> deleteComment(@PathVariable Long commentId, Principal principal) {
-        try {
-            commentService.deleteComment(commentId, principal.getName());
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteComment(@NotNull() @PathVariable Long commentId, Principal principal) {
+        commentService.deleteComment(commentId, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 
 }

@@ -11,18 +11,41 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Interface repository para classe Jam, responsável pelas funções relacionadas ao banco de dados
+ */
 @Repository
 public interface JamRepository extends JpaRepository<Jam, Long> {
+    /**
+     * Função que busca uma jam pelo jamId
+     * @param jamId Id do jogo que está sendo usado na consulta
+     * @return Jam com todas as informações sobre ela
+     */
     Optional<Jam> findByJamId(long jamId);
 
+    /**
+     * Função que busca uma lista paginada de jams, com base em um ano e mês
+     * @param year Ano que está sendo usada na consulta
+     * @param month Mês que está sendo usada na consulta
+     * @param pageable Informações sobre como deve ser feita a paginação
+     * @return Lista paginada contendo diversas jams que correspondem a busca.
+     */
     @Query("SELECT j " +
             "FROM " +
                 "Jam j " +
             "WHERE " +
                 "YEAR(j.jamStartDate) = :year " +
-                "AND MONTH(j.jamStartDate) = :month")
+                "AND MONTH(j.jamStartDate) = :month " +
+            "ORDER BY " +
+                "j.jamStartDate")
     Page<Jam> findByYearAndMonth(@Param("year") int year, @Param("month") int month, Pageable pageable);
 
+    /**
+     * Função que busca uma lista paginada de jams, com base no status
+     * @param statuses Lista com os possíveis status que serão buscados
+     * @param pageable Informações sobre como deve ser feita a paginação
+     * @return Lista paginada contendo diversas jams que correspondem a busca em ordem do número de inscritos.
+     */
     @Query("SELECT j " +
             "FROM " +
                 "Jam j " +
@@ -32,6 +55,12 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
                 "SIZE(j.jamSubscribes) DESC")
     Page<Jam> findTopJamsByJamStatus(@Param("statuses") List<JamStatus> statuses, Pageable pageable);
 
+    /**
+     * Função que busca uma lista paginada de jams, com todas as jams em que um dado usuário se inscreveu, com base no userId
+     * @param userId Id do usuário que está sendo usada na consulta
+     * @param pageable Informações sobre como deve ser feita a paginação
+     * @return Lista paginada contendo diversas jams que correspondem a busca em ordem do jamId.
+     */
     @Query("SELECT j " +
             "FROM " +
                 "Jam j, " +
@@ -43,8 +72,12 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
                 "j.jamId DESC")
     Page<Jam> findByUserIdOrderByJamId(@Param("userId") Long userId, Pageable pageable);
 
-    //  "SIZE(j.jamSubscribes) DESC")
-
+    /**
+     * Função que busca uma lista paginada de jams, com todas as jams criadas por um dado usuário, com base no userId
+     * @param userId Ano que está sendo usada na consulta
+     * @param pageable Informações sobre como deve ser feita a paginação
+     * @return Lista paginada contendo diversas jams que correspondem a busca em ordem do número de inscrições.
+     */
     @Query("SELECT j " +
             "FROM " +
                 "Jam j " +
@@ -53,5 +86,17 @@ public interface JamRepository extends JpaRepository<Jam, Long> {
             "ORDER BY " +
                 "SIZE(j.jamSubscribes) DESC")
     Page<Jam> findByUserIdOrderByJamSubscribes(@Param("userId") Long userId, Pageable pageable);
+
+    /**
+     * Função que busca uma lista paginada de jams, com base em um texto de busca no título.
+     * @param searchText Texto para buscar no título da jam
+     * @param pageable Informações sobre como deve ser feita a paginação
+     * @return Lista paginada contendo diversas jams que correspondem à busca.
+     */
+    @Query("SELECT j " +
+            "FROM Jam j " +
+            "WHERE lower(j.jamTitle) " +
+            "LIKE lower(concat('%', :searchText, '%'))")
+    Page<Jam> findByJamTitleContainingIgnoreCase(@Param("searchText") String searchText, Pageable pageable);
 
 }

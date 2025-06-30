@@ -1,10 +1,7 @@
 package com.projetopoo.jam.controller;
 
-import com.projetopoo.jam.dto.user.UserResponseDTO;
-import com.projetopoo.jam.dto.user.UserResquestDTO;
-import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
+import com.projetopoo.jam.dto.user.*;
 import com.projetopoo.jam.service.UserService;
-import com.projetopoo.jam.exception.UserValidationException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,25 +9,37 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Classe para controlar os endpoints relacionados com usuários
+ */
 @RestController
 @RequestMapping("/api/users")
 @Tag(
         name = "User",
         description = "Endpoints relacionados aos usuários.")
+@Validated
 public class UserController {
+    private final UserService userService;
+
+    /**
+     * Constrói uma nova instância de UserController com suas dependências
+     * @param userService Classe service com a lógica do User
+     */
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     @Operation(
@@ -56,15 +65,11 @@ public class UserController {
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = UserResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Usuário não encontrado", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content)
     })
-    public ResponseEntity<?> findUserId(@PathVariable Long userId, Principal principal) {
-        try {
-            UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
-            return ResponseEntity.ok(user);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> findUserId(@NotNull() @PathVariable Long userId, Principal principal) {
+        UserWithCurrentResponseDTO user = userService.findUserId(userId, principal.getName());
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping(consumes = { "multipart/form-data" })
@@ -73,24 +78,12 @@ public class UserController {
             description = "Cria um novo usuário no sistema.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
-            @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
+            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
     })
-    public ResponseEntity<?> createUser(UserResquestDTO userResquestDTO) {
-        try {
-            userService.createUser(userResquestDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> createUser(UserInsertRequestDTO userInsertRequestDTO) throws IOException {
+        userService.createUser(userInsertRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping(consumes = { "multipart/form-data" })
@@ -99,24 +92,25 @@ public class UserController {
             description = "Atualiza os detalhes de uma Jam. Apenas o proprio usuário pode editá-lo. Requer autenticação.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário alterado com sucesso", content = @Content),
-            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)",
-                    content = @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(example = "{\"message\":\"Validation failed\",\"errors\":[\"USERNAME_EXISTS\", \"EMAIL_EXISTS\"]}"))),
-            @ApiResponse(responseCode = "400", description = "Erro ao processar a imagem", content = @Content)
+            @ApiResponse(responseCode = "409", description = "Falha na validação (username ou email já existem)", content = @Content)
     })
-    public ResponseEntity<?> updateUser(UserResquestDTO userResquestDTO, Principal principal) {
-        try{
-            userService.updateUser(userResquestDTO, principal.getName());
-            return ResponseEntity.ok().build();
-        } catch (UserValidationException e) {
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Validation failed");
-            errorResponse.put("errors", e.getErrors());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<?> updateUser(UserRequestDTO userRequestDTO, Principal principal) throws IOException {
+        userService.updateUser(userRequestDTO, principal.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/changePassword")
+    @Operation(
+            summary = "Atualiza a senha do usuario",
+            description = "Ele poderá alterar a senha atual para uma nova")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Senha incorreta", content = @Content),
+            @ApiResponse(responseCode = "422", description = "Campos da requisição incorretos", content = @Content)
+    })
+    public ResponseEntity<?> updatePassword(@Valid UserPasswordRequestDTO userPasswordRequestDTO, Principal principal) {
+        userService.updatePassword(userPasswordRequestDTO, principal.getName());
+        return ResponseEntity.ok().build();
     }
 
 }

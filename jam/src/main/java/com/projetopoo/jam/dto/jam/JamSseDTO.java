@@ -4,6 +4,9 @@ import com.projetopoo.jam.model.JamStatus;
 
 import java.time.LocalDateTime;
 
+/**
+ * Classe para retornar informações sobre as jams no SSE para o frontend
+ */
 public class JamSseDTO {
     private Long jamId;
     private String jamTitle;

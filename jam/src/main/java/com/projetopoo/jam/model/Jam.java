@@ -1,12 +1,13 @@
 package com.projetopoo.jam.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
 
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Classe model de jam, responsável pelo modelo de entidades do banco de dados.
+ */
 @Entity
 @Table(name = "jams")
 public class Jam {
@@ -31,19 +32,6 @@ public class Jam {
     private String jamContent;
 
     @Column
-    private String jamCover;
-
-    @Column
-    private String jamWallpaper;
-
-    @Column
-    private String jamBanner;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private JamStatus jamStatus = JamStatus.SCHEDULED;
-
-    @Column
     private String jamToken;
 
     @Column
@@ -58,16 +46,25 @@ public class Jam {
     @Column
     private String jamLinkColor;
 
-    @OneToMany(mappedBy = "subscribeJam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Subscribe> jamSubscribes ;
+    @Column
+    private String jamCover;
+
+    @Column
+    private String jamWallpaper;
+
+    @Column
+    private String jamBanner;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JamStatus jamStatus = JamStatus.SCHEDULED;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User jamUser;
 
-    public Jam() {
-
-    }
+    @OneToMany(mappedBy = "subscribeJam", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Subscribe> jamSubscribes ;
 
     public Long getJamId() {
         return jamId;
@@ -117,54 +114,6 @@ public class Jam {
         this.jamContent = jamContent;
     }
 
-    public String getJamCover() {
-        return jamCover;
-    }
-
-    public void setJamCover(String jamCover) {
-        this.jamCover = jamCover;
-    }
-
-    public String getJamWallpaper() {
-        return jamWallpaper;
-    }
-
-    public void setJamWallpaper(String jamWallpaper) {
-        this.jamWallpaper = jamWallpaper;
-    }
-
-    public String getJamBanner() {
-        return jamBanner;
-    }
-
-    public void setJamBanner(String jamBanner) {
-        this.jamBanner = jamBanner;
-    }
-
-    public List<Subscribe> getJamSubscribes() {
-        return jamSubscribes;
-    }
-
-    public void setJamSubscribes(List<Subscribe> jamSubscribes) {
-        this.jamSubscribes = jamSubscribes;
-    }
-
-    public User getJamUser() {
-        return jamUser;
-    }
-
-    public void setJamUser(User jamUser) {
-        this.jamUser = jamUser;
-    }
-
-    public JamStatus getJamStatus() {
-        return jamStatus;
-    }
-
-    public void setJamStatus(JamStatus jamStatus) {
-        this.jamStatus = jamStatus;
-    }
-
     public String getJamToken() {
         return jamToken;
     }
@@ -203,5 +152,53 @@ public class Jam {
 
     public void setJamLinkColor(String jamLinkColor) {
         this.jamLinkColor = jamLinkColor;
+    }
+
+    public String getJamCover() {
+        return jamCover;
+    }
+
+    public void setJamCover(String jamCover) {
+        this.jamCover = jamCover;
+    }
+
+    public String getJamWallpaper() {
+        return jamWallpaper;
+    }
+
+    public void setJamWallpaper(String jamWallpaper) {
+        this.jamWallpaper = jamWallpaper;
+    }
+
+    public String getJamBanner() {
+        return jamBanner;
+    }
+
+    public void setJamBanner(String jamBanner) {
+        this.jamBanner = jamBanner;
+    }
+
+    public JamStatus getJamStatus() {
+        return jamStatus;
+    }
+
+    public void setJamStatus(JamStatus jamStatus) {
+        this.jamStatus = jamStatus;
+    }
+
+    public User getJamUser() {
+        return jamUser;
+    }
+
+    public void setJamUser(User jamUser) {
+        this.jamUser = jamUser;
+    }
+
+    public List<Subscribe> getJamSubscribes() {
+        return jamSubscribes;
+    }
+
+    public void setJamSubscribes(List<Subscribe> jamSubscribes) {
+        this.jamSubscribes = jamSubscribes;
     }
 }

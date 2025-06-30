@@ -49,92 +49,89 @@ $(async function() {
 
     applySkeleton(root);
 
-    $.when(fetchViewJam(jamId))
-        .done(data => {
-            // Lógica de estilização
-            const dynamicStyles = [];
+    try {
+        const data = await fetchViewJam(jamId);
+        const dynamicStyles = [];
 
-            if (data.jamBackgroundColor) {
-                $('body').css('background-color', data.jamBackgroundColor);
-            }
+        if (data.jamBackgroundColor) {
+            $('body').css('background-color', data.jamBackgroundColor);
+        }
 
-            if (data.jamBackgroundCardColor) {
-                $('#jam-content.card-view-jam-id, .details-jam-card').css('background-color', data.jamBackgroundCardColor);
-            }
+        if (data.jamBackgroundCardColor) {
+            $('#jam-content.card-view-jam-id, .details-jam-card').css('background-color', data.jamBackgroundCardColor);
+        }
 
-            if (data.jamTextColor) {
-                dynamicStyles.push(`main { color: ${data.jamTextColor}; }`);
-                dynamicStyles.push(`.options-jam-card button { color: ${data.jamTextColor}; }`);
-            }
+        if (data.jamTextColor) {
+            dynamicStyles.push(`main { color: ${data.jamTextColor}; }`);
+            dynamicStyles.push(`.options-jam-card button { color: ${data.jamTextColor}; }`);
+        }
 
-            if (data.jamLinkColor) {
-                dynamicStyles.push(`main a { color: ${data.jamLinkColor}; }`);
-                dynamicStyles.push(`
+        if (data.jamLinkColor) {
+            dynamicStyles.push(`main a { color: ${data.jamLinkColor}; }`);
+            dynamicStyles.push(`
                   .bg-jam-color {
                     background-color: ${data.jamLinkColor} !important;
                     color: #FFFFFF !important;
                   }
                 `);
-            }
+        }
 
-            if (dynamicStyles.length > 0) {
-                const styleTag = `<style>${dynamicStyles.join('\n')}</style>`;
-                $('head').append(styleTag);
-            }
+        if (dynamicStyles.length > 0) {
+            const styleTag = `<style>${dynamicStyles.join('\n')}</style>`;
+            $('head').append(styleTag);
+        }
 
-            const coverContainer = $('#jam-cover-container');
-            const coverImg = $('img[data-field="jamCover"]');
+        const coverContainer = $('#jam-cover-container');
+        const coverImg = $('img[data-field="jamCover"]');
 
-            if (data.jamCover) {
-                const coverUrl = data.jamCover;
-                coverImg.attr('src', coverUrl).removeClass('skeleton');
+        if (data.jamCover) {
+            const coverUrl = data.jamCover;
+            coverImg.attr('src', coverUrl).removeClass('skeleton');
 
-                $('.details-jam-card').css('margin-top', '-2rem');
-            } else {
-                coverContainer.remove();
-            }
+            $('.details-jam-card').css('margin-top', '-2rem');
+        } else {
+            coverContainer.remove();
+        }
 
-            if (data.jamWallpaper) {
-                // Se o papel de parede existe, define o background do <body>
-                const wallpaperUrl = data.jamWallpaper;
-                $('body').css({
-                    'background-image': `url(${wallpaperUrl})`,
-                    'background-size': 'cover',
-                    'background-position': 'center',
-                    'background-attachment': 'fixed'
-                });
-            }
+        if (data.jamWallpaper) {
+            // Se o papel de parede existe, define o background do <body>
+            const wallpaperUrl = data.jamWallpaper;
+            $('body').css({
+                'background-image': `url(${wallpaperUrl})`,
+                'background-size': 'cover',
+                'background-position': 'center',
+                'background-attachment': 'fixed'
+            });
+        }
 
-            // Preenche os campos estáticos da página
-            bindDataFields(data, root);
+        // Preenche os campos estáticos da página
+        bindDataFields(data, root);
 
-            const rankButton = $('button[data-tab="rank"]');
-            const rankTabContent = $('#tab-rank');
-            const jamEndDate = new Date(data.jamEndDate);
-            const now = new Date();
+        const rankButton = $('button[data-tab="rank"]');
+        const rankTabContent = $('#tab-rank');
+        const jamEndDate = new Date(data.jamEndDate);
+        const now = new Date();
 
-            //Verifica se a Jam já terminou
-            if (jamEndDate < now) {
-                initRank(data, jamId);
-            } else {
-                rankButton.prop('disabled', true);
-                rankButton.addClass('disabled');
-            }
+        //Verifica se a Jam já terminou
+        if (jamEndDate < now) {
+            initRank(data, jamId);
+        } else {
+            rankButton.prop('disabled', true);
+            rankButton.addClass('disabled');
+        }
 
-            //Inicializar Aba
-            initGeral(data, jamId);
-            initGames(data, jamId);
+        //Inicializar Aba
+        initGeral(data, jamId);
+        initGames(data, jamId);
 
-        })
-        .fail(err => {
-            console.error('Erro ao carregar Jam:', err);
-            showError('Não foi possível carregar esta Jam.');
-        })
-        .always(() => {
-            setTimeout(() => {
-                removeSkeleton(root);
-                $(root).find('.skeleton').removeClass('skeleton');
-                $('.container-jam-card').removeClass('skeleton');
-            }, 100);
-        });
+    }catch (err){
+        console.error('Erro ao carregar Jam:', err);
+        window.location.href = '/404';
+    }finally {
+        setTimeout(() => {
+            removeSkeleton(root);
+            $(root).find('.skeleton').removeClass('skeleton');
+            $('.container-jam-card').removeClass('skeleton');
+        }, 100);
+    }
 });

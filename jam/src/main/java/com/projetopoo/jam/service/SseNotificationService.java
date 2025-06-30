@@ -1,7 +1,5 @@
 package com.projetopoo.jam.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -11,6 +9,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Classe service do SSE
+ */
 @Service
 public class SseNotificationService {
     private final Map<String, List<SseEmitter>> topicToEmitters = new ConcurrentHashMap<>();

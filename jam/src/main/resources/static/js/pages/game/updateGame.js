@@ -1,4 +1,4 @@
-import { initializeGameForm } from '../../common/gameFormManager.js';
+import { initializeGameForm } from './gameForm.js';
 import { fetchDadoFormUpdate } from "../../services/gameService.js";
 import { bindDataFields } from "../../common/bindDataFields.js";
 import { showError } from '../../common/notifications.js';

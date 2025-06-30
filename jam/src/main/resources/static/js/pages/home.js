@@ -2,50 +2,46 @@ import { fetchJamsByMonth, fetchBannerJams } from '../services/jamService.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
 
 // Função para inicializar o carrossel
-function initializeCarousel() {
+async function initializeCarousel() {
     const carouselContainer = $('.home-carousel');
     const limit = 5;
 
     //Chama a API
-    fetchBannerJams(limit)
-        .done(({ jams }) => {
-            //Verifica se a API retornou alguma Jam para o banner.
-            if (!jams || jams.length === 0) {
-                carouselContainer.hide();
-                return;
+    try {
+        const { jams } = await fetchBannerJams(limit);
+
+        if (!jams || jams.length === 0) {
+            carouselContainer.hide();
+            return;
+        }
+
+        //Itera sobre cada Jam retornada para criar um slide.
+        jams.forEach(jam => {
+            let slideHtml;
+            if (jam.jamBanner) {
+                slideHtml = `
+                    <div>
+                        <a href="/jams/${jam.id}" class="carousel-slide-link">
+                            <img src="${jam.jamBanner}" alt="Banner para ${jam.jamTitle}" class="carousel-image"/>
+                        </a>
+                    </div>
+                `;
+            } else {
+                slideHtml = `
+                    <div>
+                        <a href="/jams/${jam.id}" class="carousel-slide-link">
+                            <div class="carousel-fallback">
+                                <h1>${jam.jamTitle}</h1>
+                            </div>
+                        </a>
+                    </div>
+                `;
             }
+            carouselContainer.append(slideHtml);
+        });
 
-            //Itera sobre cada Jam retornada para criar um slide.
-            jams.forEach(jam => {
-                let slideHtml;
-
-                //Lógica para criar o slide:
-                // Se a Jam tiver um 'jamBanner'.
-                if (jam.jamBanner) {
-                    slideHtml = `
-                            <div>
-                                <a href="/jams/${jam.jamId}" class="carousel-slide-link">
-                                    <img src="${jam.jamBanner}" alt="Banner para ${jam.jamTitle}" class="carousel-image"/>
-                                </a>
-                            </div>
-                        `;
-                }
-                //Cria um slide de "fallback" padrão.
-                else {
-                    slideHtml = `
-                            <div>
-                                <a href="/jams/${jam.jamId}" class="carousel-slide-link">
-                                    <div class="carousel-fallback">
-                                        <h1>${jam.jamTitle}</h1>
-                                    </div>
-                                </a>
-                            </div>
-                        `;
-                }
-                carouselContainer.append(slideHtml);
-            });
-
-            //inicializa a biblioteca Slick Carousel.
+        //Apenas inicialize o Slick se houver maus de um item.
+        if (jams.length > 1) {
             carouselContainer.slick({
                 dots: true,
                 infinite: true,
@@ -55,13 +51,13 @@ function initializeCarousel() {
                 autoplay: true,
                 autoplaySpeed: 4000
             });
-        })
-        .fail(err => {
-            console.error('Erro ao carregar banners da Jam:', err);
-            carouselContainer.hide();
-        });
-}
+        }
 
+    } catch (err) {
+        console.error('Erro ao carregar banners da Jam:', err);
+        carouselContainer.hide();
+    }
+}
 
 $(function() {
     initializeCarousel();
@@ -228,7 +224,7 @@ $(function() {
     }
 
     //Faz fetch e renderiza primeira página de um mês
-    function loadMonth(month) {
+    async function loadMonth(month) {
         if (month < getCurrentMonth() && month !== getCurrentMonth()) return;
         if (loadedMonths.includes(month) || isLoading) return;
 
@@ -241,26 +237,24 @@ $(function() {
             lastLoadMoreButton.text('Buscando mais Jams...');
         }
 
-        fetchJamsByMonth(month, 0, limitPerPage)
-            .done(({ jams, total }) => {
-                if (jams.length > 0) {
-                    renderMonthSection(month, jams, total);
-                    const section = container.find(`.month-section[data-month='${month}']`);
-                    removeSkeleton(section);
-                    monthOffsets[month] = jams.length;
-                }
-            })
-            .fail(err => {
-                console.error(`Erro ao carregar mês ${month}:`, err);
-            })
-            .always(() => {
-                isLoading = false; // Garante que terminou o estado de carregamento
-                if (lastLoadMoreButton.length) {
-                    lastLoadMoreButton.text('Carregar mais');
-                }
-                // Agora, com o estado atualizado, verifica se precisa de mais
-                setTimeout(checkAndLoadUntilScrollable, 0);
-            });
+        try {
+            const { jams, total } = await fetchJamsByMonth(month, 0, limitPerPage);
+            if (jams.length > 0) {
+                renderMonthSection(month, jams, total);
+                const section = container.find(`.month-section[data-month='${month}']`);
+                removeSkeleton(section);
+                monthOffsets[month] = jams.length;
+            }
+        } catch (err) {
+            console.error(`Erro ao carregar mês ${month}:`, err);
+        } finally {
+            isLoading = false;
+            if (lastLoadMoreButton.length) {
+                lastLoadMoreButton.text('Carregar mais');
+            }
+            setTimeout(checkAndLoadUntilScrollable, 0);
+        }
+
     }
 
     // ela vai verificar se o mês retornado do fetch estava vazio e carregar o próximo
@@ -346,40 +340,42 @@ $(function() {
     };
 
     //Carrega mais do mes
-    function loadMore(month) {
+    async function loadMore(month) {
         if (isLoading) return;
         isLoading = true;
 
-        fetchJamsByMonth(month, monthOffsets[month], limitPerPage) //Chama api
-            .done(({ jams, total }) => {
-                const section = container.find(`.month-section[data-month='${month}']`);
-                const cardsContainer = section.find('.cards-container');
-                const oldLoad = section.find('.load-more');
-                oldLoad.remove();
+        try {
+            const { jams, total } = await fetchJamsByMonth(month, monthOffsets[month], limitPerPage);
 
-                jams.forEach(jam => {
-                    const card = createJamCard(jam);
-                    cardsContainer.append(card);
-                });
+            const section = container.find(`.month-section[data-month='${month}']`);
+            const cardsContainer = section.find('.cards-container');
+            const oldLoad = section.find('.load-more');
+            oldLoad.remove();
 
-                const sectionM = container.find(`.month-section[data-month='${month}']`);
-                removeSkeleton(sectionM);
-                monthOffsets[month] += jams.length; //atualiza qtd de jams mostrada no mes
+            jams.forEach(jam => {
+                const card = createJamCard(jam);
+                cardsContainer.append(card);
+            });
 
-                //se ainda tem mais mostra o btn de carregar mais
-                if (monthOffsets[month] < total) {
-                    const btnLoadMore = $('<button>')
+            const sectionM = container.find(`.month-section[data-month='${month}']`);
+            removeSkeleton(sectionM);
+            monthOffsets[month] += jams.length; //atualiza qtd de jams mostrada no mes
+
+            //se ainda tem mais mostra o btn de carregar mais
+            if (monthOffsets[month] < total) {
+                const btnLoadMore = $('<button>')
                     .addClass('load-more')
                     .text('Carregar mais')
                     .on('click', () => loadMore(month));
-                    section.append(btnLoadMore);
-                }
-            })
-            .fail(err => console.error(`Erro ao carregar mais em ${month}:`, err))
-            .always(() => {
-                isLoading = false;
-                setTimeout(checkAndLoadUntilScrollable, 0);
-            });
+                section.append(btnLoadMore);
+            }
+        }catch (err) {
+            console.error(`Erro ao carregar mais em ${month}:`, err);
+        } finally {
+            isLoading = false;
+            setTimeout(checkAndLoadUntilScrollable, 0);
+        }
+
     }
 
     //Carregar proximos meses com Scroll

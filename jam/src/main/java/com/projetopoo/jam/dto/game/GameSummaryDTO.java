@@ -1,5 +1,8 @@
 package com.projetopoo.jam.dto.game;
 
+/**
+ * Classe correlacionada a paginação para retornar informações sobre os jogos para o frontend
+ */
 public class GameSummaryDTO {
     private Long gameId;
     private String gameTitle;

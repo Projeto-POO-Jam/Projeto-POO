@@ -4,6 +4,9 @@ import org.springframework.amqp.core.Declarables;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Classe responsável pela fila do RabbitMQ para mudar o status da jam
+ */
 @Configuration
 public class JamStatusRabbitMQConfig {
 

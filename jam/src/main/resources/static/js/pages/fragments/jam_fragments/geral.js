@@ -1,4 +1,4 @@
-import { toggleSubscription, checkSubscriptionStatus } from '../../../services/jamService.js';
+import {toggleSubscription, checkSubscriptionStatus, fetchJamGames} from '../../../services/jamService.js';
 import { applySkeleton } from '../../../common/skeleton.js';
 
 //Função que apenas desenha os botões corretos na tela.
@@ -7,7 +7,7 @@ function updateSubscriptionUI(isSubscribed) {
 
     if (isSubscribed) {
         actionContainer.html(`
-            <button id="post-game-btn" class="join-btn bg-jam-color">Postar Jogo</button>
+            <button id="post-game-btn" class="join-btn" style="display: none;">Postar Jogo</button>
             <a id="toggle-subscription-btn" class="leave-jam-link">Sair da Jam</a>
         `);
     } else {
@@ -15,8 +15,7 @@ function updateSubscriptionUI(isSubscribed) {
     }
 }
 
-
-export function init(data, jamId) {
+export async function init(data, jamId) {
     //Configuração do SSE
     const stream = new EventSource('/api/events?topic=jams-update');
 
@@ -105,58 +104,61 @@ export function init(data, jamId) {
             actionContainer.html(skeletonButtonHtml);
             applySkeleton(actionContainer);
 
-            checkSubscriptionStatus(jamId)
-                .done(response => {
-                    updateSubscriptionUI(response.subscribed);
-                })
-                .fail(() => {
-                    showError('Erro ao verificar o status da sua inscrição.');
-                });
+            try {
+                const response = await checkSubscriptionStatus(jamId);
+                updateSubscriptionUI(response.subscribed);
+            }catch (err){
+                showError('Erro ao verificar o status da sua inscrição.');
+            }
         }
 
-        $('#jam-duration-container').on('click', '#toggle-subscription-btn', function() {
+        $('#jam-duration-container').on('click', '#toggle-subscription-btn', async function() {
             const btn = $(this);
             const isLeaving = btn.text().includes('Sair da Jam');
 
             if (isLeaving) {
-                Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Você realmente deseja sair desta Jam? isso irar apagar o poste do seu Game! Você pode se inscrever novamente depois.",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#e75050',
-                    cancelButtonColor: '#5865f2',
-                    confirmButtonText: 'Sim, quero sair!',
-                    cancelButtonText: 'Cancelar',
-                    customClass: {
-                        popup: 'swal-custom-popup',
-                        title: 'swal-custom-title',
-                        htmlContainer: 'swal-custom-html-container'
+                try {
+                    const result = await Swal.fire({
+                        title: 'Tem certeza?',
+                        text: "Você realmente deseja sair desta Jam? isso irar apagar o poste do seu Game! Você pode se inscrever novamente depois.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#e75050',
+                        cancelButtonColor: '#5865f2',
+                        confirmButtonText: 'Sim, quero sair!',
+                        cancelButtonText: 'Cancelar',
+                        customClass: {
+                            popup: 'swal-custom-popup',
+                            title: 'swal-custom-title',
+                            htmlContainer: 'swal-custom-html-container'
+                        }
+                    });
+
+                    if (!result.isConfirmed) {
+                        return;
                     }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        btn.prop('disabled', true).text('Processando...');
-                        toggleSubscription(jamId)
-                            .done(() => {
-                                updateSubscriptionUI(false);
-                            })
-                            .fail(() => {
-                                showError('Ocorreu um erro ao tentar sair da Jam. Tente novamente.');
-                                updateSubscriptionUI(true);
-                            });
-                    }
-                });
+
+                    btn.prop('disabled', true).text('Processando...');
+                    await toggleSubscription(jamId);
+
+                    updateSubscriptionUI(false);
+
+                } catch (error) {
+                    showError('Ocorreu um erro ao tentar sair da Jam. Tente novamente.');
+                    updateSubscriptionUI(true);
+                }
             } else {
                 // Lógica original para se inscrever
                 btn.prop('disabled', true).text('Processando...');
-                toggleSubscription(jamId)
-                    .done(() => {
-                        updateSubscriptionUI(true);
-                    })
-                    .fail(() => {
-                        showError('Ocorreu um erro ao tentar se inscrever na Jam. Tente novamente.');
-                        updateSubscriptionUI(false);
-                    });
+
+                try {
+                    await toggleSubscription(jamId);
+                    updateSubscriptionUI(true);
+
+                } catch (error) {
+                    showError('Ocorreu um erro ao tentar se inscrever na Jam. Tente novamente.');
+                    updateSubscriptionUI(false);
+                }
             }
         });
 
@@ -200,14 +202,16 @@ function updateCountdown(data, start, end, timer) {
 
     if (diff > 0) { //am ainda não começou
         $('#cd-prefix').text('Inicia em');
-        actionContainer.hide(); //Esconde os botões até a Jam começar
+        $('#post-game-btn').hide();
 
     } else { //Jam está rolando ou acabou
         actionContainer.show();
 
+
         if (now < end) { //Jam está rolando
             diff = end - now; //Calcula o tempo restante até o fim
             $('#cd-prefix').text('Encerra em');
+            $('#post-game-btn').show();
         } else { // Jam terminou
             $('#cd-prefix').text('Encerrado');
             $('#cd-days, #cd-hours, #cd-minutes, #cd-seconds').text('00');

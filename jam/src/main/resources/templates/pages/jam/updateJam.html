@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/head.html :: Head('Cadastrar JAM')}"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
+</head>
+<body>
+<div th:replace="~{fragments/menu.html :: siteMenu}"></div>
+<main>
+    <section class="container-register-jam">
+        <div class="card-jam">
+            <form class="form-Jam" id="jamForm" enctype="multipart/form-data" novalidate>
+                <div class="title-auth">
+                    <h1>Edite sua Jam</h1>
+                    <p>Preencha os campos abaixo para atualizar sua Jam</p>
+                </div>
+
+                <div th:replace="~{fragments/formComponents.html :: formInput(
+                    id='jamName',
+                    name='jamName',
+                    type='text',
+                    icon=null,
+                    placeholder=null,
+                    labelText='Nome da Jam',
+                    inputClass=null,
+                    dataField='jamTitle'
+                )}"></div>
+
+                <div th:replace="~{fragments/formComponents.html :: formInput(
+                    id='descricao',
+                    name='descricao',
+                    type='text',
+                    icon=null,
+                    placeholder=null,
+                    labelText='Descrição da Jam',
+                    inputClass=null,
+                    dataField='jamDescription'
+                )}"></div>
+
+                <div class="grup-inputs">
+                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                       id='startDate',
+                       name='startDate',
+                       type='text',
+                       icon=null,
+                       placeholder=null,
+                       labelText='Data início',
+                       inputClass='calendario-custom',
+                       dataField=null
+                    )}"></div>
+
+                    <div th:replace="~{fragments/formComponents.html :: formInput(
+                        id='endDate',
+                        name='endDate',
+                        type='text',
+                        icon=null,
+                        placeholder=null,
+                        labelText='Data final',
+                        inputClass='calendario-custom',
+                        dataField=null
+                    )}"></div>
+                </div>
+
+                <div class="form-group form-group-jam">
+                    <label class="label-input-padrao tooltip" for="content">Conteúdo da Jam (HTML livre)</label>
+                    <textarea id="content" name="content" data-field="jamContent"></textarea>
+                </div>
+
+                <div class="container-de-inputs-grid">
+                    <div class="form-group form-group-jam">
+                        <label class="label-input-padrao" for="backgroundColor">Cor do Background</label>
+                        <div class="info-input-padrao">
+                            <div id="backgroundColorPicker"></div>
+                            <input type="text" id="backgroundColorCode" readonly class="input-codigo-cor" />
+                            <input id="backgroundColor" name="backgroundColor" type="hidden" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label class="label-input-padrao" for="cardBackgroundColor">Cor do Background do Card</label>
+                        <div class="info-input-padrao">
+                            <div id="cardBackgroundColorPicker"></div>
+                            <input type="text" id="cardBackgroundColorCode" readonly class="input-codigo-cor" />
+                            <input id="cardBackgroundColor" name="cardBackgroundColor" type="hidden" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label class="label-input-padrao" for="textColor">Cor do Texto</label>
+                        <div class="info-input-padrao">
+                            <div id="textColorPicker"></div>
+                            <input type="text" id="textColorCode" readonly class="input-codigo-cor" />
+                            <input id="textColor" name="textColor" type="hidden" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-jam">
+                        <label class="label-input-padrao" for="linkColor">Cor dos Links</label>
+                        <div class="info-input-padrao">
+                            <div id="linkColorPicker"></div>
+                            <input type="text" id="linkColorCode" readonly class="input-codigo-cor" />
+                            <input id="linkColor" name="linkColor" type="hidden" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group form-group-jam">
+                    <label class="label-input-padrao">Imagem Capa</label>
+                    <input type="file" class="filepond" name="imagemCapa" id="coverImg"/>
+                    <p id="coverImgError" class="error-message img-form-group-game"></p>
+                </div>
+
+                <div class="form-group form-group-jam">
+                    <label class="label-input-padrao">Imagem wallpaper</label>
+                    <input type="file" class="filepond" name="imagemWallpaper" id="wallpaperImg"/>
+                    <p id="wallpaperImgError" class="error-message img-form-group-game"></p>
+                </div>
+
+                <div class="form-group form-group-jam">
+                    <label class="label-input-padrao">Imagem banner</label>
+                    <input type="file" class="filepond" name="imagemBanner" id="bannerImg"/>
+                    <p id="bannerImgError" class="error-message img-form-group-game"></p>
+                </div>
+
+                <button id="submitButton" type="submit" class="submit-button">
+                    Editar Jam
+                </button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/common/theme.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+<script type="module" th:src="@{/js/pages/jam/updateJam.js}"></script>
+</body>
+</html>

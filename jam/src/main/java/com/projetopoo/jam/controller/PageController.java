@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Classe para controlar os endpoints relacionados as paginas do frontend
+ */
 @Controller
 public class PageController {
 
@@ -38,9 +41,24 @@ public class PageController {
         return "pages/game/updateGame";
     }
 
+    @GetMapping("/updateJam/{id}")
+    public String updateJam(@PathVariable Long id) {
+        return "pages/jam/updateJam";
+    }
+
     @GetMapping("/404")
     public String error() {
         return "pages/404";
+    }
+
+    @GetMapping("/changePassword")
+    public String changePassword() {
+        return "pages/changePassword";
+    }
+
+    @GetMapping("/perfil/{id}")
+    public String viewPerfil(@PathVariable Long id) {
+        return "pages/perfil";
     }
 
     @GetMapping("/login")

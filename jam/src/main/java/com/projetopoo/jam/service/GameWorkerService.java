@@ -10,42 +10,52 @@ import org.springframework.transaction.annotation.Transactional;
 import net.lingala.zip4j.ZipFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
+/**
+ * Classe worker do RabbitMQ para descompactar os jogos
+ */
 @Service
 public class GameWorkerService {
+    private final GameRepository gameRepository;
+
     @Autowired
-    private GameRepository gameRepository;
-    @Autowired
-    private SseNotificationService sseNotificationService; // Opcional, para notificar o front-end
+    public GameWorkerService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
 
     @Transactional
     @RabbitListener(queues = GameExtractRabbitMQConfig.QUEUE_NAME)
     public void extractGame(Map<String, Object> messageBody) {
+        // Pega informações passadas pela fila
         Long gameId = ((Number) messageBody.get("gameId")).longValue();
         String gameToken = (String) messageBody.get("gameToken");
 
+        // Verifica se o jogo existe
         Optional<Game> gameOptional = gameRepository.findById(gameId);
         if (gameOptional.isPresent()) {
             Game game = gameOptional.get();
+
+            // Verifica se o token recebido é igual ao armazenado no banco de dados
             if(game.getGameToken().equals(gameToken)) {
 
+                // Pega o local do arquivo .zip
                 String relativePath = game.getGameFile().replace("http://localhost:8080", "");
                 File file = new File("src/main/resources/static" + relativePath);
 
                 File destinationDir = file.getParentFile();
 
+                // Descompacta o arquivo
                 try (ZipFile zipFile = new ZipFile(file)) {
                     zipFile.extractAll(destinationDir.getAbsolutePath());
 
                     int lastSlashIndex = relativePath.lastIndexOf('/');
 
                     String directoryRelativePath = relativePath.substring(0, lastSlashIndex);
+
+                    // Atualiza o local do arquivo no banco de dados para apontar para o index.html
                     String gameDirectoryUrl = "http://localhost:8080" + directoryRelativePath + "/index.html";
                     game.setGameFile(gameDirectoryUrl);
                     gameRepository.save(game);

@@ -2,6 +2,9 @@ package com.projetopoo.jam.dto.game;
 
 import java.util.List;
 
+/**
+ * Classe correlacionada a paginação para retornar uma página contendo informações sobre uma lista de jogos para o frontend
+ */
 public class GamePaginatedResponseDTO {
     private List<GameSummaryDTO> games;
     private long total;
