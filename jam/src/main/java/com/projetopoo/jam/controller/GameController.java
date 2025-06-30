@@ -179,4 +179,23 @@ public class GameController {
         }
     }
 
+    @DeleteMapping("/{gameId}")
+    @Operation(
+            summary = "Exclui um game",
+            description = "Exclui um game pelo seu ID. Apenas o autor do game pode realizar esta ação. Requer autenticação.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "game excluído com sucesso", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor do Game.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Game não encontrado", content = @Content)
+    })
+    public ResponseEntity<?> deleteGame(@PathVariable Long gameId, Principal principal) {
+        try {
+            gameService.deleteGame(gameId, principal.getName());
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (AccessDeniedException | IOException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        }
+    }
 }

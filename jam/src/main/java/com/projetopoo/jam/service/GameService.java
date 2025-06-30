@@ -1,5 +1,6 @@
 package com.projetopoo.jam.service;
 
+import com.projetopoo.jam.dto.comment.CommentResponseDTO;
 import com.projetopoo.jam.dto.game.*;
 import com.projetopoo.jam.dto.user.UserResponseDTO;
 import com.projetopoo.jam.dto.user.UserWithCurrentResponseDTO;
@@ -210,7 +211,6 @@ public class GameService {
         }
     }
 
-
     @Transactional
     public GamePaginatedResponseDTO findGameListByUserIdVote(Long userId, int offset, int limit){
 
@@ -222,4 +222,30 @@ public class GameService {
         return addGameTotal(gamePage);
     }
 
+    @Transactional
+    public void deleteGame(Long gameId, String identifier) throws IOException {
+        Optional<Game> optionalGame = gameRepository.findById(gameId);
+        if (optionalGame.isEmpty()) {
+            throw new EntityNotFoundException("game com o ID " + gameId + " não encontrado.");
+        }
+
+        Game game = optionalGame.get();
+
+        User requestingUser = userRepository.findByIdentifier(identifier);
+
+        if (!(Objects.equals(game.getGameSubscribe().getSubscribeUser().getUserId(), requestingUser.getUserId()))) {
+            throw new AccessDeniedException("Usuário não autorizado a excluir este game.");
+        }
+
+        if (game.getGamePhoto() != null && !game.getGamePhoto().isEmpty()) {
+            ImageUtil.deleteImage(game.getGamePhoto());
+            ImageUtil.deleteDirectory(game.getGamePhoto());
+        }
+
+        if (game.getGameFile() != null && !game.getGameFile().isEmpty()) {
+            ImageUtil.deleteImage(game.getGameFile());
+            ImageUtil.deleteDirectory(game.getGameFile());
+        }
+        gameRepository.delete(game);
+    }
 }
