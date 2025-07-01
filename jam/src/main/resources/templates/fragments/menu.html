@@ -1,42 +1,86 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <div th:fragment="siteMenu">
-
         <header class="site-header">
-            <img src="" alt="Logo" class="site-logo"></img>
+            <a th:href="@{/home}">
+                <img src="/img/logo.png" alt="Logo" class="site-logo">
+            </a>
             <div class="container-menu">
-                <button>Games</button>
-                <button>Explorar Jams</button>
-                <button>Criar Jams</button>
-                <div class="bar-search-menu">
-                    <input type="text" placeholder="Pesquise por Jam"/>
-                    <span class="material-symbols-outlined">
-                        search
-                    </span>
+                <a><button class="button-menu">Explorar Games</button></a>
+                <a th:href="@{/home}"><button class="button-menu">Explorar Jams</button></a>
+                <a th:href="@{/registerJam}"><button class="button-menu">Criar Jams</button></a>
+
+                <div id="search-desktop" class="dropdown-container search-container">
+                    <div class="bar-search-menu" data-dropdown-trigger="search-desktop">
+                        <input type="text" id="jam-search-input-desktop" class="jam-search-input" placeholder="Pesquise por Jam"/>
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <div id="search-desktop-dropdown" class="menu-dropdown">
+                        <div class="search-results-container"></div>
+                        <button class="load-more-jams" style="display: none;">Carregar mais</button>
+                    </div>
                 </div>
             </div>
+
             <div class="options-menu">
-                <button class="theme-toggle">
-                    <span id="theme-icon-bell" class="material-symbols-outlined">
-                        notifications
-                    </span>
+                <div class="hamburger-container">
+                    <button class="hamburger-icon" data-dropdown-trigger="mobile-nav">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                    <div id="mobile-nav-dropdown" class="menu-dropdown">
+                        <a th:href="@{/games}"><button class="button-menu">Explorar Games</button></a>
+                        <a th:href="@{/home}"><button class="button-menu">Explorar Jams</button></a>
+                        <a th:href="@{/registerJam}"><button class="button-menu">Criar Jams</button></a>
+                    </div>
+                </div>
+
+                <div id="search-mobile" class="dropdown-container search-container">
+                    <div class="bar-search-menu" data-dropdown-trigger="search-mobile">
+                        <input type="text" id="jam-search-input-mobile" class="jam-search-input" placeholder="Pesquise por Jam"/>
+                        <span class="material-symbols-outlined">search</span>
+                    </div>
+                    <div id="search-mobile-dropdown" class="menu-dropdown">
+                        <div class="search-results-container"></div>
+                        <button class="load-more-jams" style="display: none;">Carregar mais</button>
+                    </div>
+                </div>
+
+                <button class="theme-toggle notification-button" data-dropdown-trigger="notifications">
+                    <span id="theme-icon-bell" class="material-symbols-outlined">notifications</span>
+                    <span id="notification-count-badge" class="notification-badge" style="display: none;"></span>
                 </button>
+
+                <div id="notifications-dropdown" class="menu-dropdown">
+                    <div class="notification-header">
+                        <h3>Notificações</h3>
+                    </div>
+                    <div id="notification-list-container">
+                    </div>
+                    <button id="load-more-notifications" class="load-more-notifications-btn" style="display: none;">Carregar mais</button>
+                </div>
+
                 <button
                     onclick="toggleTheme()"
                     class="theme-toggle"
                     aria-label="Alternar tema claro/escuro"
                 >
-                    <span id="theme-icon" class="theme-icon material-symbols-outlined">
-                        light_mode
-                    </span>
+                    <span id="theme-icon" class="theme-icon material-symbols-outlined">light_mode</span>
                 </button>
+
                 <img
                     class="img-user-menu skeleton"
                     src=""
                     data-field="userPhoto"
-                    data-default="/img/icone-padrao.svg">
-            </div>
+                    data-default="/img/icone-padrao.svg"
+                    data-dropdown-trigger="user">
 
+                <div id="user-dropdown" class="menu-dropdown">
+                    <ul class="user-dropdown-content">
+                        <li><a id="profile-link" href="#">Meu Perfil</a></li>
+                        <li><a th:href="@{/perform_logout}">Sair da conta</a></li>
+                    </ul>
+                </div>
+            </div>
         </header>
 
         <script type="module" th:src="@{/js/pages/fragments/menu.js}"></script>
