@@ -333,4 +333,49 @@ public class GameService {
         return new GamePaginatedResponseDTO(gameSummaryDTOList, gamePage.getTotalElements());
     }
 
+    /**
+     * Função para excluir o total um jogo
+     * @param gameId Id do game que está sendo usado
+     * @param identifier Identificador do usuário
+     */
+    @Transactional
+    public void deleteGame(Long gameId, String identifier) throws IOException {
+        // Busca o jogo que será apagado
+        Optional<Game> optionalGame = gameRepository.findById(gameId);
+        if (optionalGame.isEmpty()) {
+            throw new EntityNotFoundException("game com o ID " + gameId + " não encontrado.");
+        }
+
+        Game game = optionalGame.get();
+
+        // Busca usuário que fez a requisição
+        User requestingUser = userRepository.findByIdentifier(identifier);
+
+        if (!(Objects.equals(game.getGameSubscribe().getSubscribeUser().getUserId(), requestingUser.getUserId()))) {
+            throw new AccessDeniedException("Usuário não autorizado a excluir este game.");
+        }
+
+        // Busca a inscrição associada
+        Optional<Subscribe> optionalSubscribe = subscribeRepository.findBySubscribeGame(game);
+        if (optionalSubscribe.isPresent()) {
+            Subscribe subscribe = optionalSubscribe.get();
+
+            // Desvincula o jogo da inscrição
+            subscribe.setSubscribeGame(null);
+            subscribeRepository.save(subscribe);
+        }
+
+        // Apaga a foto do jogo
+        if (game.getGamePhoto() != null && !game.getGamePhoto().isEmpty()) {
+            FileUtil.deleteDirectory(game.getGamePhoto());
+        }
+
+        // Apaga o arquivo do jogo
+        if (game.getGameFile() != null && !game.getGameFile().isEmpty()) {
+            FileUtil.deleteDirectory(game.getGameFile());
+        }
+
+        // Apaga o jogo
+        gameRepository.delete(game);
+    }
 }
