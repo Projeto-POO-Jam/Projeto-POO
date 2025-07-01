@@ -191,4 +191,18 @@ public class JamController {
         JamPaginatedResponseDTO response = jamService.searchJamsByTitle(query, offset, limit);
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/{jamId}")
+    @Operation(
+            summary = "Exclui um Jam",
+            description = "Exclui um Jam pelo seu ID. Apenas o autor do Jam pode realizar esta ação. Requer autenticação.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Jam excluído com sucesso", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor do Jam.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Jam não encontrado", content = @Content)
+    })
+    public ResponseEntity<?> deleteJam(@PathVariable Long jamId, Principal principal) throws IOException {
+        jamService.deleteJam(jamId, principal.getName());
+        return ResponseEntity.noContent().build();
+    }
 }

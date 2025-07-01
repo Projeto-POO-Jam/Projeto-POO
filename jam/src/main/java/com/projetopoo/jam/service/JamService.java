@@ -385,4 +385,51 @@ public class JamService {
 
         return getJamPaginatedResponseDTO(jamPage);
     }
+
+    @Transactional
+    public void deleteJam(Long jamId, String identifier) throws IOException{
+        // Busca o jam que será apagado
+        Optional<Jam> optionalJam = jamRepository.findById(jamId);
+        if (optionalJam.isEmpty()) {
+            throw new EntityNotFoundException("jam com o ID " + jamId + " não encontrado.");
+        }
+
+        Jam jam = optionalJam.get();
+
+        // Busca usuário que fez a requisição
+        User requestingUser = userRepository.findByIdentifier(identifier);
+
+        if (!(Objects.equals(jam.getJamUser().getUserId(), requestingUser.getUserId()))) {
+            throw new AccessDeniedException("Usuário não autorizado a excluir este Jam.");
+        }
+
+        // Busca a inscrição associada
+        Optional<Subscribe> optionalSubscribe = subscribeRepository.findBySubscribeUserAndSubscribeJam(requestingUser,jam);
+        if (optionalSubscribe.isPresent()) {
+            Subscribe subscribe = optionalSubscribe.get();
+
+            // Desvincula o Jam da inscrição
+            subscribe.setSubscribeGame(null);
+            subscribeRepository.save(subscribe);
+        }
+
+        // Apaga a Cover do Jam
+        if (jam.getJamCover()!= null && !jam.getJamCover ().isEmpty()) {
+            FileUtil.deleteDirectory(jam.getJamCover());
+        }
+
+        // Apaga o JamWallpaper do Jam
+        if (jam.getJamWallpaper() != null && !jam.getJamWallpaper().isEmpty()) {
+            FileUtil.deleteDirectory(jam.getJamWallpaper());
+        }
+
+        // Apaga o Banner do Jam
+        if (jam.getJamBanner() != null && !jam.getJamBanner().isEmpty()) {
+            FileUtil.deleteDirectory(jam.getJamBanner());
+        }
+
+        // Apaga o jam
+        jamRepository.delete(jam);
+    }
+
 }
