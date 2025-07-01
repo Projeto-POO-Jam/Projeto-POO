@@ -29,7 +29,6 @@ function runFieldValidation(fieldId, rules) {
 export function setupValidation(rulesMap) {
     Object.entries(rulesMap).forEach(([fieldId, rules]) => {
         const input = $(`#${fieldId}`);
-        //O listener agora simplesmente chama a nossa função auxiliar
         const listener = () => runFieldValidation(fieldId, rules);
 
         if (input.hasClass('filepond')) {

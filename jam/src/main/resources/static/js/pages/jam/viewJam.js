@@ -62,8 +62,10 @@ $(async function() {
         }
 
         if (data.jamTextColor) {
-            dynamicStyles.push(`main { color: ${data.jamTextColor}; }`);
-            dynamicStyles.push(`.options-jam-card button { color: ${data.jamTextColor}; }`);
+            const textColor = data.jamTextColor;
+            dynamicStyles.push(`main { color: ${textColor}; }`);
+            dynamicStyles.push(`.options-jam-card button { color: ${textColor}; }`);
+            dynamicStyles.push(`.button-edit-jam .material-symbols-outlined { color: ${textColor}; }`);
         }
 
         if (data.jamLinkColor) {
@@ -106,6 +108,18 @@ $(async function() {
 
         // Preenche os campos estáticos da página
         bindDataFields(data, root);
+
+        //Lógica para exibir o botão de editar o Jam
+        if (data.jamUser && data.jamUser.userCurrent) {
+            const editButton = $('#edit-jam-btn');
+
+            editButton.on('click', function(event) {
+                event.preventDefault();
+                window.location.href = `/updateJam/${jamId}`;
+            });
+
+            editButton.show();
+        }
 
         const rankButton = $('button[data-tab="rank"]');
         const rankTabContent = $('#tab-rank');
