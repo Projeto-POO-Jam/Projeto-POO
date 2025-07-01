@@ -4,7 +4,7 @@ import { createJamCard } from '../../perfil/commun/cardBuilder.js';
 
 export function init(userId) {
     initializePaginatedTab({
-        tabName: 'jams-created', // Deve corresponder aos IDs no HTML
+        tabName: 'jams-created',
         userId: userId,
         fetchFunction: fetchUserCreatedJams,
         cardCreator: createJamCard,
