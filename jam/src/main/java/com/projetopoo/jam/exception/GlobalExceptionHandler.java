@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import io.swagger.v3.oas.annotations.Hidden;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * Classe responsável por tratar todas as exceções, gerando o retorno correto para o frontend
  */
-
+@Hidden
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
