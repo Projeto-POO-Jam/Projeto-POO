@@ -15,9 +15,11 @@ header.site-header {
 }
 
 .container-menu{
-    width: 60%;
-    display: flex; align-items: center;
-    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem
 }
 
 .button-menu{
@@ -129,6 +131,7 @@ body.dark .theme-icon {
 
 .menu-dropdown.active {
     opacity: 1;
+    pointer-events: auto;
 }
 
 #search-dropdown {
@@ -143,8 +146,7 @@ body.dark .theme-icon {
 }
 
 #user-dropdown {
-    right: 32px;
-    transform: translateX(50%);
+    right: -32px;
     width: 100%;
     border-radius: 0 0 0 0.5rem;
     margin-top: -3px;
@@ -322,4 +324,28 @@ body.dark .theme-icon {
     padding: 10px;
     cursor: pointer;
     font-weight: bold;
+}
+
+
+#notification-list-container::-webkit-scrollbar {
+    width: 12px;
+}
+
+#notification-list-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#notification-list-container::-webkit-scrollbar-thumb {
+    background-color: var(--background);
+    border-radius: 1rem;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+#search-mobile {
+    display: none;
+}
+
+.hamburger-container {
+    display: none;
 }

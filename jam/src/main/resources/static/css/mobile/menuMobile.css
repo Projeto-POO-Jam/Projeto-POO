@@ -1,0 +1,111 @@
+@media (max-width: 1024px) {
+    #search-desktop {
+        display: none;
+    }
+
+    #search-mobile {
+        display: block;
+        position: relative;
+    }
+
+    .container-menu {
+        width: auto;
+        flex-grow: 1;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    #search-mobile .bar-search-menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        border: 2px solid var(--blue);
+        border-radius: 0.7rem;
+        padding: 2px;
+        position: relative;
+    }
+
+    #search-mobile .bar-search-menu.is-animating{
+        transition: width 0.4s ease-in-out;
+    }
+
+    #search-mobile .bar-search-menu input {
+        display: none;
+    }
+
+    #search-mobile .bar-search-menu.search-expanded {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        width: clamp(180px, 60vw, 280px);
+        z-index: 1002;
+        background-color: var(--background-menu);
+        padding: 4px 10px;
+    }
+
+    #search-mobile .bar-search-menu.search-expanded input {
+        display: block;
+        width: 88%;
+    }
+}
+
+@media (max-width: 786px) {
+    .button-menu{
+        font-size: 12px;
+    }
+
+    .header.site-header{
+        padding: 1rem;
+    }
+
+    .bar-search-menu span{
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 518px) {
+    .hamburger-container {
+        display: block;
+        position: relative;
+    }
+
+    .hamburger-icon {
+        background: none;
+        border: none;
+        color: var(--blue);
+        font-size: 1.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    .container-menu,
+    #search-mobile {
+        display: none;
+    }
+
+    #mobile-nav-dropdown {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: var(--background-menu);
+        border-radius: 0;
+        padding: 1rem 0 2rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    #mobile-nav-dropdown .button-menu {
+        font-size: 1.1rem;
+    }
+
+    #mobile-nav-dropdown .button-menu:hover::before {
+        display: none;
+    }
+}
