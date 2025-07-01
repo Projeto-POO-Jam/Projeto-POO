@@ -183,14 +183,8 @@ public class GameController {
             @ApiResponse(responseCode = "403", description = "Acesso negado. O usuário não é o autor do Game.", content = @Content),
             @ApiResponse(responseCode = "404", description = "Game não encontrado", content = @Content)
     })
-    public ResponseEntity<?> deleteGame(@PathVariable Long gameId, Principal principal) {
-        try {
-            gameService.deleteGame(gameId, principal.getName());
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (AccessDeniedException | IOException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-        }
+    public ResponseEntity<?> deleteGame(@PathVariable Long gameId, Principal principal) throws IOException {
+        gameService.deleteGame(gameId, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 }
