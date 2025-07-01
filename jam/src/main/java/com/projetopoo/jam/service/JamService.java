@@ -403,16 +403,6 @@ public class JamService {
             throw new AccessDeniedException("Usuário não autorizado a excluir este Jam.");
         }
 
-        // Busca a inscrição associada
-        Optional<Subscribe> optionalSubscribe = subscribeRepository.findBySubscribeUserAndSubscribeJam(requestingUser,jam);
-        if (optionalSubscribe.isPresent()) {
-            Subscribe subscribe = optionalSubscribe.get();
-
-            // Desvincula o Jam da inscrição
-            subscribe.setSubscribeGame(null);
-            subscribeRepository.save(subscribe);
-        }
-
         // Apaga a Cover do Jam
         if (jam.getJamCover()!= null && !jam.getJamCover ().isEmpty()) {
             FileUtil.deleteDirectory(jam.getJamCover());
