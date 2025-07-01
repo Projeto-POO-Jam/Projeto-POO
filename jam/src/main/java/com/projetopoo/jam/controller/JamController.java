@@ -164,7 +164,7 @@ public class JamController {
                             mediaType = "application/json",
                             schema = @Schema(implementation = JamPaginatedResponseDTO.class)))
     })
-    public ResponseEntity<?> findJamListByUserId(
+    public ResponseEntity<?> findJamListByCreatingUser(
             @NotNull() @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "20") int limit) {
