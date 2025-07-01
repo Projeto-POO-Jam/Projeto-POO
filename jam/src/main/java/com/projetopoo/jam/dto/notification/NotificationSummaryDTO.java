@@ -6,8 +6,8 @@ public class NotificationSummaryDTO {
     private Long notificationId;
     private String notificationMessage;
     private String notificationLink;
-    private boolean notificationRead;
-    private LocalDateTime notificationCreatedAt;
+    private Boolean notificationRead;
+    private LocalDateTime notificationDate;
 
     public Long getNotificationId() {
         return notificationId;
@@ -33,19 +33,19 @@ public class NotificationSummaryDTO {
         this.notificationLink = notificationLink;
     }
 
-    public boolean isNotificationRead() {
+    public Boolean getNotificationRead() {
         return notificationRead;
     }
 
-    public void setNotificationRead(boolean notificationRead) {
+    public void setNotificationRead(Boolean notificationRead) {
         this.notificationRead = notificationRead;
     }
 
-    public LocalDateTime getNotificationCreatedAt() {
-        return notificationCreatedAt;
+    public LocalDateTime getNotificationDate() {
+        return notificationDate;
     }
 
-    public void setNotificationCreatedAt(LocalDateTime notificationCreatedAt) {
-        this.notificationCreatedAt = notificationCreatedAt;
+    public void setNotificationDate(LocalDateTime notificationDate) {
+        this.notificationDate = notificationDate;
     }
 }
