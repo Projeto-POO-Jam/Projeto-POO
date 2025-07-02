@@ -36,9 +36,11 @@ $(async function () {
         e.stopPropagation();
 
         const searchBarMobile = $('#search-mobile .bar-search-menu');
-        if ($(this).is(searchBarMobile) && window.innerWidth <= 900) {
+        if ($(this).is(searchBarMobile) && window.innerWidth <= 940) {
             if (!searchBarMobile.hasClass('search-expanded')) {
                 e.preventDefault();
+
+                $('header.site-header').addClass('search-active-mobile');
 
                 searchBarMobile.addClass('is-animating');
                 searchBarMobile.addClass('search-expanded');
@@ -70,8 +72,9 @@ $(async function () {
             dropdowns.removeClass('active');
         }
         // Fecha busca mobile
-        if (window.innerWidth <= 900 && !$(e.target).closest('#search-mobile').length) {
+        if (window.innerWidth <= 940 && !$(e.target).closest('#search-mobile').length) {
             $('#search-mobile .bar-search-menu').removeClass('search-expanded');
+            $('header.site-header').removeClass('search-active-mobile');
         }
     });
 
@@ -80,7 +83,7 @@ $(async function () {
 
     searchBar.on('click', function (e) {
         // Só executa a lógica de expandir em telas menores
-        if (window.innerWidth <= 900) {
+        if (window.innerWidth <= 940) {
             if (!searchBar.hasClass('search-expanded')) {
                 e.preventDefault();
                 searchBar.addClass('search-expanded');
@@ -120,19 +123,28 @@ $(async function () {
 
     //Função para criar o card.
     function createJamCard(jam) {
+        const statusMap = {
+            SCHEDULED: 'Agendada',
+            ACTIVE: 'Em andamento',
+            FINISHED: 'Finalizada',
+        };
+
+        //Crie a variável com o texto traduzido
+        const statusText = statusMap[jam.jamStatus] || jam.jamStatus;
+
         const startDate = formatDate(jam.jamStartDate);
         const endDate = formatDate(jam.jamEndDate);
 
         const card = $(`
-        <a href="/jams/${jam.jamId}" class="jam-card-search">
-            <div class="jam-card-search-info">
-                <p class="jam-card-search-title">${jam.jamTitle}</p>
-                <p class="jam-card-search-dates">${startDate} até ${endDate}</p>
-                <p class="jam-card-search-status">${jam.jamStatus}</p>
-            </div>
-            <button class="jam-card-search-button">Acessar Jam</button>
-        </a>
-    `);
+            <a href="/jams/${jam.jamId}" class="jam-card-search">
+                <div class="jam-card-search-info">
+                    <p class="jam-card-search-title">${jam.jamTitle}</p>
+                    <p class="jam-card-search-dates">${startDate} até ${endDate}</p>
+                    <p class="jam-card-search-status">${statusText}</p>
+                </div>
+                <button class="jam-card-search-button">Acessar Jam</button>
+            </a>
+        `);
 
         //Previne o comportamento padrão do link ao clicar no botão
         card.find('.jam-card-search-button').on('click', function(e) {
@@ -142,7 +154,6 @@ $(async function () {
 
         return card;
     }
-
     //Função principal que realiza a busca e exibe os resultados.
     async function performSearch(query, isLoadMore = false, activeContainer) {
         if (isSearchLoading) return;
@@ -211,7 +222,7 @@ $(async function () {
         }
     });
 
-    // Evento de clique para AMBOS os botões "Carregar mais"
+    //Evento de clique para ambos os botões "Carregar mais"
     loadMoreButtons.on('click', function () {
         if (currentQuery && !isSearchLoading) {
             const activeSearchContainer = $(this).closest('.search-container');

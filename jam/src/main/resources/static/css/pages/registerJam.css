@@ -290,3 +290,59 @@
     color: rgb(105 105 105 / 40%) !important;
 }
 
+.filepond-placeholder {
+    min-height: 220px;
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s;
+}
+
+.form-Jam .filepond-placeholder {
+    min-height: 100px !important;
+}
+
+.filepond-placeholder.file-input {
+    min-height: 75px;
+}
+
+.filepond-placeholder.skeleton .filepond {
+    position: absolute;
+    opacity: 0;
+    width: 0.1px;
+    height: 0.1px;
+    pointer-events: none;
+}
+
+.filepond-placeholder > .filepond--root {
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.filepond-placeholder:not(.skeleton) > .filepond--root {
+    opacity: 1;
+}
+
+.summernote-placeholder {
+    min-height: 300px;
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.summernote-placeholder textarea {
+    display: none;
+}
+
+.summernote-placeholder .note-editor {
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.summernote-placeholder:not(.skeleton) .note-editor {
+    opacity: 1;
+}
+
+.filepond--root .filepond--credits{
+    display: none !important;
+}

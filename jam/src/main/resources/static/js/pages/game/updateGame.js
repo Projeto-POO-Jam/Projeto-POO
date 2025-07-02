@@ -1,5 +1,5 @@
 import { initializeGameForm } from './gameForm.js';
-import { fetchDadoFormUpdate } from "../../services/gameService.js";
+import { fetchDadoFormUpdate, deleteGame } from "../../services/gameService.js";
 import { bindDataFields } from "../../common/bindDataFields.js";
 import { showError } from '../../common/notifications.js';
 import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
@@ -26,7 +26,6 @@ $(async function() {
     });
 
     try {
-        //A busca de dados continua a mesma.
         const data = await fetchDadoFormUpdate(gameId);
 
         if (!data) {
@@ -34,8 +33,6 @@ $(async function() {
             return;
         }
 
-        //Preenchimento dos campos simples e Summernote continua igual.
-        const root = '.container-register-game';
         bindDataFields(data, root);
         if (data.gameContent) {
             $('#gameContent').summernote('code', data.gameContent);
@@ -50,16 +47,9 @@ $(async function() {
 
         //Carrega a imagem de capa
         if (data.gamePhoto && pondInstances.gamePhoto) {
-            const fileName = data.gamePhoto.split('/').pop(); // Extrai o nome do arquivo da URL
+            const fileName = data.gamePhoto.split('/').pop(); //Extrai o nome do arquivo da URL
             const file = await urlToFile(data.gamePhoto, fileName);
-            pondInstances.gamePhoto.addFile(file); // Adiciona como se fosse um novo arquivo
-        }
-
-        //Carrega o arquivo do jogo
-        if (data.gameFile && pondInstances.gameFile) {
-            const fileName = data.gameFile.split('/').pop();
-            const file = await urlToFile(data.gameFile, fileName, 'application/x-rar-compressed');
-            pondInstances.gameFile.addFile(file);
+            pondInstances.gamePhoto.addFile(file); //Adiciona como se fosse um novo arquivo
         }
 
     } catch (error) {
@@ -68,4 +58,36 @@ $(async function() {
     } finally {
         removeSkeleton(root);
     }
+
+    $('#deleteButton').on('click', async function() {
+        const result = await Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Esta ação não pode ser desfeita! O seu jogo será excluído permanentemente.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e75050',
+            cancelButtonColor: '#5865f2',
+            confirmButtonText: 'Sim, deletar jogo!',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-html-container'
+            }
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await deleteGame(gameId);
+                showSuccess('Jogo deletado com sucesso!');
+                setTimeout(() => {
+                    const redirectUrl = document.referrer.includes('/jams/') ? document.referrer : '/home';
+                    window.location.href = redirectUrl;
+                }, 2000);
+            } catch (err) {
+                showError('Ocorreu um erro ao deletar o jogo.');
+                console.error('Erro ao deletar o jogo:', err);
+            }
+        }
+    });
 });

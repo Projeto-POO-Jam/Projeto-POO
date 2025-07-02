@@ -113,4 +113,36 @@ $(async function() {
     } finally {
         removeSkeleton(root);
     }
+
+    //Adicione a lógica do botão de deletar aqui
+    $('#deleteButton').on('click', async function() {
+        const result = await Swal.fire({
+            title: 'Você tem certeza?',
+            text: "Isto irá apagar a Jam e TODOS os jogos enviados para ela. Esta ação é irreversível!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e75050',
+            cancelButtonColor: '#5865f2',
+            confirmButtonText: 'Sim, deletar Jam!',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                popup: 'swal-custom-popup',
+                title: 'swal-custom-title',
+                htmlContainer: 'swal-custom-html-container'
+            }
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await deleteJam(jamId);
+                showSuccess('Jam deletada com sucesso!');
+                setTimeout(() => {
+                    window.location.href = '/home';
+                }, 2000);
+            } catch (err) {
+                showError('Ocorreu um erro ao deletar a Jam.');
+                console.error('Erro ao deletar a Jam:', err);
+            }
+        }
+    });
 });

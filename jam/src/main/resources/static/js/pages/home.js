@@ -1,5 +1,6 @@
 import { fetchJamsByMonth, fetchBannerJams } from '../services/jamService.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
+import { createJamCard } from '../common/cardBuilder.js';
 
 // Função para inicializar o carrossel
 async function initializeCarousel() {
@@ -96,108 +97,6 @@ $(function() {
         return date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
     }
 
-    //Função auxiliar para verificae se é mes/dia/hora/minuto
-    function formatRelativeTime(diffMs) {
-        const totalSeconds = Math.floor(diffMs / 1000);
-        const totalDays = Math.floor(totalSeconds / 86400);
-        const months = Math.floor(totalDays / 30);
-        const days = totalDays % 30;
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-        if (months > 0) {
-            return `${months} mês${months > 1 ? 'es' : ''}`;
-        }
-        if (days > 0) {
-            return `${days} dia${days > 1 ? 's' : ''}`;
-        }
-        if (hours > 0) {
-            return `${hours} hora${hours > 1 ? 's' : ''}`;
-        }
-        if (minutes > 0) {
-            return `${minutes} minuto${minutes > 1 ? 's' : ''}`;
-        }
-        return 'agora';
-    }
-
-    //Função auxiliar que recebe uma jam e retorna um elemento jQuery pronto
-    function createJamCard(jam) {
-        const statusMap = {
-            SCHEDULED: 'Agendada',
-            ACTIVE: 'Em andamento',
-            FINISHED: 'Finalizada',
-        };
-        const statusText = statusMap[jam.jamStatus] || jam.jamStatus;
-
-        const agora = new Date();
-        const dataInicio = new Date(jam.jamStartDate);
-        const dataFim = new Date(jam.jamEndDate);
-
-        const diffStart = dataInicio - agora;
-        const diffEnd = dataFim - agora;
-
-        let durationHtml;
-
-        if (diffStart > 0) {
-            //Acontece no futuro
-            durationHtml = `
-                <div class="duration-jam-card">
-                    <p data-field class="skeleton">Começa em ${formatRelativeTime(diffStart)}</p>
-                    <p data-field class="skeleton">Termina em ${formatRelativeTime(diffEnd)}</p>
-                </div>
-            `;
-        } else if (diffEnd > 0) {
-            //Já começou, mas ainda não acabou
-            durationHtml = `
-                <div class="duration-jam-card">
-                    <p data-field class="duration-solo-jam-card skeleton">Termina em ${formatRelativeTime(diffEnd)}</p>
-                </div>
-            `;
-        } else {
-            //Já terminou
-            durationHtml = `
-                <div class="duration-jam-card">
-                    <p data-field class="skeleton">Essa jam acabou</p>
-                </div>
-            `;
-        }
-
-        const count = jam.jamTotalSubscribers
-            ?? jam.jamTotalSubscribers
-            ?? jam.subscribeTotal
-            ?? 0;
-
-        const card = `
-            <div class="jam-card-home" data-jamid="${jam.jamId}">
-                <div class="header-jam-card-home">
-                    <h1 data-field class="status-jam-card-home skeleton">${statusText}</h1>
-                    <div class="aling-qtd-members-jam-card-home">
-                        <span class="material-symbols-outlined">account_circle</span>
-                        <p data-field class="skeleton">${jam.jamTotalSubscribers}</p>
-                    </div>
-                </div>
-                <div class="container-jam-card-home">
-                    <h1 data-field class="skeleton">${jam.jamTitle}</h1>
-                    ${durationHtml}
-                </div>
-            </div>
-        `;
-
-        const newCard = $(card);
-
-        const btnWrapper = $('<div>')
-            .addClass('jam-btn-wrapper');
-
-        const btn = $('<button>')
-            .addClass('jam-btn-home')
-            .text('Ver Jam')
-            .on('click', () => window.location.href = `/jams/${jam.jamId}`);
-
-        btnWrapper.append(btn);
-        newCard.append(btnWrapper);
-
-        return newCard;
-    }
 
     //Mostra Jams de um mês
     function renderMonthSection(month, jams, total) {

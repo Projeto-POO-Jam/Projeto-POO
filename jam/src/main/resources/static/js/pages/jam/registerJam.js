@@ -1,4 +1,5 @@
-import { initializeJamForm } from './jamForm.js'; // Ajuste o caminho se necessário
+import { initializeJamForm } from './jamForm.js';
+import { removeSkeleton } from '../../common/skeleton.js';
 
 $(function() {
 
@@ -10,5 +11,7 @@ $(function() {
         entityId: null,
         initialData: {}
     });
+
+    removeSkeleton('.container-register-jam');
 
 });

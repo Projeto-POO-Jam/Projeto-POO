@@ -15,16 +15,32 @@ import { registerFilePondPlugins, createFilePondInstance } from '../../common/fi
  */
 export function initializeGameForm(config) {
     //Inicializa o Summernote
-    $('#gameContent').summernote({ height: 300 });
+    $('#gameContent').summernote({
+        height: 300,
+        callbacks: {
+            onInit: function() {
+                $('#gameContent-placeholder').removeClass('skeleton');
+            }
+        }
+    });
 
     //Registra os plugins do FilePond
     registerFilePondPlugins();
 
     const pondInstances = {};
 
+    //Helper para remover o skeleton
+    const onPondInit = (placeholderId) => {
+        const placeholder = document.getElementById(placeholderId);
+        if (placeholder) {
+            placeholder.classList.remove('skeleton');
+        }
+    };
+
     // Inicializa a instância da foto, adicionando a propriedade 'server'
     pondInstances.gamePhoto = createFilePondInstance('#gamePhoto', {
         labelIdle: `Arraste a <strong>imagem de capa</strong> ou <span class="filepond--label-action">Procure</span>`,
+        oninit: () => onPondInit('gamePhoto-placeholder'),
         server: {}
     });
 
@@ -33,6 +49,7 @@ export function initializeGameForm(config) {
         labelIdle: `Arraste o <strong>arquivo do jogo (.rar)</strong> ou <span class="filepond--label-action">Procure</span>`,
         stylePanelAspectRatio: '0.1',
         acceptedFileTypes: null,
+        oninit: () => onPondInit('gameFile-placeholder'),
         server: {}
     });
 

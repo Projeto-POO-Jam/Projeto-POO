@@ -38,24 +38,37 @@
 
                     <div class="form-group form-group-jam">
                         <label for="gameContent" class="label-input-padrao">Conteúdo da Jam (HTML livre)</label>
-                        <textarea id="gameContent" name="gameContent" data-field="gameContent"></textarea>
+                        <div id="content-placeholder" class="summernote-placeholder skeleton">
+                            <textarea id="gameContent" name="gameContent" data-field="gameContent"></textarea>
+                        </div>
+
                     </div>
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem Capa</label>
-                        <input type="file" class="filepond" name="gamePhoto" id="gamePhoto"/>
+                        <div id="gamePhoto-placeholder" class="filepond-placeholder skeleton file-input">
+                            <input type="file" class="filepond" name="gamePhoto" id="gamePhoto"/>
+                        </div>
                         <p id="gamePhotoError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Enviar Game</label>
-                        <input type="file" class="filepond" name="gameFile" id="gameFile"/>
+                        <div id="gameFile-placeholder" class="filepond-placeholder skeleton file-input">
+                            <input type="file" class="filepond" name="gameFile" id="gameFile"/>
+                        </div>
                         <p id="gameFileError" class="error-message"></p>
                     </div>
 
                     <button id="submitButton" type="submit" class="submit-button">
                         Editar Game
                     </button>
+                    <div class="aling-button-delete">
+                        <button type="button" id="deleteButton" class="delete-button">
+                            Deletar Game
+                        </button>
+                    </div>
+
                 </form>
             </div>
         </section>

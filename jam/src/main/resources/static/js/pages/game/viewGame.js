@@ -117,7 +117,7 @@ $(async function() {
         //Lógica para exibir o botão de editar o game
         if (gameData.userResponseDTO && gameData.userResponseDTO.userCurrent) {
             const editButton = $('#edit-game-btn');
-            editButton.attr('href', `/updateJam/${gameId}`);
+            editButton.attr('href', `/updateGame/${gameId}`);
             editButton.show();
         }
 

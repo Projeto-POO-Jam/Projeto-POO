@@ -36,21 +36,10 @@ export function applySkeleton(root) {
  */
 export function removeSkeleton(root) {
     const $scope = root ? $(root) : $(document);
-    $scope.find('[data-field]').each(function() {
-        const $el = $(this);
 
-        if ($el.is('img')) {
-            if ($el.hasClass('skeleton')) {
-                $el.removeClass('skeleton');
-            }
-        }
-        else {
-            if ($el.hasClass('skeleton')) {
-                $el.removeClass('skeleton');
-            }
-            if ($el.is('input') || $el.is('textarea') || $el.is('select')) {
-                $el.prop('disabled', false);
-            }
-        }
-    });
+    // Encontra qualquer elemento com a classe .skeleton e a remove.
+    $scope.find('.skeleton').removeClass('skeleton');
+
+    //Reabilita os campos de formulário que possam ter sido desabilitados.
+    $scope.find('input, textarea, select').prop('disabled', false);
 }
