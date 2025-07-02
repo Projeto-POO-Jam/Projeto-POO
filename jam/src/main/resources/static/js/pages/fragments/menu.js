@@ -36,9 +36,11 @@ $(async function () {
         e.stopPropagation();
 
         const searchBarMobile = $('#search-mobile .bar-search-menu');
-        if ($(this).is(searchBarMobile) && window.innerWidth <= 900) {
+        if ($(this).is(searchBarMobile) && window.innerWidth <= 940) {
             if (!searchBarMobile.hasClass('search-expanded')) {
                 e.preventDefault();
+
+                $('header.site-header').addClass('search-active-mobile');
 
                 searchBarMobile.addClass('is-animating');
                 searchBarMobile.addClass('search-expanded');
@@ -70,8 +72,9 @@ $(async function () {
             dropdowns.removeClass('active');
         }
         // Fecha busca mobile
-        if (window.innerWidth <= 900 && !$(e.target).closest('#search-mobile').length) {
+        if (window.innerWidth <= 940 && !$(e.target).closest('#search-mobile').length) {
             $('#search-mobile .bar-search-menu').removeClass('search-expanded');
+            $('header.site-header').removeClass('search-active-mobile');
         }
     });
 
@@ -80,7 +83,7 @@ $(async function () {
 
     searchBar.on('click', function (e) {
         // Só executa a lógica de expandir em telas menores
-        if (window.innerWidth <= 900) {
+        if (window.innerWidth <= 940) {
             if (!searchBar.hasClass('search-expanded')) {
                 e.preventDefault();
                 searchBar.addClass('search-expanded');

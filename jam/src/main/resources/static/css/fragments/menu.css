@@ -20,7 +20,7 @@ header.site-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem
+    gap: 2rem;
 }
 
 .button-menu{
@@ -267,7 +267,6 @@ body.dark .theme-icon {
 
 .notification-header {
     padding: 10px 15px;
-    border-bottom: 1px solid var(--background);
     font-weight: bold;
 }
 
@@ -355,6 +354,6 @@ body.dark .theme-icon {
 #search-desktop-dropdown,
 #search-mobile-dropdown {
     left: 0;
-    width: 100%;
+    width: 21rem;
     right: auto;
 }
