@@ -1,6 +1,7 @@
 import { fetchJamsByMonth, fetchBannerJams } from '../services/jamService.js';
 import { applySkeleton, removeSkeleton } from '../common/skeleton.js';
-import { createJamCard } from '../common/cardBuilder.js';
+import { createJamCardTemplate, populateJamCard } from '../common/cardBuilder.js';
+import { bindDataFields } from '../common/bindDataFields.js';
 
 // Função para inicializar o carrossel
 async function initializeCarousel() {
@@ -22,7 +23,7 @@ async function initializeCarousel() {
             if (jam.jamBanner) {
                 slideHtml = `
                     <div>
-                        <a href="/jams/${jam.id}" class="carousel-slide-link">
+                        <a href="/jams/${jam.jamId}" class="carousel-slide-link">
                             <img src="${jam.jamBanner}" alt="Banner para ${jam.jamTitle}" class="carousel-image"/>
                         </a>
                     </div>
@@ -69,6 +70,18 @@ $(function() {
     let loadedMonths = [];
     let monthOffsets = {};
     let isLoading = false;
+    let noMoreMonthsToLoad = false;
+
+    function checkAndShowEmptyMessage() {
+        setTimeout(() => {
+            if (noMoreMonthsToLoad && container.children('.month-section').length === 0) {
+                container.html('<div class="page-error" style="padding: 5rem 0;"><h1>Nenhuma jam foi postada ainda.</h1></div>');
+                $('footer').css({ 'opacity': 1, 'visibility': 'visible' });
+            } else if (container.children('.month-section').length > 0) {
+                $('footer').css({ 'opacity': 1, 'visibility': 'visible' });
+            }
+        }, 100);
+    }
 
     //Garante que uma função seja executada no máximo uma vez a cada X milissegundos.
     function throttle(func, limit) {
@@ -87,157 +100,145 @@ $(function() {
     //Pega o mês atual
     function getCurrentMonth() {
         const date = new Date();
-        return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
     }
 
     //Formata mês para título
     function formatMonthTitle(ym) {
         const [y, m] = ym.split('-');
-        const date = new Date(y, m-1);
+        const date = new Date(y, m - 1);
         return date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-    }
-
-
-    //Mostra Jams de um mês
-    function renderMonthSection(month, jams, total) {
-        const section = $('<section>').addClass('month-section').attr('data-month', month);
-        const title = $('<h2>').addClass('month-title').text(formatMonthTitle(month));
-        const cardsContainer = $('<div>').addClass('cards-container');
-
-        jams.forEach(jam => {
-            const card = createJamCard(jam);
-            cardsContainer.append(card);
-        });
-
-        const shown = jams.length + monthOffsets[month];
-        if (shown < total) {
-            const btnLoadMore = $('<button>')
-                .addClass('load-more')
-                .text('Carregar mais')
-                .on('click', () => loadMore(month));
-            section.append(btnLoadMore);
-        }
-
-        section.prepend(cardsContainer);
-        container.append(title, section);
     }
 
     //Faz fetch e renderiza primeira página de um mês
     async function loadMonth(month) {
-        if (month < getCurrentMonth() && month !== getCurrentMonth()) return;
-        if (loadedMonths.includes(month) || isLoading) return;
+        if (loadedMonths.includes(month) || isLoading || noMoreMonthsToLoad) return;
 
         isLoading = true;
-        loadedMonths.push(month);
-        monthOffsets[month] = 0;
 
-        const lastLoadMoreButton = $('.load-more').last();
-        if (lastLoadMoreButton.length) {
-            lastLoadMoreButton.text('Buscando mais Jams...');
-        }
+        const section = $('<section>').addClass('month-section').attr('data-month', month);
+        const title = $('<h2>').addClass('month-title').text(formatMonthTitle(month));
+        const cardsContainer = $('<div>').addClass('cards-container');
+
+        section.append(title, cardsContainer);
+        container.append(section);
+
+        //Aplica o skeleton na seção enquanto os dados carregam
+        applySkeleton(section);
 
         try {
             const { jams, total } = await fetchJamsByMonth(month, 0, limitPerPage);
+            loadedMonths.push(month);
+
             if (jams.length > 0) {
-                renderMonthSection(month, jams, total);
-                const section = container.find(`.month-section[data-month='${month}']`);
-                removeSkeleton(section);
+                //Se encontrou Jams, popule os cards
+                jams.forEach(jam => {
+                    const newCardTemplate = createJamCardTemplate();
+                    populateJamCard(newCardTemplate, jam);
+                    cardsContainer.append(newCardTemplate);
+                });
+
                 monthOffsets[month] = jams.length;
+                if (monthOffsets[month] < total) {
+                    const btnLoadMore = $('<button>')
+                        .addClass('load-more')
+                        .text('Carregar mais')
+                        .on('click', () => loadMore(month));
+                    section.append(btnLoadMore);
+                }
+            } else {
+                //Se não encontrou Jams para o mês, ativamos a flag e removemos a seção
+                section.remove();
+                noMoreMonthsToLoad = true;
             }
+
+            checkAndLoadUntilScrollable();
+
         } catch (err) {
             console.error(`Erro ao carregar mês ${month}:`, err);
+            section.remove();
+            noMoreMonthsToLoad = true; //Ativa a flag em caso de erro também
         } finally {
             isLoading = false;
-            if (lastLoadMoreButton.length) {
-                lastLoadMoreButton.text('Carregar mais');
-            }
-            setTimeout(checkAndLoadUntilScrollable, 0);
-            $('footer').css({
-                'transition': 'opacity 0.5s ease-in-out',
-                'opacity': 1,
-                'visibility': 'visible'
-            });
+            //Remove o skeleton da seção inteira após o processo
+            removeSkeleton(section);
         }
-
     }
-
-    // ela vai verificar se o mês retornado do fetch estava vazio e carregar o próximo
+    //Verificar se o mês retornado do fetch estava vazio e carregar o próximo
     function checkAndLoadUntilScrollable() {
-        if (!isLoading && $(document).height() <= $(window).height()) {
+        if (isLoading || noMoreMonthsToLoad) return;
+
+        const isScrollable = $(document).height() > $(window).height() + 50;
+
+        if (!isScrollable) {
             const lastLoaded = loadedMonths[loadedMonths.length - 1];
             if (!lastLoaded) return;
 
-            const section = $(`.month-section[data-month='${lastLoaded}']`);
-            if (section.find('.jam-card-home').length === 0 || $(document).height() <= $(window).height()) {
-                const [y, m] = lastLoaded.split('-').map(Number);
-                const date = new Date(y, m - 1, 1);
-                date.setMonth(date.getMonth() + 1);
-                const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-                loadMonth(nextMonth);
-            }
+            const [y, m] = lastLoaded.split('-').map(Number);
+            const date = new Date(y, m, 1);
+            const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+            loadMonth(nextMonth);
         }
     }
 
     //SSE handlers:
     const stream = new EventSource('/api/events?topic=jams-list-update');
 
-    function updateJamCard(jamId, updater, payload) {
-        if (!jamId) return;
-        const card = $(`.jam-card-home[data-jamid="${jamId}"]`);
-        if (card.length) {
-            updater(card, payload);
-        }
-    }
-
     //Cria atualização em tempo real nas jams
     const sseHandlers = {
         'jam-insert': (e) => {
-            const raw = JSON.parse(e.data);
-            const jam = {
-                ...raw,
-                subscribersCount: raw.jamTotalSubscribers ?? raw.subscribeTotal ?? 0
-            };
-
+            const jam = JSON.parse(e.data);
             const monthKey = jam.jamStartDate.slice(0, 7);
-            const section = $(`.month-section[data-month="${monthKey}"]`);
-            const cardsContainer = section.find('.cards-container');
-            const newCard = createJamCard(jam);
-            removeSkeleton(newCard);
+            let section = $(`.month-section[data-month="${monthKey}"]`);
 
-            if (cardsContainer.length) {
-                cardsContainer.prepend(newCard);
-            } else {
-                renderMonthSection(monthKey, [jam], 1);
+            if (section.length === 0) {
+                const monthsOnScreen = $('.month-section').map(function() { return $(this).data('month') }).get();
+                const sortedMonths = [...monthsOnScreen, monthKey].sort().reverse();
+                const newIndex = sortedMonths.indexOf(monthKey);
+
+                section = $('<section>').addClass('month-section').attr('data-month', monthKey);
+                const title = $('<h2>').addClass('month-title').text(formatMonthTitle(monthKey));
+                const cardsContainer = $('<div>').addClass('cards-container');
+                section.append(title, cardsContainer);
+
+                if (newIndex === 0 || container.children().length === 0) {
+                    container.prepend(section);
+                } else {
+                    const prevMonth = sortedMonths[newIndex - 1];
+                    container.find(`.month-section[data-month='${prevMonth}']`).after(section);
+                }
+            }
+
+            const cardsContainer = section.find('.cards-container');
+            const newCardTemplate = createJamCardTemplate();
+            populateJamCard(newCardTemplate, jam);
+            cardsContainer.prepend(newCardTemplate);
+        },
+
+        'jam-subscribes-update': (e) => {
+            const payload = JSON.parse(e.data);
+            const card = $(`.jam-card-home[data-jamid="${payload.subscribeJamId}"]`);
+            if (card.length) {
+                bindDataFields({ jamTotalSubscribers: payload.subscribeTotal ?? 0 }, card);
             }
         },
 
-        'subscriber-update': (e) => {
+        'jam-status-update': (e) => {
             const payload = JSON.parse(e.data);
-            updateJamCard(payload.subscribeJamId, (card, { subscribeTotal }) => {
-                card.find('.aling-qtd-members-jam-card-home p[data-field]')
-                    .removeClass('skeleton')
-                    .text(subscribeTotal ?? 0);
-            }, payload);
-        },
-
-        'status-update': (e) => {
-            const payload = JSON.parse(e.data);
-            updateJamCard(payload.jamId, (card, { jamStatus }) => {
+            const card = $(`.jam-card-home[data-jamid="${payload.jamId}"]`);
+            if (card.length) {
                 const statusMap = { SCHEDULED: 'Agendada', ACTIVE: 'Em andamento', FINISHED: 'Finalizada' };
-                const statusText = statusMap[jamStatus] || jamStatus;
-                card.find('h1.status-jam-card-home[data-field]')
-                    .removeClass('skeleton')
-                    .text(statusText);
-            }, payload);
+                const statusText = statusMap[payload.jamStatus] || payload.jamStatus;
+                bindDataFields({ jamStatusText: statusText }, card);
+            }
         }
     };
 
-    //Adiciona os listeners de evento a partir do mapa de handlers
     Object.entries(sseHandlers).forEach(([eventName, handler]) => {
         stream.addEventListener(eventName, handler);
     });
 
-    //Tratamento de erro centralizado
     stream.onerror = (err) => {
         console.error('SSE connection error:', err);
         stream.close();
@@ -248,59 +249,53 @@ $(function() {
         if (isLoading) return;
         isLoading = true;
 
+        const section = container.find(`.month-section[data-month='${month}']`);
+        const btnLoadMore = section.find('.load-more');
+        btnLoadMore.text('Buscando mais Jams...').prop('disabled', true);
+
+        const cardsContainer = section.find('.cards-container');
+
         try {
             const { jams, total } = await fetchJamsByMonth(month, monthOffsets[month], limitPerPage);
 
-            const section = container.find(`.month-section[data-month='${month}']`);
-            const cardsContainer = section.find('.cards-container');
-            const oldLoad = section.find('.load-more');
-            oldLoad.remove();
-
             jams.forEach(jam => {
-                const card = createJamCard(jam);
-                cardsContainer.append(card);
+                const newCardTemplate = createJamCardTemplate();
+                populateJamCard(newCardTemplate, jam);
+                cardsContainer.append(newCardTemplate);
             });
 
-            const sectionM = container.find(`.month-section[data-month='${month}']`);
-            removeSkeleton(sectionM);
-            monthOffsets[month] += jams.length; //atualiza qtd de jams mostrada no mes
+            monthOffsets[month] += jams.length;
 
-            //se ainda tem mais mostra o btn de carregar mais
-            if (monthOffsets[month] < total) {
-                const btnLoadMore = $('<button>')
-                    .addClass('load-more')
-                    .text('Carregar mais')
-                    .on('click', () => loadMore(month));
-                section.append(btnLoadMore);
+            if (monthOffsets[month] >= total) {
+                btnLoadMore.remove();
+            } else {
+                btnLoadMore.text('Carregar mais').prop('disabled', false);
             }
+
         }catch (err) {
             console.error(`Erro ao carregar mais em ${month}:`, err);
+            btnLoadMore.text('Erro! Tente novamente').prop('disabled', false);
         } finally {
             isLoading = false;
-            setTimeout(checkAndLoadUntilScrollable, 0);
         }
-
     }
 
     //Carregar proximos meses com Scroll
     function handleInfiniteScroll() {
         const scrollBottom = $(window).scrollTop() + $(window).height();
-        if (scrollBottom + 100 >= $(document).height() && !isLoading) {
-
+        if (scrollBottom + 150 >= $(document).height() && !isLoading && !noMoreMonthsToLoad) {
             const lastLoaded = loadedMonths[loadedMonths.length - 1];
             if (!lastLoaded) return;
 
             const [y, m] = lastLoaded.split('-').map(Number);
-            const date = new Date(y, m - 1, 1);
-            date.setMonth(date.getMonth() + 1);
-
+            const date = new Date(y, m, 1);
             const nextMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 
             loadMonth(nextMonth);
         }
     }
 
-    $(window).on('scroll', throttle(handleInfiniteScroll, 100));
+    $(window).on('scroll', throttle(handleInfiniteScroll, 200));
 
     // Inicializa com o mês atual
     loadMonth(getCurrentMonth());

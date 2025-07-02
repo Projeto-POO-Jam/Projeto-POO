@@ -63,6 +63,18 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    animation: fadeIn-slideUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn-slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .header-jam-card-home{
@@ -230,3 +242,4 @@
     visibility: visible !important;
     opacity: 1 !important;
 }
+

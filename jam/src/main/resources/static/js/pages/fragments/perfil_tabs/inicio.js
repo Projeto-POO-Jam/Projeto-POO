@@ -5,7 +5,7 @@ import {
     fetchUserLikedGames
 } from '../../../services/perfilService.js';
 import { applySkeleton, removeSkeleton } from '../../../common/skeleton.js';
-import { createJamCard, createGameCard } from '../../../common/cardBuilder.js';
+import { createGameCard, createJamCardTemplate, populateJamCard } from '../../../common/cardBuilder.js';
 
 /**
  * Renderiza uma lista de itens em um container, agora usando uma mensagem customizada.
@@ -20,8 +20,15 @@ function renderItems(container, items, createCardFn, noItemsMessage) {
 
     if (items && items.length > 0) {
         items.forEach(item => {
-            const card = createCardFn(item);
-            $listContainer.append(card);
+            //Lógica ajustada para usar o novo card builder
+            if (createCardFn === populateJamCard) {
+                const cardTemplate = createJamCardTemplate();
+                populateJamCard(cardTemplate, item);
+                $listContainer.append(cardTemplate);
+            } else {
+                const card = createCardFn(item);
+                $listContainer.append(card);
+            }
         });
     } else {
         $listContainer.html(`<p class="no-items-message">${noItemsMessage}</p>`);
@@ -60,8 +67,8 @@ export async function init(userData) {
 
         //Renderiza cada seção usando os card builders importados
         renderItems(createdGamesContainer, createdGamesData.games, createGameCard, "Nenhum jogo criado ainda.");
-        renderItems(createdJamsContainer, createdJamsData.jams, createJamCard, "Nenhuma Jam criada ainda.");
-        renderItems(registeredJamsContainer, registeredJamsData.jams, createJamCard, "Não está inscrito em nenhuma Jam.");
+        renderItems(createdJamsContainer, createdJamsData.jams, populateJamCard, "Nenhuma Jam criada ainda.");
+        renderItems(registeredJamsContainer, registeredJamsData.jams, populateJamCard, "Não está inscrito em nenhuma Jam.");
         renderItems(likedGamesContainer, likedGamesData.games, createGameCard, "Nenhum jogo curtido ainda.");
 
     } catch (error) {
