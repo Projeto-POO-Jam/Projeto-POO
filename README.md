@@ -40,7 +40,7 @@ O projeto foi construído com uma stack de tecnologias modernas e robustas, tant
 -   **Spring Security:** Para funcionalidades de autenticação e controle de acesso.
 -   **Spring Data JPA & Hibernate:** Para a camada de persistência de dados e interação com a base de dados.
 -   **MySQL / MariaDB:** Sistemas de gestão de base de dados relacionais.
--   **RabbitMQ:** Message broker para comunicação e processamento assíncrono.
+-   **RabbitMQ:** Message broker para agendamento de atividades e processamento assíncrono.
 -   **Maven:** Ferramenta de gestão de dependências e automação de build.
 -   **Swagger / OpenAPI:** Para documentação interativa da API REST.
 
@@ -50,16 +50,18 @@ O projeto foi construído com uma stack de tecnologias modernas e robustas, tant
 -   **JavaScript (ES6+):** Para a lógica e interatividade do lado do cliente.
 -   **jQuery:** Biblioteca para simplificar a manipulação do DOM e requisições AJAX.
 -   **Thymeleaf:** Motor de templates para renderização de páginas dinâmicas no servidor.
--   **FilePond:** Biblioteca avançada para upload de ficheiros.
--   **Summernote:** Editor de texto rico (WYSIWYG) para a criação de conteúdo HTML.
--   **Flatpickr & Pickr:** Componentes para seleção de data/hora e cores.
--   **Cropper.js:** Para a funcionalidade de recorte de imagens.
 
 ### Ferramentas Adicionais
 
--   **Docker:** Para containerização da aplicação e dos seus serviços (ex: RabbitMQ).
--   **Git & GitHub:** Para controlo de versões e colaboração.
-
+-   **Docker:** Para containerização do RabbitMQ.
+-   **Git & GitHub:** Para controle de versões e colaboração.
+-   **Trello:** Para gestão de projetos colaborativa e visual, baseada no sistema Kanban.
+-   **Figma:** Ferramenta de design, focada em design de interface do usuário (UI) e experiência do usuário (UX).
+-   **Postman:** Plataforma colaborativa para testar e documentar APIs.
+-   **IntelliJ:** IDE para o desenvolvimento em Java.
+-   **Discord:** Plataforma de comunicação entre os colaboradores do projeto.
+-   **Unity:** Motor gráfico para desenvolvimento de jogos 3D e 2D para multiplataforma como web.
+  
 ## 🚀 Como Executar o Projeto
 
 Para executar o projeto no seu ambiente local, siga estes passos:
@@ -71,9 +73,9 @@ Para executar o projeto no seu ambiente local, siga estes passos:
     ```
 
 2.  **Configurar a Base de Dados:**
-    -   Certifique-se de que tem uma instância do MySQL ou MariaDB a correr.
+    -   Certifique-se de que tem uma instância do MySQL ou MariaDB.
     -   Crie uma base de dados (ex: `projetopoo`).
-    -   Atualize o ficheiro `src/main/resources/application.properties` com as suas credenciais de acesso à base de dados.
+    -   Crie o arquivo `/application-local.properties` com as suas credenciais de acesso à base de dados conforme o arquivo `/application-local.properties.example`.
 
 3.  **Executar o RabbitMQ (via Docker):**
     -   Certifique-se de que tem o Docker e o Docker Compose instalados.
