@@ -59,3 +59,14 @@ export function fetchDadoFormUpdate(gameId) {
 export function deleteGame(gameId) {
     return apiRequest('DELETE', `api/games/${gameId}`);
 }
+
+/**
+ * Busca todos os jogos da plataforma de forma paginada.
+ * @param {number} limit - A quantidade de itens por página.
+ * @param {number} offset - O deslocamento para a paginação.
+ * @returns {Promise<object>}
+ */
+export function fetchCompleteGameList(limit = 20, offset = 0) {
+    return apiRequest('GET', `api/games/list/complete?offset=${offset}&limit=${limit}`)
+        .then(({ data }) => data);
+}

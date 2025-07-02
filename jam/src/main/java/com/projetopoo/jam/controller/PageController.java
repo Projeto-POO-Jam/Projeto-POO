@@ -61,6 +61,11 @@ public class PageController {
         return "pages/perfil";
     }
 
+    @GetMapping("/explorarGames")
+    public String explorarGames() {
+        return "pages/explorarGames";
+    }
+
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

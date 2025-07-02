@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/head :: Head('Explorar Jogos')}"></div>
+</head>
+<body>
+    <div th:replace="~{fragments/menu :: siteMenu}"></div>
+    <main>
+        <section class="container-explorar-jogos">
+            <div class="title-explorar-jogos">
+                <h1>Explorar Jogos</h1>
+                <p>Navegue e descubra os jogos criados pela comunidade.</p>
+            </div>
+            <div id="games-list-container" class="games-grid">
+            </div>
+            <div id="load-more-container" class="load-more-container">
+            </div>
+        </section>
+    </main>
+    <footer th:replace="~{fragments/footer :: site-footer}"></footer>
+    <script th:src="@{/js/common/theme.js}"></script>
+    <script type="module" th:src="@{/js/pages/game/explorarGames.js}"></script>
+</body>
+</html>

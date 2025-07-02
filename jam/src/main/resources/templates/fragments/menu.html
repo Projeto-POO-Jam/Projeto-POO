@@ -6,7 +6,7 @@
                 <img src="/img/logo.png" alt="Logo" class="site-logo">
             </a>
             <div class="container-menu">
-                <a><button class="button-menu">Explorar Games</button></a>
+                <a th:href="@{/explorarGames}"><button class="button-menu">Explorar Games</button></a>
                 <a th:href="@{/home}"><button class="button-menu">Explorar Jams</button></a>
                 <a th:href="@{/registerJam}"><button class="button-menu">Criar Jams</button></a>
 
@@ -28,7 +28,7 @@
                         <span class="material-symbols-outlined">menu</span>
                     </button>
                     <div id="mobile-nav-dropdown" class="menu-dropdown">
-                        <a th:href="@{/games}"><button class="button-menu">Explorar Games</button></a>
+                        <a th:href="@{/explorarGames}"><button class="button-menu">Explorar Games</button></a>
                         <a th:href="@{/home}"><button class="button-menu">Explorar Jams</button></a>
                         <a th:href="@{/registerJam}"><button class="button-menu">Criar Jams</button></a>
                     </div>
