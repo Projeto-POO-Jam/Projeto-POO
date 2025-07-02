@@ -1,3 +1,6 @@
+import { bindDataFields } from './bindDataFields.js';
+import { removeSkeleton } from './skeleton.js';
+
 //Função para formatar data
 export function formatRelativeTime(diffMs) {
     if (diffMs < 0) return 'encerrado';
@@ -16,8 +19,38 @@ export function formatRelativeTime(diffMs) {
     return 'agora';
 }
 
-//Função genérica para criar o card da JAM
-export function createJamCard(jam) {
+/**
+ * Cria a estrutura HTML de um card de Jam com atributos data-field.
+ * @returns {jQuery} Um elemento jQuery do template do card.
+ */
+export function createJamCardTemplate() {
+    const cardHtml = `
+        <div class="jam-card-home">
+            <div class="header-jam-card-home">
+                <h1 class="status-jam-card-home" data-field="jamStatusText"></h1>
+                <div class="aling-qtd-members-jam-card-home">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <p data-field="jamTotalSubscribers"></p>
+                </div>
+            </div>
+            <div class="container-jam-card-home">
+                <h1 data-field="jamTitle"></h1>
+                <div class="duration-jam-card" data-field="durationHtml"></div>
+            </div>
+            <div class="jam-btn-wrapper">
+                 <button class="jam-btn-home">Ver Jam</button>
+            </div>
+        </div>
+    `;
+    return $(cardHtml);
+}
+
+/**
+ * Preenche um elemento de card de Jam com os dados.
+ * @param {jQuery} cardElement - O elemento do card (template).
+ * @param {object} jam - O objeto da Jam com os dados.
+ */
+export function populateJamCard(cardElement, jam) {
     const statusMap = {
         SCHEDULED: 'Agendada',
         ACTIVE: 'Em andamento',
@@ -28,40 +61,30 @@ export function createJamCard(jam) {
     const agora = new Date();
     const dataInicio = new Date(jam.jamStartDate);
     const dataFim = new Date(jam.jamEndDate);
-
     const diffStart = dataInicio - agora;
     const diffEnd = dataFim - agora;
 
     let durationHtml;
-
     if (diffStart > 0) {
-        durationHtml = `<div class="duration-jam-card"><p>Começa em ${formatRelativeTime(diffStart)}</p></div>`;
+        durationHtml = `<p>Começa em ${formatRelativeTime(diffStart)}</p>`;
     } else if (diffEnd > 0) {
-        durationHtml = `<div class="duration-jam-card"><p class="duration-solo-jam-card">Termina em ${formatRelativeTime(diffEnd)}</p></div>`;
+        durationHtml = `<p class="duration-solo-jam-card">Termina em ${formatRelativeTime(diffEnd)}</p>`;
     } else {
-        durationHtml = `<div class="duration-jam-card"><p>Essa jam acabou</p></div>`;
+        durationHtml = `<p>Essa jam acabou</p>`;
     }
 
-    const card = `
-        <div class="jam-card-home" data-jamid="${jam.jamId}">
-            <div class="header-jam-card-home">
-                <h1 class="status-jam-card-home">${statusText}</h1>
-                <div class="aling-qtd-members-jam-card-home">
-                    <span class="material-symbols-outlined">account_circle</span>
-                    <p>${jam.jamTotalSubscribers || 0}</p>
-                </div>
-            </div>
-            <div class="container-jam-card-home">
-                <h1>${jam.jamTitle}</h1>
-                ${durationHtml}
-            </div>
-            <div class="jam-btn-wrapper">
-                 <button class="jam-btn-home" onclick="window.location.href='/jams/${jam.jamId}'">Ver Jam</button>
-            </div>
-        </div>
-    `;
+    const dataToBind = {
+        ...jam,
+        jamStatusText: statusText,
+    };
 
-    return $(card);
+    bindDataFields(dataToBind, cardElement);
+    cardElement.find('[data-field="durationHtml"]').html(durationHtml);
+    cardElement.attr('data-jamid', jam.jamId);
+    cardElement.find('.jam-btn-home').on('click', () => window.location.href = `/jams/${jam.jamId}`);
+
+    removeSkeleton(cardElement);
+    cardElement.removeClass('skeleton');
 }
 
 //Função criar card do game

@@ -38,6 +38,16 @@
     flex-direction: column;
     align-items: start;
     width: 100%;
+    contain: layout;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.7s ease-in-out, opacity 0.5s ease-in;
+}
+
+.month-section.is-visible {
+    max-height: 2000px;
+    opacity: 1;
 }
 
 .month-title{
@@ -63,6 +73,21 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+}
+
+.jam-card-home.animate-in {
+    animation: fadeIn-slideUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn-slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .header-jam-card-home{
@@ -230,3 +255,4 @@
     visibility: visible !important;
     opacity: 1 !important;
 }
+
