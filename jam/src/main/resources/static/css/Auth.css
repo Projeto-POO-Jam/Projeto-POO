@@ -15,9 +15,10 @@
 .img-auth{
     width: 40%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 1rem 0rem 0rem 1rem;
+    border-radius: 1rem 0 0 1rem;
     margin-right: -1rem;
     background-color: var(--blue);
 }
@@ -292,4 +293,40 @@ body.body-centered-content main.main-with-menu {
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+.img-padrão-auth{
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    width: 91%;
+    margin: 1rem 6rem 1rem 0;
+    height: 100%;
+}
+
+.img-padrão-auth img{
+    height: 8rem;
+    user-select: none;
+}
+
+.title-cc{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-top: 4rem;
+}
+
+.title-cc h1 {
+    font-size: 44px;
+    font-weight: bold;
+    color: var(--white);
+}
+
+.title-cc p{
+    font-size: 21px;
+    font-weight: 600;
+    margin-top: 1rem;
+    max-width: 21rem;
+    color: var(--white);
+    line-height: 1.6;
 }
