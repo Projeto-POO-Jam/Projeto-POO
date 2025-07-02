@@ -141,3 +141,23 @@ O projeto segue a estrutura padrão de uma aplicação Spring Boot:
         └── java/com/projetopoo/jam/  # Testes unitários e de integração
 ```
 
+# Integrantes do Grupo
+
+- Ana Júlia Mantovani (UI/UX designer / Back-End / Documentação) <br>
+  [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Anajuliamantovani)
+  [![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leonardo-modesto-bb8b75285/)
+
+- Eduardo Franco Seco (Fuill-Stack) <br>
+  [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/eduardofranco572)
+  [![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/eduardo-franco572/)
+
+- Igor Albiero (Back-End) <br>
+  [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/igorskeff)
+  [![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/igor-albiero-7178a5215/)
+
+- João Victor da Silva (Back-End) <br>
+  [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Joao-victor-da-silva)
+  [![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jo%C3%A3o-victor-da-silva-5b1044203/)
+
+- João Victor Meschiatti Magioli (UI/UX designer / Front-End) <br>
+  [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/JMeschiatti)
