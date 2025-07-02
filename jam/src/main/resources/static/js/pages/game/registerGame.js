@@ -1,4 +1,5 @@
 import { initializeGameForm } from './gameForm.js';
+import { removeSkeleton } from '../../common/skeleton.js';
 
 $(function() {
 
@@ -14,5 +15,7 @@ $(function() {
         entityId: jamId,
         redirectUrl: `/jams/${jamId}`
     });
+
+    removeSkeleton('.container-register-game');
 
 });

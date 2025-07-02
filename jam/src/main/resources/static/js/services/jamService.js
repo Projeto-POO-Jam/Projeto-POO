@@ -75,4 +75,11 @@ export function fetchDadoFormUpdate(jamId) {
         .then(({ data }) => data);
 }
 
-
+/**
+ * Exclui uma jam pelo seu ID.
+ * @param {string|number} jamId - O ID da jam a ser excluída.
+ * @returns {Promise<void>}
+ */
+export function deleteJam(jamId) {
+    return apiRequest('DELETE', `api/jams/${jamId}`);
+}

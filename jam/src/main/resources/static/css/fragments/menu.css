@@ -357,3 +357,7 @@ body.dark .theme-icon {
     width: 21rem;
     right: auto;
 }
+
+.notification-button {
+    position: relative;
+}

@@ -63,7 +63,9 @@
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao tooltip" for="content">Conteúdo da Jam (HTML livre)</label>
-                        <textarea id="content" name="content" data-field="jamContent"></textarea>
+                        <div id="content-placeholder" class="summernote-placeholder skeleton">
+                            <textarea id="content" name="content" data-field="jamContent"></textarea>
+                        </div>
                     </div>
 
                     <div class="container-de-inputs-grid">
@@ -106,25 +108,37 @@
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem Capa</label>
-                        <input type="file" class="filepond" name="imagemCapa" id="coverImg"/>
+                        <div id="coverImg-placeholder" class="filepond-placeholder skeleton">
+                            <input type="file" class="filepond" name="imagemCapa" id="coverImg"/>
+                        </div>
                         <p id="coverImgError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem wallpaper</label>
-                        <input type="file" class="filepond" name="imagemWallpaper" id="wallpaperImg"/>
+                        <div id="wallpaperImg-placeholder" class="filepond-placeholder skeleton">
+                            <input type="file" class="filepond" name="imagemWallpaper" id="wallpaperImg"/>
+                        </div>
                         <p id="wallpaperImgError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <div class="form-group form-group-jam">
                         <label class="label-input-padrao">Imagem banner</label>
-                        <input type="file" class="filepond" name="imagemBanner" id="bannerImg"/>
+                        <div id="bannerImg-placeholder" class="filepond-placeholder skeleton">
+                            <input type="file" class="filepond" name="imagemBanner" id="bannerImg"/>
+                        </div>
                         <p id="bannerImgError" class="error-message img-form-group-game"></p>
                     </div>
 
                     <button id="submitButton" type="submit" class="submit-button">
                         Editar Jam
                     </button>
+
+                    <div class="aling-button-delete">
+                        <button type="button" id="deleteButton" class="delete-button">
+                            Deletar Jam
+                        </button>
+                    </div>
                 </form>
             </div>
         </section>

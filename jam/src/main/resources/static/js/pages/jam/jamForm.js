@@ -79,10 +79,24 @@ export function initializeJamForm(config) {
 
     registerFilePondPlugins();
 
+    const onPondInit = (placeholderId) => {
+        const placeholder = document.getElementById(placeholderId);
+        if (placeholder) {
+            placeholder.classList.remove('skeleton');
+        }
+    };
+
     $('#content').summernote({
         height: 300,
-        codemirror: { theme: 'default' }
+        codemirror: { theme: 'default' },
+        callbacks: {
+            onInit: function() {
+                $('#content-placeholder').removeClass('skeleton');
+            }
+        }
     });
+
+
 
     const flatpickrInstances = {
         startDate: flatpickr("#startDate", {

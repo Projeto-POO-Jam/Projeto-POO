@@ -48,6 +48,7 @@ function populateRankCard(newCard, game, rank) {
 //Função principal que busca os jogos e monta o ranking.
 async function loadRank(jamId) {
     const rankContainer = $('#rank-list-container');
+    const podioContainer = $('.podio');
     const limit = 3;
     const offset = 0;
 
@@ -59,7 +60,8 @@ async function loadRank(jamId) {
         rankContainer.empty();
 
         if (games.length === 0) {
-            rankContainer.html('<p>Ainda não há jogos suficientes para formar um ranking.</p>');
+            rankContainer.html('<p>Não há jogos suficientes para formar um ranking.</p>');
+            podioContainer.remove();
             return;
         }
 

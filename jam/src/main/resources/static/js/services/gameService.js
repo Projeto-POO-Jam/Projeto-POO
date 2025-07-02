@@ -51,3 +51,11 @@ export function fetchDadoFormUpdate(gameId) {
         .then(({ data }) => data);
 }
 
+/**
+ * Exclui um jogo pelo seu ID.
+ * @param {string|number} gameId - O ID do jogo a ser excluído.
+ * @returns {Promise<void>}
+ */
+export function deleteGame(gameId) {
+    return apiRequest('DELETE', `api/games/${gameId}`);
+}

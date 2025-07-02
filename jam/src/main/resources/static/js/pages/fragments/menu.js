@@ -123,19 +123,28 @@ $(async function () {
 
     //Função para criar o card.
     function createJamCard(jam) {
+        const statusMap = {
+            SCHEDULED: 'Agendada',
+            ACTIVE: 'Em andamento',
+            FINISHED: 'Finalizada',
+        };
+
+        //Crie a variável com o texto traduzido
+        const statusText = statusMap[jam.jamStatus] || jam.jamStatus;
+
         const startDate = formatDate(jam.jamStartDate);
         const endDate = formatDate(jam.jamEndDate);
 
         const card = $(`
-        <a href="/jams/${jam.jamId}" class="jam-card-search">
-            <div class="jam-card-search-info">
-                <p class="jam-card-search-title">${jam.jamTitle}</p>
-                <p class="jam-card-search-dates">${startDate} até ${endDate}</p>
-                <p class="jam-card-search-status">${jam.jamStatus}</p>
-            </div>
-            <button class="jam-card-search-button">Acessar Jam</button>
-        </a>
-    `);
+            <a href="/jams/${jam.jamId}" class="jam-card-search">
+                <div class="jam-card-search-info">
+                    <p class="jam-card-search-title">${jam.jamTitle}</p>
+                    <p class="jam-card-search-dates">${startDate} até ${endDate}</p>
+                    <p class="jam-card-search-status">${statusText}</p>
+                </div>
+                <button class="jam-card-search-button">Acessar Jam</button>
+            </a>
+        `);
 
         //Previne o comportamento padrão do link ao clicar no botão
         card.find('.jam-card-search-button').on('click', function(e) {
@@ -145,7 +154,6 @@ $(async function () {
 
         return card;
     }
-
     //Função principal que realiza a busca e exibe os resultados.
     async function performSearch(query, isLoadMore = false, activeContainer) {
         if (isSearchLoading) return;
@@ -214,7 +222,7 @@ $(async function () {
         }
     });
 
-    // Evento de clique para AMBOS os botões "Carregar mais"
+    //Evento de clique para ambos os botões "Carregar mais"
     loadMoreButtons.on('click', function () {
         if (currentQuery && !isSearchLoading) {
             const activeSearchContainer = $(this).closest('.search-container');
