@@ -106,18 +106,38 @@ Para executar o projeto no seu ambiente local, siga estes passos:
 ## 📂 Estrutura do Projeto
 
 O projeto segue a estrutura padrão de uma aplicação Spring Boot:
+```
+/
+|── .gitignore
+|── pom.xml
+|── docker-compose.yml
+|── README.md
+└── src
+    |── main
+    |   |── java/com/projetopoo/jam/
+    |   |   |── config/              # Pastas de configuração do Spring (Security, Beans, etc.)
+    |   |   |── controller/          # Controladores da API REST que gerem os endpoints HTTP
+    |   |   |── dto/                 # Data Transfer Objects (DTOs) para a comunicação
+    |   |   |── exception/           # Gestores de exceções personalizadas e globais
+    |   |   |── model/               # Entidades de domínio (JPA) que mapeiam para a base de dados
+    |   |   |── repository/          # Interfaces do Spring Data JPA para o acesso a dados
+    |   |   |── service/             # Lógica de negócio da aplicação
+    |   |   |── util/                # Classes utilitárias (ex: manipulação de arquivos)
+    |   |   └── JamApplication.java  # Ponto de entrada da aplicação Spring Boot
+    |   |
+    |   └── resources/
+    |       |── static/              # Recursos estáticos (CSS, JavaScript, Imagens)
+    |       |   |── css/
+    |       |   |── js/
+    |       |   |── img/
+    |       |   └── upload/
+    |       |── templates/           # Templates HTML do Thymeleaf
+    |       |   |── auth/
+    |       |   |── fragments/
+    |       |   └── pages/
+    |       └── application.properties # Arquivo de configuração principal da aplicação
+    |
+    └── test/
+        └── java/com/projetopoo/jam/  # Testes unitários e de integração
+```
 
--   `src/main/java/com/projetopoo/jam`: Contém todo o código-fonte Java.
-    -   `config`: Configurações do Spring (Segurança, MVC, OpenAPI, etc.).
-    -   `controller`: Controladores REST que expõem os endpoints da API.
-    -   `dto`: Data Transfer Objects para a comunicação entre as camadas.
-    -   `exception`: Gestores de exceções globais.
-    -   `model`: Entidades JPA que mapeiam as tabelas da base de dados.
-    -   `repository`: Interfaces do Spring Data JPA para as operações de base de dados.
-    -   `service`: Onde reside a lógica de negócio da aplicação.
-    -   `util`: Classes utilitárias (ex: manipulação de ficheiros).
--   `src/main/resources`: Ficheiros de configuração e recursos estáticos.
-    -   `static`: Ficheiros CSS, JavaScript e imagens.
-    -   `templates`: Ficheiros de template do Thymeleaf.
-    -   `application.properties`: Ficheiro principal de configuração da aplicação.
--   `pom.xml`: Ficheiro de configuração do Maven que define as dependências e o processo de build do projeto.
