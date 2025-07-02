@@ -1,5 +1,7 @@
-//Função para formatar data,
+//Função para formatar data
 export function formatRelativeTime(diffMs) {
+    if (diffMs < 0) return 'encerrado';
+
     const totalSeconds = Math.floor(diffMs / 1000);
     const totalDays = Math.floor(totalSeconds / 86400);
     const months = Math.floor(totalDays / 30);
@@ -14,7 +16,7 @@ export function formatRelativeTime(diffMs) {
     return 'agora';
 }
 
-//Função criar card
+//Função genérica para criar o card da JAM
 export function createJamCard(jam) {
     const statusMap = {
         SCHEDULED: 'Agendada',
@@ -46,7 +48,7 @@ export function createJamCard(jam) {
                 <h1 class="status-jam-card-home">${statusText}</h1>
                 <div class="aling-qtd-members-jam-card-home">
                     <span class="material-symbols-outlined">account_circle</span>
-                    <p>${jam.jamTotalSubscribers}</p>
+                    <p>${jam.jamTotalSubscribers || 0}</p>
                 </div>
             </div>
             <div class="container-jam-card-home">
@@ -62,7 +64,7 @@ export function createJamCard(jam) {
     return $(card);
 }
 
-//Função createGameCard
+//Função criar card do game
 export function createGameCard(game) {
     const cardHtml = `
         <a class="card-game-unic" href="/viewGame/${game.gameId}">

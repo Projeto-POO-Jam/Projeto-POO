@@ -3,106 +3,18 @@ import {
     fetchUserCreatedJams,
     fetchUserRegisteredJams,
     fetchUserLikedGames
-} from "../../../services/perfilService.js";
+} from '../../../services/perfilService.js';
 import { applySkeleton, removeSkeleton } from '../../../common/skeleton.js';
-
-//Helper para criar o card de um JOGO
-function createGameCard(game) {
-    const cardHtml = `
-        <a class="card-game-unic" href="/viewGame/${game.gameId}">
-            <img class="game-card-photo"
-                 src="${game.gamePhoto || '/img/imgCardGamePadrao.png'}"
-                 alt="Capa do jogo ${game.gameTitle}">
-            <div class="game-card-title title-game-perfil">${game.gameTitle}</div>
-        </a>
-    `;
-    return $(cardHtml);
-}
-
-//Função auxiliar para tempo
-function formatRelativeTime(diffMs) {
-    const totalSeconds = Math.floor(diffMs / 1000);
-    const totalDays = Math.floor(totalSeconds / 86400);
-    const months = Math.floor(totalDays / 30);
-    const days = totalDays % 30;
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-
-    if (months > 0) return `${months} mês${months > 1 ? 'es' : ''}`;
-    if (days > 0) return `${days} dia${days > 1 ? 's' : ''}`;
-    if (hours > 0) return `${hours} hora${hours > 1 ? 's' : ''}`;
-    if (minutes > 0) return `${minutes} minuto${minutes > 1 ? 's' : ''}`;
-    return 'agora';
-}
-
-//Helper para criar o card de uma JAM
-function createJamCard(jam) {
-    const statusMap = {
-        SCHEDULED: 'Agendada',
-        ACTIVE: 'Em andamento',
-        FINISHED: 'Finalizada',
-    };
-    const statusText = statusMap[jam.jamStatus] || jam.jamStatus;
-
-    const agora = new Date();
-    const dataInicio = new Date(jam.jamStartDate);
-    const dataFim = new Date(jam.jamEndDate);
-
-    const diffStart = dataInicio - agora;
-    const diffEnd = dataFim - agora;
-
-    let durationHtml;
-
-    if (diffStart > 0) {
-        durationHtml = `
-            <div class="duration-jam-card">
-                <p>Começa em ${formatRelativeTime(diffStart)}</p>
-                <p>Termina em ${formatRelativeTime(diffEnd)}</p>
-            </div>
-        `;
-    } else if (diffEnd > 0) {
-        durationHtml = `
-            <div class="duration-jam-card">
-                <p class="duration-solo-jam-card">Termina em ${formatRelativeTime(diffEnd)}</p>
-            </div>
-        `;
-    } else {
-        durationHtml = `
-            <div class="duration-jam-card">
-                <p>Essa jam acabou</p>
-            </div>
-        `;
-    }
-
-    const card = `
-        <div class="jam-card-home" data-jamid="${jam.jamId}">
-            <div class="header-jam-card-home">
-                <h1 class="status-jam-card-home">${statusText}</h1>
-                <div class="aling-qtd-members-jam-card-home">
-                    <span class="material-symbols-outlined">account_circle</span>
-                    <p>${jam.jamTotalSubscribers}</p>
-                </div>
-            </div>
-            <div class="container-jam-card-home">
-                <h1>${jam.jamTitle}</h1>
-                ${durationHtml}
-            </div>
-            <div class="jam-btn-wrapper">
-                 <button class="jam-btn-home" onclick="window.location.href='/jams/${jam.jamId}'">Ver Jam</button>
-            </div>
-        </div>
-    `;
-
-    return $(card);
-}
+import { createJamCard, createGameCard } from '../../../common/cardBuilder.js';
 
 /**
- * Renderiza uma lista de itens em um container.
+ * Renderiza uma lista de itens em um container, agora usando uma mensagem customizada.
  * @param {jQuery} container - O elemento jQuery onde os cards serão inseridos.
  * @param {Array} items - A lista de dados (jogos ou jams).
  * @param {function} createCardFn - A função que cria o card para um item.
+ * @param {string} noItemsMessage - Mensagem para exibir se não houver itens.
  */
-function renderItems(container, items, createCardFn) {
+function renderItems(container, items, createCardFn, noItemsMessage) {
     const $listContainer = container.find('.list-cards-perfil');
     $listContainer.empty();
 
@@ -112,7 +24,7 @@ function renderItems(container, items, createCardFn) {
             $listContainer.append(card);
         });
     } else {
-        $listContainer.html('<p class="no-items-message">Nenhum item encontrado.</p>');
+        $listContainer.html(`<p class="no-items-message">${noItemsMessage}</p>`);
     }
     removeSkeleton(container);
 }
@@ -132,7 +44,7 @@ export async function init(userData) {
     applySkeleton(registeredJamsContainer);
     applySkeleton(likedGamesContainer);
 
-    //Busca todos os dados em paralelo
+    //Busca todos os dados em paralelo para uma pré-visualização na aba início
     try {
         const [
             createdGamesData,
@@ -140,17 +52,17 @@ export async function init(userData) {
             registeredJamsData,
             likedGamesData
         ] = await Promise.all([
-            fetchUserCreatedGames(userId),
-            fetchUserCreatedJams(userId),
-            fetchUserRegisteredJams(userId),
-            fetchUserLikedGames(userId)
+            fetchUserCreatedGames(userId, 4, 0),
+            fetchUserCreatedJams(userId, 4, 0),
+            fetchUserRegisteredJams(userId, 4, 0),
+            fetchUserLikedGames(userId, 4, 0)
         ]);
 
-        //Renderiza cada seção
-        renderItems(createdGamesContainer, createdGamesData.games, createGameCard);
-        renderItems(createdJamsContainer, createdJamsData.jams, createJamCard);
-        renderItems(registeredJamsContainer, registeredJamsData.jams, createJamCard);
-        renderItems(likedGamesContainer, likedGamesData.games, createGameCard);
+        //Renderiza cada seção usando os card builders importados
+        renderItems(createdGamesContainer, createdGamesData.games, createGameCard, "Nenhum jogo criado ainda.");
+        renderItems(createdJamsContainer, createdJamsData.jams, createJamCard, "Nenhuma Jam criada ainda.");
+        renderItems(registeredJamsContainer, registeredJamsData.jams, createJamCard, "Não está inscrito em nenhuma Jam.");
+        renderItems(likedGamesContainer, likedGamesData.games, createGameCard, "Nenhum jogo curtido ainda.");
 
     } catch (error) {
         console.error("Erro ao carregar dados para a aba Início:", error);
