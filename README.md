@@ -73,26 +73,33 @@ Para executar o projeto no seu ambiente local, siga estes passos:
     ```
 
 2.  **Configurar a Base de Dados:**
-    -   Certifique-se de que tem uma instância do MySQL ou MariaDB.
+    -   Certifique-se de que tem uma instância do MySQL ou MariaDB na porta `3306`.
     -   Crie uma base de dados (ex: `projetopoo`).
     -   Crie o arquivo `/application-local.properties` com as suas credenciais de acesso à base de dados conforme o arquivo `/application-local.properties.example`.
 
-3.  **Executar o RabbitMQ (via Docker):**
+3.  **Configurar o RabbitMQ:**
+    -   Certifique-se que a porta `15672` está liberada para uso.
+    -   Altere o arquivo `/application-local.properties` para configurar as credenciais do RabbitMQ.
+    -   Crie o arquivo `/.env` com as suas credenciais de acesso do RabbitMQ conforme o arquivo `/.env.example`.
+    
+5.  **Executar o RabbitMQ (via Docker):**
     -   Certifique-se de que tem o Docker e o Docker Compose instalados.
     -   A partir da raiz do diretório `jam`, execute:
         ```bash
+        docker-compose build --no-cache
         docker-compose up -d
         ```
-    -   Isto irá iniciar um container RabbitMQ com as configurações necessárias.
+    -   Isto construirá uma imagem para o container RabbitMQ e a utiliza para criar um container RabbitMQ.
 
-4.  **Executar a Aplicação:**
+6.  **Executar a Aplicação:**
     -   Pode executar a aplicação através da sua IDE (ex: IntelliJ, Eclipse) localizando e correndo a classe `JamApplication.java`.
     -   Alternativamente, pode usar o Maven na linha de comandos:
         ```bash
         mvn spring-boot:run
         ```
 
-5.  **Aceder à Aplicação:**
+5.  **Acessar a Aplicação:**
+    -   Certifique-se que a porta `8080` está liberada para uso.
     -   Abra o seu navegador e navegue para `http://localhost:8080`.
     -   A documentação da API estará disponível em `http://localhost:8080/swagger-ui.html`.
 
