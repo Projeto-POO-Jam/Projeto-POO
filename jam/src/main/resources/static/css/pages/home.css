@@ -38,6 +38,16 @@
     flex-direction: column;
     align-items: start;
     width: 100%;
+    contain: layout;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.7s ease-in-out, opacity 0.5s ease-in;
+}
+
+.month-section.is-visible {
+    max-height: 2000px;
+    opacity: 1;
 }
 
 .month-title{
@@ -63,7 +73,10 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    animation: fadeIn-slideUp 0.6s ease-out forwards;
+}
+
+.jam-card-home.animate-in {
+    animation: fadeIn-slideUp 0.5s ease-out forwards;
 }
 
 @keyframes fadeIn-slideUp {

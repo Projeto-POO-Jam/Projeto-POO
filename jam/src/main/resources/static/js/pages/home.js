@@ -113,25 +113,19 @@ $(function() {
     //Faz fetch e renderiza primeira página de um mês
     async function loadMonth(month) {
         if (loadedMonths.includes(month) || isLoading || noMoreMonthsToLoad) return;
-
         isLoading = true;
-
-        const section = $('<section>').addClass('month-section').attr('data-month', month);
-        const title = $('<h2>').addClass('month-title').text(formatMonthTitle(month));
-        const cardsContainer = $('<div>').addClass('cards-container');
-
-        section.append(title, cardsContainer);
-        container.append(section);
-
-        //Aplica o skeleton na seção enquanto os dados carregam
-        applySkeleton(section);
 
         try {
             const { jams, total } = await fetchJamsByMonth(month, 0, limitPerPage);
             loadedMonths.push(month);
 
-            if (jams.length > 0) {
-                //Se encontrou Jams, popule os cards
+            if (jams && jams.length > 0) {
+                //Cria a seção e seus elementos em memória
+                const section = $('<section>').addClass('month-section').attr('data-month', month);
+                const title = $('<h2>').addClass('month-title').text(formatMonthTitle(month));
+                const cardsContainer = $('<div>').addClass('cards-container');
+                section.append(title, cardsContainer);
+
                 jams.forEach(jam => {
                     const newCardTemplate = createJamCardTemplate();
                     populateJamCard(newCardTemplate, jam);
@@ -146,9 +140,15 @@ $(function() {
                         .on('click', () => loadMore(month));
                     section.append(btnLoadMore);
                 }
+
+                //Adiciona a seção ao DOM.
+                container.append(section);
+
+                setTimeout(() => {
+                    section.addClass('is-visible');
+                }, 50); // 50ms é suficiente
+
             } else {
-                //Se não encontrou Jams para o mês, ativamos a flag e removemos a seção
-                section.remove();
                 noMoreMonthsToLoad = true;
             }
 
@@ -156,14 +156,12 @@ $(function() {
 
         } catch (err) {
             console.error(`Erro ao carregar mês ${month}:`, err);
-            section.remove();
-            noMoreMonthsToLoad = true; //Ativa a flag em caso de erro também
+            noMoreMonthsToLoad = true;
         } finally {
             isLoading = false;
-            //Remove o skeleton da seção inteira após o processo
-            removeSkeleton(section);
         }
     }
+
     //Verificar se o mês retornado do fetch estava vazio e carregar o próximo
     function checkAndLoadUntilScrollable() {
         if (isLoading || noMoreMonthsToLoad) return;
@@ -258,10 +256,18 @@ $(function() {
         try {
             const { jams, total } = await fetchJamsByMonth(month, monthOffsets[month], limitPerPage);
 
-            jams.forEach(jam => {
+            jams.forEach((jam, index) => {
                 const newCardTemplate = createJamCardTemplate();
                 populateJamCard(newCardTemplate, jam);
+
+                //Começa invisível
+                newCardTemplate.css('opacity', 0);
                 cardsContainer.append(newCardTemplate);
+
+                //Aplica a animação com um pequeno atraso para cada card
+                setTimeout(() => {
+                    newCardTemplate.addClass('animate-in');
+                }, index * 100); //Atraso de 100ms
             });
 
             monthOffsets[month] += jams.length;
