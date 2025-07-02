@@ -1,4 +1,5 @@
 header.site-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -109,7 +110,7 @@ body.dark .theme-icon {
     position: relative;
     display: flex;
     align-items: center;
-    width: 40%;
+    width: 30%;
 }
 
 .options-menu {
@@ -122,6 +123,7 @@ body.dark .theme-icon {
 .menu-dropdown {
     position: absolute;
     top: calc(100% + 15px);
+    right: 0;
     background-color: var(--background-card);
     border-radius: 0.5rem;
     z-index: 1000;
@@ -348,4 +350,11 @@ body.dark .theme-icon {
 
 .hamburger-container {
     display: none;
+}
+
+#search-desktop-dropdown,
+#search-mobile-dropdown {
+    left: 0;
+    width: 100%;
+    right: auto;
 }

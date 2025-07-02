@@ -253,6 +253,11 @@ $(function() {
                 lastLoadMoreButton.text('Carregar mais');
             }
             setTimeout(checkAndLoadUntilScrollable, 0);
+            $('footer').css({
+                'transition': 'opacity 0.5s ease-in-out',
+                'opacity': 1,
+                'visibility': 'visible'
+            });
         }
 
     }

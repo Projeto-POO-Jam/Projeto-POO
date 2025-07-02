@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: Head('Página Inicial')}"></head>
+<style>
+    footer {
+        opacity: 0;
+        visibility: hidden;
+    }
+</style>
 <body>
     <div th:replace="fragments/menu :: siteMenu"></div>
 
@@ -21,7 +27,7 @@
 
 
     </main>
-
+    <footer th:replace="fragments/footer :: site-footer"></footer>
     <script th:src="@{/js/common/theme.js}"></script>
     <script type="module" th:src="@{/js/pages/home.js}"></script>
 </body>
