@@ -133,7 +133,7 @@ $(async function() {
             rankButton.prop('disabled', true);
             rankButton.addClass('disabled');
         }
-        
+
         //Inicializar Aba
         initGeral(data, jamId);
         initGames(data, jamId);
