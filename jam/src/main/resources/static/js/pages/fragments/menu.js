@@ -36,7 +36,7 @@ $(async function () {
         e.stopPropagation();
 
         const searchBarMobile = $('#search-mobile .bar-search-menu');
-        if ($(this).is(searchBarMobile) && window.innerWidth <= 1024) {
+        if ($(this).is(searchBarMobile) && window.innerWidth <= 900) {
             if (!searchBarMobile.hasClass('search-expanded')) {
                 e.preventDefault();
 
@@ -70,7 +70,7 @@ $(async function () {
             dropdowns.removeClass('active');
         }
         // Fecha busca mobile
-        if (window.innerWidth <= 1024 && !$(e.target).closest('#search-mobile').length) {
+        if (window.innerWidth <= 900 && !$(e.target).closest('#search-mobile').length) {
             $('#search-mobile .bar-search-menu').removeClass('search-expanded');
         }
     });
@@ -80,7 +80,7 @@ $(async function () {
 
     searchBar.on('click', function (e) {
         // Só executa a lógica de expandir em telas menores
-        if (window.innerWidth <= 1024) {
+        if (window.innerWidth <= 900) {
             if (!searchBar.hasClass('search-expanded')) {
                 e.preventDefault();
                 searchBar.addClass('search-expanded');
@@ -91,7 +91,7 @@ $(async function () {
 
     //Fecha a barra de busca se clicar fora dela
     $(document).on('click', function (e) {
-        if (window.innerWidth <= 1024) {
+        if (window.innerWidth <= 900) {
             if (!$(e.target).closest('.bar-search-menu').length && !$(e.target).closest('#search-dropdown').length) {
                 searchBar.removeClass('search-expanded');
             }
@@ -99,14 +99,8 @@ $(async function () {
     });
 
     //Logica buscar jams
-
-    // Seleciona AMBOS os inputs de busca pela classe em comum
     const searchInputs = $('.jam-search-input');
-
-    //Contêineres de resultados de ambas as buscas
     const searchResultsContainers = $('.search-results-container');
-
-    //Botões de "Carregar mais"
     const loadMoreButtons = $('.load-more-jams');
 
     //Variáveis de estado da busca
@@ -124,12 +118,11 @@ $(async function () {
         return date.toLocaleDateString('pt-BR');
     }
 
-    // Função para criar o card HTML de uma Jam.
+    //Função para criar o card.
     function createJamCard(jam) {
         const startDate = formatDate(jam.jamStartDate);
         const endDate = formatDate(jam.jamEndDate);
 
-        // Cria o card usando template strings
         const card = $(`
         <a href="/jams/${jam.jamId}" class="jam-card-search">
             <div class="jam-card-search-info">
@@ -141,7 +134,7 @@ $(async function () {
         </a>
     `);
 
-        // Previne o comportamento padrão do link ao clicar no botão
+        //Previne o comportamento padrão do link ao clicar no botão
         card.find('.jam-card-search-button').on('click', function(e) {
             e.preventDefault();
             window.location.href = `/jams/${jam.jamId}`;

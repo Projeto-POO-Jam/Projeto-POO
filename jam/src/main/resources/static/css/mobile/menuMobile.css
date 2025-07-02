@@ -1,4 +1,4 @@
-@media (max-width: 1024px) {
+@media (max-width: 940px) {
     #search-desktop {
         display: none;
     }
@@ -49,11 +49,19 @@
         display: block;
         width: 88%;
     }
+
+    #search-mobile .bar-search-menu.search-expanded + .menu-dropdown {
+        width: clamp(180px, 60vw, 280px);
+        right: 0;
+        left: auto;
+        top: 100%;
+        transform: none;
+    }
 }
 
 @media (max-width: 786px) {
     .button-menu{
-        font-size: 12px;
+        font-size: 16px;
     }
 
     .header.site-header{
@@ -62,6 +70,12 @@
 
     .bar-search-menu span{
         font-size: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .button-menu{
+        font-size: 11px;
     }
 }
 
