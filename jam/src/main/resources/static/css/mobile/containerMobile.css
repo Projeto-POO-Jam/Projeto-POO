@@ -1,11 +1,14 @@
 @media (min-width: 1440px) {
     .card-jam,
-    .card-game,
     .modal-container,
     .header-view-game,
     .container-view-game,
     .container-comments{
         width: 40%;
+    }
+
+    .card-game{
+        width: 30%;
     }
 }
 

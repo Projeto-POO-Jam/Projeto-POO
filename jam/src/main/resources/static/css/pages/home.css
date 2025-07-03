@@ -213,16 +213,16 @@
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #2c3e50, #34495e);
+    justify-content: start;
     color: var(--white);
     text-align: center;
     padding: 20px;
 }
 
 .carousel-fallback h1 {
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    font-size: 62px;
+    font-weight: bold;
+    max-width: 50%;
 }
 
 .slick-dots li button:before {
@@ -256,3 +256,8 @@
     opacity: 1 !important;
 }
 
+.padrao-carrossel{
+    background-image: url("/img/BannerPadraoPinguim.png");
+    background-position: center;
+    background-size: cover;
+}

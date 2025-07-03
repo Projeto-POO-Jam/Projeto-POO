@@ -3,7 +3,7 @@ import { fetchCurrentUser } from '../../services/userService.js';
 import { fetchComments, postComment, deleteComment } from '../../services/commentService.js';
 import { bindDataFields } from '../../common/bindDataFields.js';
 import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
-import { showError } from '../../common/notifications.js';
+import { showError, showSuccess } from '../../common/notifications.js';
 
 $(async function() {
     //Pega id na URL

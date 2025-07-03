@@ -35,15 +35,15 @@ $(function() {
         const submitButton = $('#submitButton');
         submitButton.prop('disabled', true).text('Alterando...');
 
-        //Prepara os dados para enviar à API
-        const data = {
-            userOldPassword: $('#currentPassword').val(),
-            userNewPassword: $('#newPassword').val()
-        };
+
+        const formData = new FormData(this);
+        formData.set('userOldPassword', $.trim($('#currentPassword').val()));
+        formData.set('userNewPassword', $('#newPassword').val());
+
 
         try {
             //Faz a requisição para a API
-            await apiRequest('PUT', 'api/users/changePassword', data);
+            await apiRequest('PUT', 'api/users/changePassword', formData);
             showSuccess('Senha alterada com sucesso!');
 
             //Redireciona para a home após 2 segundos
