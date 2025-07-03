@@ -1,6 +1,19 @@
 # PinguimJam: Plataforma de Game Jams
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/dcbdd130-c0f9-4b38-bed9-20361b8f9904" alt="Texto Alternativo">
+</div>
+
 O PinguimJam é uma plataforma web completa desenvolvida para a comunidade de desenvolvimento de jogos. Ela permite que utilizadores organizem, participem e descubram "game jams" — competições onde os participantes criam um jogo do zero dentro de um prazo definido. A plataforma oferece um ecossistema robusto para a submissão de jogos, votação, feedback através de comentários e interação social entre os desenvolvedores.
+
+![ezgif com-animated-gif-maker](https://github.com/user-attachments/assets/ff405136-ae4b-4fea-95cf-c2ccc2a1adc6)
+
+![image](https://github.com/user-attachments/assets/760475fe-c2c2-4590-8d10-33825001bd94)
+
+![2](https://github.com/user-attachments/assets/69d42679-212e-49f0-b584-571b5f8c2331)
+
+![3](https://github.com/user-attachments/assets/9f1183c7-8f03-4300-a686-80431f10a09c)
+
 
 ## ✨ Funcionalidades Principais
 
