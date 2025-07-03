@@ -415,3 +415,15 @@
     border: none;
 }
 
+.img-not-game{
+    height: 20rem;
+    user-select: none;
+}
+
+#itens-not-a-game,
+#itens-not-a-rank{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+

@@ -32,21 +32,16 @@ $(async function() {
             return;
         }
 
-        //Esconde a aba ativa
-        $('.tab-pane-perfil:visible').slideUp(300, function() {
-            $(this).removeClass('active');
-        });
-
-        //Mostra a nova aba
-        targetTab.slideDown(300, function() {
-            $(this).addClass('active');
-        });
-
-        //Atualiza a classe 'active' nos botões
+        //Atualiza a classe 'active' nos botões imediatamente
         $('.menu-perfil button').removeClass('active');
         button.addClass('active');
 
+        //Esconde a aba visível com um efeito de fadeOut
+        $('.tab-pane-perfil:visible').fadeOut(300, function() {
+            targetTab.fadeIn(300);
+        });
 
+        // Lógica para carregar o conteúdo da aba na primeira vez que for clicada
         if (!initializedTabs.has(tabId)) {
             if (tabId === 'games') {
                 initGames(userId);

@@ -1,0 +1,77 @@
+@media (max-width: 1440px) {
+    .img-auth{
+        width: 35%;
+    }
+
+    .card-jam,
+    .card-game,
+    .modal-container,
+    .header-view-game,
+    .container-view-game,
+    .container-comments{
+        width: 50%;
+    }
+
+}
+@media (max-width: 1024px) {
+    .modal-container {
+        width: 60%;
+    }
+}
+
+
+@media (max-width: 940px) {
+    .img-auth{
+        width: 45%;
+    }
+
+    .card-jam,
+    .card-game,
+    .modal-container,
+    .header-view-game,
+    .container-view-game,
+    .container-comments {
+        width: 60%;
+    }
+}
+
+@media (max-width: 786px) {
+    .title-cc h1 {
+        font-size: 31px;
+    }
+
+    .title-cc p {
+        font-size: 18px;
+    }
+
+    .card-jam,
+    .card-game,
+    .modal-container,
+    .header-view-game,
+    .container-view-game,
+    .container-comments{
+        width: 80%;
+    }
+
+    .menu-perfil button {
+        margin: 10px;
+        font-size: 16px;
+    }
+
+}
+
+@media (max-width: 518px) {
+    .img-auth{
+        display: none;
+    }
+
+    .card{
+        width: 80%;
+    }
+
+    .menu-perfil button {
+        font-size: 12px;
+    }
+
+}
+

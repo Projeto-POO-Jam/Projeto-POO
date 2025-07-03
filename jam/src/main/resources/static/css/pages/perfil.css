@@ -302,11 +302,6 @@ html.dark main .details-user-perfil {
 }
 
 #tab-content-perfil {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: start;
-    align-self: flex-start;
     margin: 1rem;
     width: 75%;
 }
@@ -320,14 +315,12 @@ html.dark main .details-user-perfil {
     width: 100%;
 }
 
-.details-list-inicio,
-.tab-pane-perfil{
+.details-list-inicio {
     display: flex;
     flex-direction: column;
     align-items: start;
     margin-top: 2rem;
 }
-
 
 .list-cards-perfil{
     display: flex;
@@ -347,4 +340,23 @@ html.dark main .details-user-perfil {
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+
+@keyframes fadeIn-slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeIn-slideUp 0.5s ease-out forwards;
+}
+
+.card-game-unic, .jam-card-home {
+    opacity: 0;
 }

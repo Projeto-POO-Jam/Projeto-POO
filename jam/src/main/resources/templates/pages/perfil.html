@@ -13,7 +13,7 @@
                 <div id="img-user-perfil">
                     <img
                         data-field="userPhoto"
-                        data-default="/img/icone-padrao.png"
+                        data-default="/img/icone-padrao.svg"
                         alt="Foto do usuário"
                         class="skeleton"
                     />
@@ -41,23 +41,21 @@
                 <button data-tab="jogos-curtidos">Jogos Curtidos</button>
             </div>
 
-            <div class="infos-perfil">
-                <div id="tab-content-perfil">
-                    <div id="tab-inicio" class="tab-pane-perfil active">
-                        <div th:replace="~{fragments/perfil/inicio :: conteudoInicio}"></div>
-                    </div>
-                    <div id="tab-games" class="tab-pane-perfil" style="display: none;">
-                        <div th:replace="~{fragments/perfil/games :: conteudoGames}"></div>
-                    </div>
-                    <div id="tab-jams-criadas" class="tab-pane-perfil" style="display: none;">
-                        <div th:replace="~{fragments/perfil/jamsCriadas :: conteudoJamsCriadas}"></div>
-                    </div>
-                    <div id="tab-jams-inscritas" class="tab-pane-perfil" style="display: none;">
-                        <div th:replace="~{fragments/perfil/jamsInscritas :: conteudoJamsInscritas}"></div>
-                    </div>
-                    <div id="tab-jogos-curtidos" class="tab-pane-perfil" style="display: none;">
-                        <div th:replace="~{fragments/perfil/jogosCurtidos :: conteudoJogosCurtidos}"></div>
-                    </div>
+            <div id="tab-content-perfil">
+                <div id="tab-inicio" class="tab-pane-perfil active">
+                    <div th:replace="~{fragments/perfil/inicio :: conteudoInicio}"></div>
+                </div>
+                <div id="tab-games" class="tab-pane-perfil" style="display: none;">
+                    <div th:replace="~{fragments/perfil/games :: conteudoGames}"></div>
+                </div>
+                <div id="tab-jams-criadas" class="tab-pane-perfil" style="display: none;">
+                    <div th:replace="~{fragments/perfil/jamsCriadas :: conteudoJamsCriadas}"></div>
+                </div>
+                <div id="tab-jams-inscritas" class="tab-pane-perfil" style="display: none;">
+                    <div th:replace="~{fragments/perfil/jamsInscritas :: conteudoJamsInscritas}"></div>
+                </div>
+                <div id="tab-jogos-curtidos" class="tab-pane-perfil" style="display: none;">
+                    <div th:replace="~{fragments/perfil/jogosCurtidos :: conteudoJogosCurtidos}"></div>
                 </div>
             </div>
 
