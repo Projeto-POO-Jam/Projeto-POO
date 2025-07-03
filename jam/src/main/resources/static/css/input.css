@@ -36,7 +36,7 @@ form {
     display: flex;
     justify-content: start;
     align-items: center;
-    padding: 8px;
+    padding: 12px;
     border-radius: 0.5rem;
     background-color: var(--background);
     border: 1px solid var(--blue);

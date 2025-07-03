@@ -122,3 +122,23 @@ input:-webkit-autofill:active {
 .swal-custom-html-container {
     color: var(--text) !important;
 }
+
+iframe::-webkit-scrollbar {
+    width: 12px;
+}
+
+iframe::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+iframe::-webkit-scrollbar-thumb {
+    background-color: var(--background);
+    border-radius: 1rem;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+iframe{
+    scrollbar-width: thin;
+    scrollbar-color: var(--background) transparent;
+}

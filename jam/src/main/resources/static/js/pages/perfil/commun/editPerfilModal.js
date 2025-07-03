@@ -75,6 +75,11 @@ export async function initEditPerfilModal(userData) {
     };
     setupValidation(validationRules);
 
+    //Evento para o botão de trocar senha
+    $('#changePasswordBtn').on('click', function() {
+        window.location.href = '/changePassword';
+    });
+
     // Evento de submit do formulário
     form.on('submit', async e => {
         e.preventDefault();

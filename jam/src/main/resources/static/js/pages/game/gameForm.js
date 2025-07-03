@@ -46,7 +46,7 @@ export function initializeGameForm(config) {
 
     //Inicializa a instância do arquivo do jogo com suas opções específicas
     pondInstances.gameFile = createFilePondInstance('#gameFile', {
-        labelIdle: `Arraste o <strong>arquivo do jogo (.rar)</strong> ou <span class="filepond--label-action">Procure</span>`,
+        labelIdle: `Arraste o <strong>arquivo do jogo (.zip)</strong> ou <span class="filepond--label-action">Procure</span>`,
         stylePanelAspectRatio: '0.1',
         acceptedFileTypes: null,
         oninit: () => onPondInit('gameFile-placeholder'),
@@ -111,7 +111,7 @@ export function initializeGameForm(config) {
     if (config.mode === 'create') {
         validationRules.gameFile.unshift({
             validate: () => pondInstances.gameFile?.getFiles().length > 0,
-            message: 'O envio de um arquivo .rar é obrigatório.'
+            message: 'O envio de um arquivo .zip é obrigatório.'
         });
     }
 

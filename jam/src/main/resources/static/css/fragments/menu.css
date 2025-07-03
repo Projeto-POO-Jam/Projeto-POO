@@ -301,6 +301,10 @@ body.dark .theme-icon {
 .notification-content p {
     margin: 0;
     line-height: 1.4;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .notification-message {
