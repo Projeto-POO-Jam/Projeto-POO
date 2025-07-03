@@ -158,7 +158,7 @@ O projeto segue a estrutura padrão de uma aplicação Spring Boot:
 
 - Ana Júlia Mantovani (UI/UX designer / Back-End / Documentação) <br>
   [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Anajuliamantovani)
-  [![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/leonardo-modesto-bb8b75285/)
+  [![LinkedIn](https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/anajuliamantovani/)
 
 - Eduardo Franco Seco (Fuill-Stack) <br>
   [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/eduardofranco572)
