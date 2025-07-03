@@ -387,7 +387,7 @@ public class JamService {
     }
 
     @Transactional
-    public void deleteJam(Long jamId, String identifier) throws IOException{
+    public void deleteJam(Long jamId, String identifier) {
         // Busca o jam que será apagado
         Optional<Jam> optionalJam = jamRepository.findById(jamId);
         if (optionalJam.isEmpty()) {
