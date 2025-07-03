@@ -140,14 +140,33 @@ $(async function() {
             }
         });
 
-        const container = $('.container-view-game');
-        const userHtml = gameData.gameContent?.trim();
-        if (userHtml) {
-            const sanitizedHtml = $('<div>').html(userHtml);
-            sanitizedHtml.find('script').remove();
-            container.html(sanitizedHtml.html());
-        } else {
-            container.html('<p>O desenvolvedor não adicionou conteúdo adicional.</p>');
+        const gameFrame = document.getElementById('game-content-frame');
+        if (gameFrame && gameData.gameContent) {
+            gameFrame.onload = function() {
+                // Ajusta a altura do iframe ao seu conteúdo
+                this.style.height = this.contentWindow.document.body.scrollHeight + 20 + 'px';
+            };
+
+            //Escreve o conteúdo HTML e CSS do usuário no iframe
+            gameFrame.srcdoc = `
+                <html>
+                    <head>
+                        <style>
+                            body { 
+                                margin: 0; 
+                                padding: 0; 
+                                font-family: "League Spartan", sans-serif;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${gameData.gameContent}
+                    </body>
+                </html>
+            `;
+        } else if (gameFrame) {
+            //Caso não haja conteúdo
+            gameFrame.srcdoc = '<p>O desenvolvedor não adicionou conteúdo adicional.</p>';
         }
 
         //Configura o estado inicial do botão de Like

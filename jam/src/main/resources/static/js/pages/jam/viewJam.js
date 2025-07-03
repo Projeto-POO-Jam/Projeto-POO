@@ -109,6 +109,34 @@ $(async function() {
         // Preenche os campos estáticos da página
         bindDataFields(data, root);
 
+        // Lógica para injetar conteúdo no iframe
+        const jamFrame = document.getElementById('jam-content-frame');
+        if (jamFrame && data.jamContent) {
+            jamFrame.onload = function() {
+                //Estilos para fazer o iframe se adaptar ao conteúdo
+                this.style.height = this.contentWindow.document.body.scrollHeight + 'px';
+
+                //Aplica as cores de texto e link definidas na Jam
+                const style = this.contentWindow.document.createElement('style');
+                style.innerHTML = `
+                    body { 
+                        color: ${data.jamTextColor || '#000'}; 
+                        margin: 0; 
+                        padding: 1rem;
+                        font-family: "League Spartan", sans-serif;
+                    }
+                    a { color: ${data.jamLinkColor || '#007bff'}; }
+                `;
+                this.contentWindow.document.head.appendChild(style);
+            };
+
+            // Escreve o conteúdo do usuário no iframe
+            jamFrame.srcdoc = data.jamContent;
+        } else if (jamFrame) {
+            // Caso não haja conteúdo
+            jamFrame.srcdoc = '<p>O organizador ainda não adicionou uma descrição para esta Jam.</p>';
+        }
+
         //Lógica para exibir o botão de editar o Jam
         if (data.jamUser && data.jamUser.userCurrent) {
             const editButton = $('#edit-jam-btn');
