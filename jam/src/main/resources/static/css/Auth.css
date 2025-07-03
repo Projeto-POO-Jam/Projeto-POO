@@ -20,12 +20,17 @@
     align-items: center;
     border-radius: 1rem 0 0 1rem;
     margin-right: -1rem;
-    background-color: var(--blue);
+    background-image: url("/img/fundoTeste.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .card {
-    width: 40%;
-    max-width: 25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 35%;
+    min-height: 30rem;
     padding: 1.5rem;
     background-color: var(--background-card);
     border-radius: 1rem;
@@ -297,11 +302,8 @@ body.body-centered-content main.main-with-menu {
 
 .img-padrão-auth{
     display: flex;
-    justify-content: end;
-    align-items: end;
-    width: 91%;
-    margin: 1rem 6rem 1rem 0;
-    height: 100%;
+    justify-content: center;
+    align-items: center;
 }
 
 .img-padrão-auth img{
@@ -313,20 +315,25 @@ body.body-centered-content main.main-with-menu {
     display: flex;
     flex-direction: column;
     align-items: start;
-    margin-top: 4rem;
 }
 
 .title-cc h1 {
     font-size: 44px;
     font-weight: bold;
     color: var(--white);
+    margin-top: 1rem;
 }
 
 .title-cc p{
-    font-size: 21px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 400;
     margin-top: 1rem;
-    max-width: 21rem;
+    max-width: 20rem;
     color: var(--white);
-    line-height: 1.6;
+    line-height: 1.4;
+}
+
+
+.container-change-password{
+    padding: 4rem !important;
 }

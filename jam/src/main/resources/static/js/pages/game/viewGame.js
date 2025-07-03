@@ -143,19 +143,33 @@ $(async function() {
         const gameFrame = document.getElementById('game-content-frame');
         if (gameFrame && gameData.gameContent) {
             gameFrame.onload = function() {
-                // Ajusta a altura do iframe ao seu conteúdo
-                this.style.height = this.contentWindow.document.body.scrollHeight + 20 + 'px';
+                const iframeDoc = this.contentWindow.document;
+
+                //Estilo para garantir que não haja scrollbars
+                const style = iframeDoc.createElement('style');
+                style.innerHTML = `
+                    html { scrollbar-width: none; }
+                    html::-webkit-scrollbar { display: none; }
+                    body { margin: 0; overflow: hidden; }
+                `;
+                iframeDoc.head.appendChild(style);
+
+                //Redimensiona após a renderização
+                this.contentWindow.requestAnimationFrame(() => {
+                    const newHeight = iframeDoc.body.scrollHeight;
+                    this.style.height = newHeight + 'px';
+                });
             };
 
-            //Escreve o conteúdo HTML e CSS do usuário no iframe
-            gameFrame.srcdoc = `
+            //Define o conteúdo do iframe (srcdoc)
+           gameFrame.srcdoc = `
                 <html>
                     <head>
                         <style>
-                            body { 
-                                margin: 0; 
-                                padding: 0; 
+                            body {
+                                padding: 0;
                                 font-family: "League Spartan", sans-serif;
+                                color: ${getComputedStyle(document.documentElement).getPropertyValue('--text')};
                             }
                         </style>
                     </head>

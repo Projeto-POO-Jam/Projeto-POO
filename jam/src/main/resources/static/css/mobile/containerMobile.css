@@ -1,6 +1,17 @@
+@media (min-width: 1440px) {
+    .card-jam,
+    .card-game,
+    .modal-container,
+    .header-view-game,
+    .container-view-game,
+    .container-comments{
+        width: 40%;
+    }
+}
+
 @media (max-width: 1440px) {
-    .img-auth{
-        width: 35%;
+    .img-auth {
+        width: 40%;
     }
 
     .card-jam,

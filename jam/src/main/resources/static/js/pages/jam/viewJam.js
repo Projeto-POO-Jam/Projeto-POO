@@ -113,21 +113,36 @@ $(async function() {
         const jamFrame = document.getElementById('jam-content-frame');
         if (jamFrame && data.jamContent) {
             jamFrame.onload = function() {
-                //Estilos para fazer o iframe se adaptar ao conteúdo
-                this.style.height = this.contentWindow.document.body.scrollHeight + 'px';
+                const iframeDoc = this.contentWindow.document;
 
                 //Aplica as cores de texto e link definidas na Jam
-                const style = this.contentWindow.document.createElement('style');
+                const style = iframeDoc.createElement('style');
                 style.innerHTML = `
+                    html {
+                        /* Estilos para Firefox */
+                        scrollbar-width: none; /* Esconde a barra de rolagem no Firefox */
+                    }
+                    /* Estilos para Chrome, Edge e Safari */
+                    html::-webkit-scrollbar {
+                        display: none; /* Esconde a barra de rolagem */
+                    }
                     body { 
                         color: ${data.jamTextColor || '#000'}; 
                         margin: 0; 
                         padding: 1rem;
                         font-family: "League Spartan", sans-serif;
+                        height: auto;
+                        overflow: hidden; /* Previne scrollbars no body do iframe */
                     }
                     a { color: ${data.jamLinkColor || '#007bff'}; }
                 `;
-                this.contentWindow.document.head.appendChild(style);
+                iframeDoc.head.appendChild(style);
+
+                //Usa requestAnimationFrame para garantir que o redimensionamento ocorra após a renderização
+                this.contentWindow.requestAnimationFrame(() => {
+                    const newHeight = iframeDoc.body.scrollHeight;
+                    this.style.height = newHeight + 'px';
+                });
             };
 
             // Escreve o conteúdo do usuário no iframe

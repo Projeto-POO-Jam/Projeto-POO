@@ -356,7 +356,3 @@ html.dark main .details-user-perfil {
 .animate-in {
     animation: fadeIn-slideUp 0.5s ease-out forwards;
 }
-
-.card-game-unic {
-    opacity: 0;
-}
