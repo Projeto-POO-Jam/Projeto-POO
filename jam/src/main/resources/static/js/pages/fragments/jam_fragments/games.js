@@ -86,7 +86,10 @@ async function loadGames() {
         }
 
         if (games.length === 0 && currentGameOffset === 0) {
-            gamesContainer.html(`<p>Nenhum jogo foi enviado para esta Jam ainda.</p>`);
+            $("#itens-not-a-game").html(`
+                <img src="/img/naoTemJogo.png" alt="imagem que não tem jogo" class="img-not-game">
+                <p>Nenhum jogo foi enviado para esta Jam ainda.</p>   
+            `);
             return;
         }
 

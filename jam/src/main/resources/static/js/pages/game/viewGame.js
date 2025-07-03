@@ -80,22 +80,29 @@ $(async function() {
             `;
         }
 
+        const userProfileUrl = comment.commentUser ? `/perfil/${comment.commentUser.userId}` : '#';
+
         const commentHtml = `
             <div class="comment-card" data-comment-id="${comment.commentId}">
                 <div class="container-user-comment">
-                     <img
-                        src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
-                        data-default="/images/iconePadrao.svg"
-                        alt="comment actor icon"
-                        class="icone-actor-comments"
-                        onerror="this.src=this.dataset.default"
-                    />
+                     <a href="${userProfileUrl}">
+                        <img
+                            src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
+                            data-default="/images/iconePadrao.svg"
+                            alt="comment actor icon"
+                            class="icone-actor-comments"
+                            onerror="this.src=this.dataset.default"
+                        />
+                     </a>
                     <div class="comment-content">
-                        <p class="comment-username">${comment.commentUser.userName}</p>
+                        <a href="${userProfileUrl}" style="text-decoration: none; color: inherit;">
+                            <p class="comment-username">${comment.commentUser.userName}</p>
+                        </a>
                         <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p>
                     </div>
                 </div>
-                ${deleteButtonHtml} </div>
+                ${deleteButtonHtml} 
+            </div>
         `;
         return $(commentHtml);
     }
@@ -114,6 +121,10 @@ $(async function() {
         //Preenche os dados do game
         bindDataFields(gameData, root);
 
+        if (gameData.userResponseDTO && gameData.userResponseDTO.userId) {
+            $('#actor-profile-link').attr('href', `/perfil/${gameData.userResponseDTO.userId}`);
+        }
+
         //Lógica para exibir o botão de editar o game
         if (gameData.userResponseDTO && gameData.userResponseDTO.userCurrent) {
             const editButton = $('#edit-game-btn');
@@ -129,14 +140,33 @@ $(async function() {
             }
         });
 
-        const container = $('.container-view-game');
-        const userHtml = gameData.gameContent?.trim();
-        if (userHtml) {
-            const sanitizedHtml = $('<div>').html(userHtml);
-            sanitizedHtml.find('script').remove();
-            container.html(sanitizedHtml.html());
-        } else {
-            container.html('<p>O desenvolvedor não adicionou conteúdo adicional.</p>');
+        const gameFrame = document.getElementById('game-content-frame');
+        if (gameFrame && gameData.gameContent) {
+            gameFrame.onload = function() {
+                // Ajusta a altura do iframe ao seu conteúdo
+                this.style.height = this.contentWindow.document.body.scrollHeight + 20 + 'px';
+            };
+
+            //Escreve o conteúdo HTML e CSS do usuário no iframe
+            gameFrame.srcdoc = `
+                <html>
+                    <head>
+                        <style>
+                            body { 
+                                margin: 0; 
+                                padding: 0; 
+                                font-family: "League Spartan", sans-serif;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        ${gameData.gameContent}
+                    </body>
+                </html>
+            `;
+        } else if (gameFrame) {
+            //Caso não haja conteúdo
+            gameFrame.srcdoc = '<p>O desenvolvedor não adicionou conteúdo adicional.</p>';
         }
 
         //Configura o estado inicial do botão de Like

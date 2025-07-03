@@ -18,7 +18,7 @@
                 <div class="info-view-game">
                     <div class="details-view-game">
                         <div class="actor-view-game">
-                            <div class="infor-user-actor-view-game">
+                            <a id="actor-profile-link" href="#" class="infor-user-actor-view-game">
                                 <img
                                     data-field="userResponseDTO.userPhoto"
                                     data-default="/img/icone-padrao.svg"
@@ -26,7 +26,7 @@
                                     class="icone-actor skeleton"
                                 />
                                 <h1 data-field="userResponseDTO.userName" class="skeleton"></h1>
-                            </div>
+                            </a>
 
                             <a id="edit-game-btn" class="button-edit-game" style="display: none;">
                                 <span class="material-symbols-outlined">edit</span>
@@ -46,6 +46,7 @@
             </section>
 
             <section class="container-view-game">
+                <iframe id="game-content-frame" frameborder="0" style="width: 100%; min-height: 500px; border-radius: 1rem;"></iframe>
             </section>
 
             <section class="container-comments">

@@ -107,6 +107,7 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
     box-shadow: 0 0 0 50px transparent inset !important;
     -webkit-text-fill-color: var(--text) !important;
+    caret-color: var(--text) !important;
     transition: background-color 5000s ease-in-out 0s;
 }
 

@@ -75,7 +75,7 @@ $(function() {
     function checkAndShowEmptyMessage() {
         setTimeout(() => {
             if (noMoreMonthsToLoad && container.children('.month-section').length === 0) {
-                container.html('<div class="page-error" style="padding: 5rem 0;"><h1>Nenhuma jam foi postada ainda.</h1></div>');
+                container.html('<div><h1>Nenhuma jam foi postada ainda.</h1></div>');
                 $('footer').css({ 'opacity': 1, 'visibility': 'visible' });
             } else if (container.children('.month-section').length > 0) {
                 $('footer').css({ 'opacity': 1, 'visibility': 'visible' });

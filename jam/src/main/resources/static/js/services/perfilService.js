@@ -53,6 +53,6 @@ export function fetchUserRegisteredJams(userId, limit = 4, offset = 0) {
  * @returns {Promise<object>}
  */
 export function fetchUserLikedGames(userId, limit = 4, offset = 0) {
-    return apiRequest('GET', `api/games/user/vote?userId=${userId}&offset=0&limit=${limit}`)
+    return apiRequest('GET', `api/games/user/vote?userId=${userId}&offset=${offset}&limit=${limit}`)
         .then(({ data }) => data);
 }

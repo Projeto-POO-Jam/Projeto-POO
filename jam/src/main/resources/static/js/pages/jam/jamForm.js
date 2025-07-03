@@ -96,8 +96,6 @@ export function initializeJamForm(config) {
         }
     });
 
-
-
     const flatpickrInstances = {
         startDate: flatpickr("#startDate", {
             dateFormat: "d/m/Y H:i",
@@ -115,13 +113,15 @@ export function initializeJamForm(config) {
         endDate: flatpickr("#endDate", {
             dateFormat: "d/m/Y H:i",
             enableTime: true,
-            firstDayOfWeek: 1,
-            weekdays: {
-                shorthand: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
-                longhand: ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"] },
-            months: {
-                shorthand: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-                longhand: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"] },
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+                    longhand: ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"] },
+                months: {
+                    shorthand: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+                    longhand: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"] },
+            }
         })
     };
 

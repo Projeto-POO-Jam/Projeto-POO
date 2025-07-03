@@ -34,9 +34,13 @@ export function initializePaginatedTab(config) {
             const items = dataExtractor(responseData);
 
             if (items && items.length > 0) {
-                items.forEach(item => {
+                items.forEach((item, index) => {
                     const card = cardCreator(item);
+                    card.css('opacity', 0);
                     container.append(card);
+                    setTimeout(() => {
+                        card.addClass('animate-in');
+                    }, index * 100);
                 });
                 currentPage++;
             }

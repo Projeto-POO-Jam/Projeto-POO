@@ -19,16 +19,23 @@ function renderItems(container, items, createCardFn, noItemsMessage) {
     $listContainer.empty();
 
     if (items && items.length > 0) {
-        items.forEach(item => {
-            //Lógica ajustada para usar o novo card builder
+        items.forEach((item, index) => { //Adicionamos o 'index' para o atraso
+            let card;
+            //Lógica para usar o novo card builder
             if (createCardFn === populateJamCard) {
-                const cardTemplate = createJamCardTemplate();
-                populateJamCard(cardTemplate, item);
-                $listContainer.append(cardTemplate);
+                card = createJamCardTemplate();
+                populateJamCard(card, item);
             } else {
-                const card = createCardFn(item);
-                $listContainer.append(card);
+                card = createCardFn(item);
             }
+
+            card.css('opacity', 0); //Garante que o card comece invisível
+            $listContainer.append(card);
+
+            //Aplica a animação com um pequeno atraso escalonado
+            setTimeout(() => {
+                card.addClass('animate-in');
+            }, index * 100); //Atraso de 100ms por item
         });
     } else {
         $listContainer.html(`<p class="no-items-message">${noItemsMessage}</p>`);

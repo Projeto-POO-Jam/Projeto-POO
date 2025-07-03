@@ -60,7 +60,10 @@ async function loadRank(jamId) {
         rankContainer.empty();
 
         if (games.length === 0) {
-            rankContainer.html('<p>Não há jogos suficientes para formar um ranking.</p>');
+            $("#itens-not-a-rank").html(`
+                <img src="/img/naoTemJogo.png" alt="imagem que não tem jogo" class="img-not-game">
+                <p>Nenhum jogo foi enviado para esta Jam ainda.</p>   
+            `);
             podioContainer.remove();
             return;
         }

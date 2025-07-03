@@ -10,9 +10,7 @@
             th:text="${labelText}">
         </label>
 
-        <div class="info-input-padrao skeleton">
-            <span th:if="${icon}" class="material-symbols-outlined" th:text="${icon}"></span>
-
+        <div class="info-input-padrao">
             <input
                 th:id="${id}"
                 th:name="${name}"
@@ -21,7 +19,6 @@
                 class="input-padrao"
                 th:classappend="${param.error != null ? 'error' : ''} + ' ' + ${inputClass}"
                 th:attr="data-field=${dataField}" />
-
         </div>
         <p th:id="${id + 'Error'}" class="error-message"></p>
     </div>
