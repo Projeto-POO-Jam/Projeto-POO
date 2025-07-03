@@ -32,7 +32,7 @@ async function initializeCarousel() {
                 slideHtml = `
                     <div>
                         <a href="/jams/${jam.id}" class="carousel-slide-link">
-                            <div class="carousel-fallback">
+                            <div class="carousel-fallback padrao-carrossel">
                                 <h1>${jam.jamTitle}</h1>
                             </div>
                         </a>

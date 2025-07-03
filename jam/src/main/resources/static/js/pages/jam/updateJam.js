@@ -1,5 +1,5 @@
 import { initializeJamForm } from './jamForm.js';
-import { fetchDadoFormUpdate } from "../../services/jamService.js";
+import { fetchDadoFormUpdate, deleteJam } from "../../services/jamService.js";
 import { bindDataFields } from "../../common/bindDataFields.js";
 import { showError } from '../../common/notifications.js';
 import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
@@ -108,6 +108,7 @@ $(async function() {
         }
 
     } catch (error) {
+        window.location.href = document.referrer.includes('/404');
         console.error("Erro no processo de edição da Jam:", error);
         window.location.href = '/404';
     } finally {

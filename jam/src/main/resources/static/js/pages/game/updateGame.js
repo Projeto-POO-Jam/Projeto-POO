@@ -1,7 +1,7 @@
 import { initializeGameForm } from './gameForm.js';
 import { fetchDadoFormUpdate, deleteGame } from "../../services/gameService.js";
 import { bindDataFields } from "../../common/bindDataFields.js";
-import { showError } from '../../common/notifications.js';
+import { showError, showSuccess} from '../../common/notifications.js';
 import { applySkeleton, removeSkeleton } from '../../common/skeleton.js';
 
 $(async function() {
@@ -11,6 +11,8 @@ $(async function() {
 
     if (!gameId) {
         showError("ID do jogo não encontrado!");
+        const redirectUrl = document.referrer.includes('/404');
+        window.location.href = redirectUrl;
         return;
     }
 
@@ -53,6 +55,7 @@ $(async function() {
         }
 
     } catch (error) {
+        window.location.href = document.referrer.includes('/404');
         console.error("Erro no processo de edição:", error);
         showError("Falha ao carregar ou processar os dados para edição.");
     } finally {

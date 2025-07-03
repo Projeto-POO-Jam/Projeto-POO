@@ -1,5 +1,6 @@
 .container-explorar-jogos {
     width: 80%;
+    min-height: 40rem;
     margin: 2rem auto;
     padding: 1rem;
 }
