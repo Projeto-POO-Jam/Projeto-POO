@@ -357,6 +357,6 @@ html.dark main .details-user-perfil {
     animation: fadeIn-slideUp 0.5s ease-out forwards;
 }
 
-.card-game-unic, .jam-card-home {
+.card-game-unic {
     opacity: 0;
 }

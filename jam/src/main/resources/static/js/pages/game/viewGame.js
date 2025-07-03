@@ -80,22 +80,29 @@ $(async function() {
             `;
         }
 
+        const userProfileUrl = comment.commentUser ? `/perfil/${comment.commentUser.userId}` : '#';
+
         const commentHtml = `
             <div class="comment-card" data-comment-id="${comment.commentId}">
                 <div class="container-user-comment">
-                     <img
-                        src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
-                        data-default="/images/iconePadrao.svg"
-                        alt="comment actor icon"
-                        class="icone-actor-comments"
-                        onerror="this.src=this.dataset.default"
-                    />
+                     <a href="${userProfileUrl}">
+                        <img
+                            src="${comment.commentUser.userPhoto || '/images/iconePadrao.svg'}"
+                            data-default="/images/iconePadrao.svg"
+                            alt="comment actor icon"
+                            class="icone-actor-comments"
+                            onerror="this.src=this.dataset.default"
+                        />
+                     </a>
                     <div class="comment-content">
-                        <p class="comment-username">${comment.commentUser.userName}</p>
+                        <a href="${userProfileUrl}" style="text-decoration: none; color: inherit;">
+                            <p class="comment-username">${comment.commentUser.userName}</p>
+                        </a>
                         <p class="comment-text">${$('<div>').text(comment.commentText).html()}</p>
                     </div>
                 </div>
-                ${deleteButtonHtml} </div>
+                ${deleteButtonHtml} 
+            </div>
         `;
         return $(commentHtml);
     }
@@ -113,6 +120,10 @@ $(async function() {
 
         //Preenche os dados do game
         bindDataFields(gameData, root);
+
+        if (gameData.userResponseDTO && gameData.userResponseDTO.userId) {
+            $('#actor-profile-link').attr('href', `/perfil/${gameData.userResponseDTO.userId}`);
+        }
 
         //Lógica para exibir o botão de editar o game
         if (gameData.userResponseDTO && gameData.userResponseDTO.userCurrent) {
