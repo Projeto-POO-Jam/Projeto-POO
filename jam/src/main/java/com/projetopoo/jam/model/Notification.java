@@ -14,10 +14,10 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notificationId;
 
-    @Column(nullable = false)
+    @Column(length = 200, nullable = false)
     private String notificationMessage;
 
-    @Column
+    @Column(length = 50)
     private String notificationLink;
 
     @Column(nullable = false)

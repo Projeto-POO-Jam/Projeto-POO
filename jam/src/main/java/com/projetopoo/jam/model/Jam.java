@@ -31,19 +31,19 @@ public class Jam {
     @Column(length = Integer.MAX_VALUE)
     private String jamContent;
 
-    @Column
+    @Column(length = 50)
     private String jamToken;
 
-    @Column
+    @Column(length = 10)
     private String jamBackgroundColor;
 
-    @Column
+    @Column(length = 10)
     private String jamBackgroundCardColor;
 
-    @Column
+    @Column(length = 10)
     private String jamTextColor;
 
-    @Column
+    @Column(length = 10)
     private String jamLinkColor;
 
     @Column

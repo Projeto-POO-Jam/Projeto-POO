@@ -15,13 +15,13 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
 
-    @Column(nullable = false)
+    @Column(length = 60, nullable = false)
     private String gameTitle;
 
-    @Column(nullable = false)
+    @Column(length = 1000, nullable = false)
     private String gameDescription;
 
-    @Column(nullable = false)
+    @Column
     private String gamePhoto;
 
     @Column(nullable = false)
@@ -30,7 +30,7 @@ public class Game {
     @Column(length = Integer.MAX_VALUE)
     private String gameContent;
 
-    @Column
+    @Column(length = 50)
     private String gameToken;
 
     @OneToOne(mappedBy = "subscribeGame")
